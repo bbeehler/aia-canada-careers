@@ -87,6 +87,54 @@ export const CONTENT_SECTIONS: ContentSection[] = [
     ],
   },
   {
+    id: "about.stats", page: "About the Industry page", title: "Numbers strip and overview",
+    fields: [
+      { key: "about.stats", label: "Numbers", type: "list", default: "$43.9B | Economic Output (CAD) | Record high for the Canadian automotive aftermarket\n400,000+ | Jobs Supported | Direct and indirect employment across Canada\n29,700+ | Businesses Nationwide | Repair shops, parts makers and retailers\n26.7 Million | Registered Vehicles | On Canadian roads and needing regular service", hint: "One per line: number | label | small caption" },
+      { key: "about.overview.tag", label: "Overview: small tag", type: "text", default: "Industry Overview" },
+      { key: "about.overview.heading", label: "Overview: heading", type: "text", default: "What Is the Automotive Aftermarket?", hint: HIGHLIGHT_HINT },
+      { key: "about.overview.body", label: "Overview: text", type: "textarea", default: "When your family’s car needs an oil change, new brakes, or a repair after an accident, you visit an automotive service business. That entire world – the parts, the shops, the people – is called the **automotive aftermarket**.\n\nThe “aftermarket” refers to everything that happens to a vehicle after it’s sold new – all the maintenance, repairs, parts, and services it needs throughout its lifetime. In Canada, this is a massive, essential industry that keeps millions of vehicles safely on the road every single day.", hint: "Leave a blank line between paragraphs. Put **double asterisks** around words to make them bold." },
+    ],
+  },
+  {
+    id: "about.compare", page: "About the Industry page", title: "Dealership vs. independent aftermarket",
+    fields: [
+      { key: "about.compare.tag", label: "Small tag", type: "text", default: "Two Service Pathways" },
+      { key: "about.compare.heading", label: "Heading", type: "text", default: "Dealership vs. Independent Aftermarket" },
+      { key: "about.compare.intro", label: "Intro", type: "textarea", default: "When it comes to vehicle service in Canada, there are two main sectors where careers exist. Understanding the difference helps you find where you’ll fit best." },
+      { key: "about.dealer.title", label: "Dealership: title", type: "text", default: "Dealership" },
+      { key: "about.dealer.subtitle", label: "Dealership: subtitle", type: "text", default: "Brand-specific service" },
+      { key: "about.dealer.text", label: "Dealership: description", type: "textarea", default: "Dealership service centres are attached to new vehicle franchises – think a Toyota dealership or a GM dealer. They specialize in one brand and handle warranty work, recalls, and maintenance for vehicles in their brand family." },
+      { key: "about.dealer.points", label: "Dealership: points", type: "list", default: "Franchised and brand-specific (e.g., Toyota, Ford, GM dealer)\nPrimarily services vehicles under manufacturer warranty\nUses Original Equipment Manufacturer (OEM) parts\nTechnicians are trained and certified by the manufacturer\nHigher labour rates, brand-controlled customer experience\nFocused on one brand or a small family of brands", hint: LIST_HINT },
+      { key: "about.indie.title", label: "Independent: title", type: "text", default: "Independent Aftermarket" },
+      { key: "about.indie.badge", label: "Independent: badge", type: "text", default: "AIA Canada represents this sector" },
+      { key: "about.indie.text", label: "Independent: description", type: "textarea", default: "Independent aftermarket businesses are not tied to any single brand. They service all makes and models, and represent the vast majority of vehicle repair and maintenance businesses across Canada." },
+      { key: "about.indie.points", label: "Independent: points", type: "list", default: "Independent shops work on all makes, models, and years\nServes vehicles once they’re out of warranty – the majority of vehicles on the road\nUses high-quality aftermarket and OEM-equivalent parts\nTechnicians hold Red Seal and industry certifications\nCompetitive pricing, community-based, customer-focused\nA $43.9B sector that employs hundreds of thousands of Canadians", hint: LIST_HINT },
+      { key: "about.goodnews", label: "Good news note", type: "textarea", default: "**Good news:** The careers featured on this site apply to both sectors. Whether you work at a dealership or an independent shop, the skills, certifications, and opportunities are largely the same.", hint: "Put **double asterisks** around words to make them bold." },
+    ],
+  },
+  {
+    id: "about.chain", page: "About the Industry page", title: "Supply chain",
+    fields: [
+      { key: "about.chain.tag", label: "Small tag", type: "text", default: "How It All Fits Together" },
+      { key: "about.chain.heading", label: "Heading", type: "text", default: "The Automotive Supply Chain" },
+      { key: "about.chain.intro", label: "Intro", type: "textarea", default: "From the factory floor to your family’s driveway, a whole ecosystem of businesses and people work together to keep Canada’s vehicles running. Every step in this chain is a career opportunity." },
+      { key: "about.chain.steps", label: "Steps", type: "list", default: "Parts Manufacturers | Companies that design and produce replacement parts – from brake pads to engine components. Many are global brands with Canadian operations. | Brake pads & rotors, Filters & belts, Electrical components, Body & chassis parts, High-voltage batteries\nDistributors & Wholesalers | National and regional companies that warehouse parts and deliver them quickly to service locations – often the same or next day. | National distribution centres, Regional warehouses, Fleet delivery & logistics, Inventory management\nRetailers & Jobbers | Local parts stores and jobbers serve as the link between distributors and repair shops, providing parts, tools, and technical support. | Auto parts stores, Jobber networks, Tool suppliers, Technical support\nService & Repair Shops | The front line of the aftermarket – where vehicles are inspected, maintained, and repaired by skilled technicians and service professionals. | Independent repair shops, Specialty shops, Quick lube centres, Fleet maintenance, Collision centres, Diagnostic specialists, ADAS calibration, Tire shops\nVehicle Owners | Every Canadian driver depends on this supply chain to keep their vehicle safe, reliable, and road-ready – creating consistent, year-round demand. | 26.7 million registered vehicles, Regular maintenance needs, Collision & repair work, Year-round demand", hint: "One step per line: title | description | examples separated by commas" },
+    ],
+  },
+  {
+    id: "about.growth", page: "About the Industry page", title: "Growing industry and closing call to action",
+    fields: [
+      { key: "about.growth.tag", label: "Small tag", type: "text", default: "Why Now Is a Great Time" },
+      { key: "about.growth.heading", label: "Heading", type: "text", default: "A Growing Industry That Needs You" },
+      { key: "about.growth.intro", label: "Intro", type: "textarea", default: "The automotive aftermarket isn’t just stable – it’s growing and evolving. Here’s why a career in this sector is a smart choice right now." },
+      { key: "about.growth.cards", label: "Cards", type: "list", default: "Vehicles Are Getting Older | Canadians are keeping their vehicles longer, which means more vehicles that need ongoing maintenance and repair from aftermarket professionals.\nElectric Vehicles Are Coming | EVs are growing fast, but they still need brakes, tires, software updates, and collision repair – creating new opportunities for trained professionals.\nTechnician Shortage | Canada faces a significant skilled trades shortage. Qualified automotive professionals are in high demand, with strong job security and competitive wages.\nTechnology Is Evolving | Modern vehicles are computers on wheels. The industry needs tech-savvy professionals who understand electronics, diagnostic software, and advanced systems.", hint: "One card per line: title | text" },
+      { key: "about.cta.heading", label: "Closing: heading", type: "text", default: "Ready to Find Your Place in the Industry?" },
+      { key: "about.cta.body", label: "Closing: text", type: "textarea", default: "Now that you understand the sector, explore the specific careers waiting for you – or take our quick quiz to find your best match." },
+      { key: "about.cta.link.label", label: "Closing: AIA link label", type: "text", default: "Learn More at AIA Canada" },
+      { key: "about.cta.link.url", label: "Closing: AIA link", type: "text", default: "https://www.aiacanada.com/about-us/" },
+    ],
+  },
+  {
     id: "employers", page: "For employers page", title: "For employers page",
     fields: [
       { key: "employers.headline", label: "Headline", type: "text", default: "Hire from the people who chose this industry." },
@@ -117,8 +165,8 @@ const DEFAULTS: Record<string, string> = Object.fromEntries(
   CONTENT_SECTIONS.flatMap((s) => s.fields.map((f) => [f.key, f.default])),
 );
 
-interface ContentState { get: (key: string) => string; list: (key: string) => string[]; reload: () => Promise<void> }
-const ContentContext = createContext<ContentState>({ get: (k) => DEFAULTS[k] ?? "", list: () => [], reload: async () => {} });
+interface ContentState { get: (key: string) => string; list: (key: string) => string[]; rows: (key: string) => string[][]; reload: () => Promise<void> }
+const ContentContext = createContext<ContentState>({ get: (k) => DEFAULTS[k] ?? "", list: () => [], rows: () => [], reload: async () => {} });
 
 export function ContentProvider({ children }: { children: ReactNode }) {
   const [values, setValues] = useState<Record<string, string>>({});
@@ -132,7 +180,8 @@ export function ContentProvider({ children }: { children: ReactNode }) {
   const state = useMemo<ContentState>(() => {
     const get = (key: string) => values[key] ?? DEFAULTS[key] ?? "";
     const list = (key: string) => get(key).split("\n").map((s) => s.trim()).filter(Boolean);
-    return { get, list, reload };
+    const rows = (key: string) => list(key).map((line) => line.split("|").map((p) => p.trim()));
+    return { get, list, rows, reload };
   }, [values, reload]);
   return <ContentContext.Provider value={state}>{children}</ContentContext.Provider>;
 }
