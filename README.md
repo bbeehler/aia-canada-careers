@@ -1,4 +1,6 @@
-# AIA Canada Careers
+# Careers in Auto Care
+
+A job board from AIA Canada (Automotive Industries Association of Canada).
 
 The job board for Canada's automotive aftermarket. Employers post jobs in mechanical repair,
 collision repair, parts and manufacturing, and business operations. AIA Canada members post free;

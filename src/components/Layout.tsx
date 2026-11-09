@@ -17,10 +17,11 @@ export default function Layout() {
       )}
       <header className="border-b border-line bg-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <Link to="/" className="flex items-center gap-2.5" aria-label="AIA Canada Careers home">
+          <Link to="/" className="flex items-center gap-2.5" aria-label="Careers in Auto Care home">
             <span className="h-8 w-1.5 rounded-sm bg-signal" aria-hidden />
-            <span className="font-display text-2xl font-bold leading-none text-navy">
-              AIA Canada <span className="font-semibold text-steel">Careers</span>
+            <span className="leading-none">
+              <span className="block font-display text-2xl font-bold text-navy">Careers in Auto Care</span>
+              <span className="block text-xs text-steel">from AIA Canada</span>
             </span>
           </Link>
           <nav className="flex flex-wrap items-center gap-1">
@@ -45,7 +46,7 @@ export default function Layout() {
       <footer className="border-t border-line bg-white">
         <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 text-sm text-steel sm:grid-cols-3">
           <div>
-            <p className="font-display text-lg font-bold text-navy">AIA Canada Careers</p>
+            <p className="font-display text-lg font-bold text-navy">Careers in Auto Care</p>
             <p className="mt-1">The job board for Canada’s automotive aftermarket, from the Automotive Industries Association of Canada.</p>
           </div>
           <div className="flex flex-col gap-1.5">

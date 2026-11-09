@@ -170,7 +170,7 @@ export default function JobForm() {
         <fieldset className="panel space-y-4 p-6">
           <legend className="px-1 font-display text-2xl font-bold text-navy">How people apply</legend>
           <div className="grid gap-2 sm:grid-cols-2">
-            {([["on_site", "Through AIA Canada Careers", "Applications and resumes arrive in your dashboard."],
+            {([["on_site", "Through Careers in Auto Care", "Applications and resumes arrive in your dashboard."],
                ["external", "On our own website", "We’ll send applicants to your careers page."]] as const).map(([v, t, d]) => (
               <label key={v} className={`cursor-pointer rounded border p-4 ${applyMethod === v ? "border-navy bg-navy-soft" : "border-line"}`}>
                 <input type="radio" name="apply_method" value={v} checked={applyMethod === v} onChange={() => setApplyMethod(v)} className="sr-only" />
