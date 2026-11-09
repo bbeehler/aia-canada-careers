@@ -9,8 +9,6 @@ const navClass = ({ isActive }: { isActive: boolean }) =>
   `px-2.5 py-2 text-sm font-medium rounded whitespace-nowrap xl:px-3 ${isActive ? "text-navy bg-navy-soft" : "text-steel hover:text-navy"}`;
 const drawerClass = ({ isActive }: { isActive: boolean }) =>
   `block rounded px-3 py-3 text-base font-medium ${isActive ? "bg-navy-soft text-navy" : "text-ink hover:bg-paper"}`;
-const barClass = ({ isActive }: { isActive: boolean }) =>
-  `whitespace-nowrap rounded px-2.5 py-1 ${isActive ? "bg-white/15 text-white" : "text-white/75 hover:text-white"}`;
 
 const PUBLIC_LINKS: [string, string][] = [
   ["/about-the-industry", "About the Industry"],
@@ -49,35 +47,31 @@ export default function Layout() {
         </div>
       )}
 
-      {session && (
-        <div className="hidden bg-navy-deep text-sm lg:block">
-          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-1.5">
-            <nav className="flex items-center gap-1" aria-label="Account">
-              <span className="mr-2 text-xs font-semibold uppercase tracking-wide text-white/50">{roleLabel}</span>
-              {roleLinks.map(([to, label, end]) => <NavLink key={to} to={to} end={end} className={barClass}>{label}</NavLink>)}
-            </nav>
-            <div className="flex items-center gap-3 text-white/75">
-              <span className="truncate">{session.user.email}</span>
-              <button onClick={signOut} className="rounded px-2.5 py-1 text-white hover:bg-white/15">Sign out</button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+        {/* Row 1: logo and title on the left, account and admin links with sign in/out on the right */}
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2.5 sm:py-3">
           <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Careers in Auto Care home">
             <img src="/aia-canada-logo.png" alt="AIA Canada" width={45} height={48} className="h-10 w-auto sm:h-12" />
             <span className="h-8 w-px shrink-0 bg-line sm:h-9" aria-hidden />
-            <span className="truncate font-display text-xl font-bold leading-none text-navy sm:text-2xl lg:text-xl xl:text-2xl">Careers in Auto Care</span>
+            <span className="truncate font-display text-xl font-bold leading-none text-navy sm:text-2xl">Careers in Auto Care</span>
           </Link>
 
-          <nav className="hidden shrink-0 items-center gap-0.5 lg:flex xl:gap-1" aria-label="Main">
-            {publicLinks.map(([to, label]) => <NavLink key={to} to={to} className={navClass}>{label}</NavLink>)}
-            {!session && <Link to="/sign-in" className="ml-2 btn-navy whitespace-nowrap">Sign in</Link>}
+          <nav className="hidden shrink-0 items-center gap-1 md:flex" aria-label="Account">
+            {roleLinks.length > 0 && (
+              <span className="mr-1 hidden text-xs font-semibold uppercase tracking-wide text-steel lg:inline">{roleLabel}</span>
+            )}
+            {roleLinks.map(([to, label, end]) => <NavLink key={to} to={to} end={end} className={navClass}>{label}</NavLink>)}
+            {session ? (
+              <>
+                <span className="ml-2 hidden max-w-[14rem] truncate text-sm text-steel xl:inline" title={session.user.email}>{session.user.email}</span>
+                <button onClick={signOut} className="ml-2 btn-ghost whitespace-nowrap">Sign out</button>
+              </>
+            ) : (
+              <Link to="/sign-in" className="ml-1 btn-navy whitespace-nowrap">Sign in</Link>
+            )}
           </nav>
 
-          <button type="button" className="-mr-2 flex h-11 w-11 shrink-0 items-center justify-center rounded text-navy hover:bg-paper lg:hidden"
+          <button type="button" className="-mr-2 flex h-11 w-11 shrink-0 items-center justify-center rounded text-navy hover:bg-paper md:hidden"
             aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(!open)}>
             <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current stroke-2 [stroke-linecap:round]" aria-hidden>
               {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
@@ -85,8 +79,15 @@ export default function Layout() {
           </button>
         </div>
 
+        {/* Row 2: main site navigation, under the logo */}
+        <div className="hidden border-t border-line md:block">
+          <nav className="mx-auto flex max-w-6xl items-center gap-1 overflow-x-auto px-2 py-1.5" aria-label="Main">
+            {publicLinks.map(([to, label]) => <NavLink key={to} to={to} className={navClass}>{label}</NavLink>)}
+          </nav>
+        </div>
+
         {open && (
-          <div id="mobile-menu" className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-white lg:hidden">
+          <div id="mobile-menu" className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-white md:hidden">
             <nav className="mx-auto max-w-6xl space-y-1 px-4 py-3" aria-label="Main">
               {publicLinks.map(([to, label]) => <NavLink key={to} to={to} className={drawerClass}>{label}</NavLink>)}
               {roleLinks.length > 0 && (

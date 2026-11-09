@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-  html { scroll-padding-top: 5.5rem; -webkit-text-size-adjust: 100%; }
+  html { scroll-padding-top: 8rem; -webkit-text-size-adjust: 100%; }
   body { @apply bg-paper text-ink font-sans antialiased; overflow-wrap: break-word; }
   h1, h2, h3 { @apply font-display font-bold tracking-tight text-navy; }
   :focus-visible { @apply outline outline-2 outline-offset-2 outline-signal; }

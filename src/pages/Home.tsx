@@ -76,24 +76,6 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-4 py-12">
-        <div className="grid items-center gap-6 rounded-xl bg-gradient-to-br from-[#1D3264] to-navy-deep px-5 py-8 text-white sm:px-10 sm:py-9 lg:grid-cols-[auto_1fr_auto] lg:gap-8">
-          <span className="hidden h-14 w-14 items-center justify-center rounded-full bg-white/10 lg:flex" aria-hidden>
-            <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
-              <path d="M3 21V10l5 3V10l5 3V5h4l1 16zM3 21h18M8 17h1M12 17h1M16 17h1" />
-            </svg>
-          </span>
-          <div>
-            <span className="inline-block rounded border border-white/30 bg-white/10 px-2.5 py-0.5 text-xs font-semibold">{c.get("home.didyouknow.tag")}</span>
-            <h2 className="mt-3 font-sans text-2xl font-bold tracking-normal text-white sm:text-3xl">{c.get("home.didyouknow.heading")}</h2>
-            <p className="mt-3 max-w-2xl leading-relaxed text-white/85"><Bold text={c.get("home.didyouknow.body")} /></p>
-          </div>
-          <SmartLink to={c.get("home.didyouknow.button.url")}
-            className="btn w-full bg-white px-6 py-3 text-navy hover:bg-navy-soft sm:w-auto sm:justify-self-start lg:self-center">
-            {c.get("home.didyouknow.button.label")} <span aria-hidden>→</span>
-          </SmartLink>
-        </div>
-      </section>
 
       <section className="border-b border-line bg-white">
         <div className="mx-auto max-w-5xl px-4 py-16">
@@ -125,6 +107,25 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-12">
+        <div className="grid items-center gap-6 rounded-xl bg-gradient-to-br from-[#1D3264] to-navy-deep px-5 py-8 text-white sm:px-10 sm:py-9 lg:grid-cols-[auto_1fr_auto] lg:gap-8">
+          <span className="hidden h-14 w-14 items-center justify-center rounded-full bg-white/10 lg:flex" aria-hidden>
+            <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
+              <path d="M3 21V10l5 3V10l5 3V5h4l1 16zM3 21h18M8 17h1M12 17h1M16 17h1" />
+            </svg>
+          </span>
+          <div>
+            <span className="inline-block rounded border border-white/30 bg-white/10 px-2.5 py-0.5 text-xs font-semibold">{c.get("home.didyouknow.tag")}</span>
+            <h2 className="mt-3 font-sans text-2xl font-bold tracking-normal text-white sm:text-3xl">{c.get("home.didyouknow.heading")}</h2>
+            <p className="mt-3 max-w-2xl leading-relaxed text-white/85"><Bold text={c.get("home.didyouknow.body")} /></p>
+          </div>
+          <SmartLink to={c.get("home.didyouknow.button.url")}
+            className="btn w-full bg-white px-6 py-3 text-navy hover:bg-navy-soft sm:w-auto sm:justify-self-start lg:self-center">
+            {c.get("home.didyouknow.button.label")} <span aria-hidden>→</span>
+          </SmartLink>
         </div>
       </section>
 

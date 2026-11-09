@@ -70,8 +70,8 @@ export default function JobDetail() {
         </div>
       </article>
 
-      <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
-        <div id="apply" className="scroll-mt-24"><ApplyBox job={job} /></div>
+      <aside className="space-y-5 lg:sticky lg:top-32 lg:self-start">
+        <div id="apply" className="scroll-mt-32"><ApplyBox job={job} /></div>
         {job.icar_training && (
           <div className="panel border-l-4 border-l-signal p-5">
             <p className="font-display text-xl font-bold text-navy">Training this employer values</p>
