@@ -98,6 +98,15 @@ export const CONTENT_SECTIONS: ContentSection[] = [
     ],
   },
   {
+    id: "careers.hero", page: "Explore careers page", title: "Banner",
+    fields: [
+      { key: "careers.hero.tag", label: "Small tag", type: "text", default: "Explore Careers" },
+      { key: "careers.hero.heading", label: "Headline", type: "text", default: "Find a career that fits you", hint: HIGHLIGHT_HINT },
+      { key: "careers.hero.body", label: "Paragraph", type: "textarea", default: "Browse careers in vehicle repair, collision, manufacturing and business operations. See what each job involves, what it pays, and how to get started." },
+      { key: "careers.hero.image", label: "Background photo", type: "image", default: "", hint: "Optional. Leave empty for the plain navy banner. Wide photos work best." },
+    ],
+  },
+  {
     id: "jobs.hero", page: "Find jobs page", title: "Banner",
     fields: [
       { key: "jobs.hero.tag", label: "Small tag", type: "text", default: "Explore Careers" },

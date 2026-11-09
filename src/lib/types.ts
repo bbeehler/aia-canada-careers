@@ -55,3 +55,21 @@ export interface Application {
   status: "submitted" | "reviewed" | "shortlisted" | "declined";
   created_at: string;
 }
+
+export interface Career {
+  id: string;
+  slug: string;
+  title: string;
+  sector: Sector;
+  summary: string;
+  description: string;
+  tasks: string;
+  skills: string;
+  training: string;
+  education_level: string;
+  salary_range: string;
+  growth: string;
+  search_terms: string;
+  sort_order: number;
+  is_published: boolean;
+}

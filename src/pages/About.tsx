@@ -48,7 +48,7 @@ export default function About() {
         body={c.get("about.hero.body")}
         image={c.get("about.hero.image") || undefined}
         actions={<>
-          <Link to="/jobs" className={heroPrimary}>Explore Careers <span aria-hidden>→</span></Link>
+          <Link to="/careers" className={heroPrimary}>Explore Careers <span aria-hidden>→</span></Link>
           <Link to="/quiz" className={heroSecondary}>Take the Career Quiz</Link>
         </>}
       />
@@ -154,7 +154,7 @@ export default function About() {
         <h2 className="text-4xl sm:text-5xl"><Highlighted text={c.get("about.cta.heading")} className="text-signal" /></h2>
         <p className="mt-3 text-lg text-steel">{c.get("about.cta.body")}</p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/jobs" className="btn-navy px-5 py-3">Explore All Careers <span aria-hidden>→</span></Link>
+          <Link to="/careers" className="btn-navy px-5 py-3">Explore All Careers <span aria-hidden>→</span></Link>
           <Link to="/quiz" className="btn-ghost px-5 py-3">Take the Career Quiz</Link>
           <SmartLink to={c.get("about.cta.link.url")} className="btn px-4 py-3 text-navy hover:underline">{c.get("about.cta.link.label")}</SmartLink>
         </div>

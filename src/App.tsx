@@ -15,6 +15,9 @@ import NotFound from "./pages/NotFound";
 import Quiz from "./pages/Quiz";
 import Parents from "./pages/Parents";
 import About from "./pages/About";
+import Careers from "./pages/Careers";
+import CareerDetail from "./pages/CareerDetail";
+import CareersEditor from "./pages/CareersEditor";
 import ContentEditor from "./pages/ContentEditor";
 
 export default function App() {
@@ -27,6 +30,9 @@ export default function App() {
         <Route path="quiz" element={<Quiz />} />
         <Route path="parents" element={<Parents />} />
         <Route path="about-the-industry" element={<About />} />
+        <Route path="careers" element={<Careers />} />
+        <Route path="careers/:slug" element={<CareerDetail />} />
+        <Route path="admin/careers" element={<RequireRole roles={["admin"]}><CareersEditor /></RequireRole>} />
         <Route path="sign-in" element={<SignIn />} />
         <Route path="employers" element={<Employers />} />
         <Route path="employer" element={<RequireRole roles={["employer", "admin"]}><EmployerDashboard /></RequireRole>} />

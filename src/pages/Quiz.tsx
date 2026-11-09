@@ -125,7 +125,7 @@ export default function Quiz() {
         <div className="panel mt-8 p-6">
           <h2 className="text-2xl">Jobs to look into</h2>
           <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-            {ROLES[top].map((r) => <li key={r} className="rounded border border-line px-3 py-2 text-sm">{r}</li>)}
+            {ROLES[top].map((r) => <li key={r}><Link to={`/careers?q=${encodeURIComponent(r.split(" (")[0])}`} className="block rounded border border-line px-3 py-2 text-sm hover:border-navy hover:text-navy">{r}</Link></li>)}
           </ul>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link to={`/jobs?sector=${top}`} className="btn-primary">See {SECTORS[top].label.toLowerCase()} jobs</Link>

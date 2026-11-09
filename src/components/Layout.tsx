@@ -27,10 +27,12 @@ export default function Layout() {
           </Link>
           <nav className="flex flex-wrap items-center gap-1">
             <NavLink to="/about-the-industry" className={navClass}>About the Industry</NavLink>
+            <NavLink to="/careers" className={navClass}>Explore Careers</NavLink>
             <NavLink to="/jobs" className={navClass}>Find jobs</NavLink>
             <NavLink to="/quiz" className={navClass}>Career quiz</NavLink>
             {profile?.role === "employer" && <NavLink to="/employer" className={navClass}>My postings</NavLink>}
             {profile?.role === "admin" && <NavLink to="/admin" end className={navClass}>Review queue</NavLink>}
+            {profile?.role === "admin" && <NavLink to="/admin/careers" className={navClass}>Careers</NavLink>}
             {profile?.role === "admin" && <NavLink to="/admin/content" className={navClass}>Site content</NavLink>}
             {profile?.role === "candidate" && <NavLink to="/applications" className={navClass}>My applications</NavLink>}
             {!session && <NavLink to="/employers" className={navClass}>For employers</NavLink>}
@@ -56,8 +58,8 @@ export default function Layout() {
             </Link>
             <p className="mt-3 max-w-xs leading-relaxed text-steel">{c.get("footer.blurb")}</p>
           </div>
-          <FooterColumn title="Explore" links={[["About the Industry", "/about-the-industry"], ["All Careers", "/jobs"], ["Career Quiz", "/quiz"], ["Resources", "/parents"]]} />
-          <FooterColumn title="Career Areas" links={[["Vehicle Repair", "/jobs?sector=mechanical"], ["Collision Repair", "/jobs?sector=collision"], ["Parts & Manufacturing", "/jobs?sector=parts_manufacturing"], ["Business Operations", "/jobs?sector=business_operations"]]} />
+          <FooterColumn title="Explore" links={[["About the Industry", "/about-the-industry"], ["All Careers", "/careers"], ["Find Jobs", "/jobs"], ["Career Quiz", "/quiz"], ["Resources", "/parents"]]} />
+          <FooterColumn title="Career Areas" links={[["Vehicle Repair", "/careers?category=mechanical"], ["Collision Repair", "/careers?category=collision"], ["Parts & Manufacturing", "/careers?category=parts_manufacturing"], ["Business Operations", "/careers?category=business_operations"]]} />
           <FooterColumn title="For Parents" links={[["Parent Guide", "/parents"], ["Salary Information", "/parents#pay"], ["AIA Canada", "https://www.aiacanada.com"]]} />
         </div>
         <div className="border-t border-line">
