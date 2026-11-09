@@ -36,10 +36,17 @@ export default function Home() {
 
   return (
     <>
-      <section className="overflow-hidden bg-navy text-white">
-        <div className="mx-auto grid max-w-6xl lg:grid-cols-[1.15fr_0.85fr]">
-        <div className="px-4 pb-14 pt-14 sm:pt-20 lg:pr-10">
-          <h1 className="max-w-3xl font-display text-5xl font-bold leading-[0.95] text-white sm:text-7xl">
+      <section className="relative isolate overflow-hidden bg-navy text-white">
+        <img
+          src="/hero-technician-lift.jpg"
+          alt="A technician in coveralls working under a car raised on a lift in a repair shop"
+          className="absolute inset-0 -z-20 h-full w-full object-cover object-[55%_center]"
+          width={1800}
+          height={1013}
+        />
+        <div className="absolute inset-0 -z-10 bg-navy/80 md:bg-transparent md:bg-gradient-to-r md:from-navy md:via-navy/85 md:to-navy/20" aria-hidden />
+        <div className="mx-auto flex min-h-[520px] max-w-6xl flex-col justify-center px-4 py-16 sm:min-h-[600px] sm:py-20">
+          <h1 className="max-w-2xl font-display text-5xl font-bold leading-[0.95] text-white sm:text-7xl">
             Work that keeps Canada moving.
           </h1>
           <p className="mt-5 max-w-xl text-lg text-white/80">
@@ -59,16 +66,6 @@ export default function Home() {
             </select>
             <button className="bg-signal px-6 py-4 font-semibold text-white hover:bg-signal-dark">Search jobs</button>
           </form>
-        </div>
-        <div className="relative h-72 sm:h-96 lg:h-auto">
-          <img
-            src="/hero-technician-lift.jpg"
-            alt="A technician in coveralls working under a car raised on a lift in a repair shop"
-            className="absolute inset-0 h-full w-full object-cover object-[45%_center]"
-            width={1800}
-            height={1013}
-          />
-        </div>
         </div>
       </section>
 
