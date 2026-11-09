@@ -12,6 +12,7 @@ import Applications from "./pages/Applications";
 import MyApplications from "./pages/MyApplications";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
+import Quiz from "./pages/Quiz";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="jobs" element={<Jobs />} />
         <Route path="jobs/:id" element={<JobDetail />} />
+        <Route path="quiz" element={<Quiz />} />
         <Route path="sign-in" element={<SignIn />} />
         <Route path="employers" element={<Employers />} />
         <Route path="employer" element={<RequireRole roles={["employer", "admin"]}><EmployerDashboard /></RequireRole>} />

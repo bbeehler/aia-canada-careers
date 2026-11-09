@@ -46,11 +46,14 @@ export default function Home() {
         />
         <div className="absolute inset-0 -z-10 bg-navy/80 md:bg-transparent md:bg-gradient-to-r md:from-navy md:via-navy/85 md:to-navy/20" aria-hidden />
         <div className="mx-auto flex min-h-[520px] max-w-6xl flex-col justify-center px-4 py-16 sm:min-h-[600px] sm:py-20">
-          <h1 className="max-w-2xl font-display text-5xl font-bold leading-[0.95] text-white sm:text-7xl">
-            Work that keeps Canada moving.
+          <span className="inline-block self-start rounded-md border border-white/30 bg-white/10 px-3 py-1 text-sm font-semibold text-white">
+            Career Exploration
+          </span>
+          <h1 className="mt-5 max-w-2xl font-display text-5xl font-bold leading-[0.95] text-white sm:text-7xl">
+            Your Future in <span className="text-[#F0384F]">Automotive</span> Starts Here
           </h1>
-          <p className="mt-5 max-w-xl text-lg text-white/80">
-            Jobs in mechanical repair, collision repair, parts and the businesses behind them, posted by employers across the automotive aftermarket.
+          <p className="mt-5 max-w-xl text-lg text-white/85">
+            Discover rewarding career paths in vehicle repair and automotive business operations. Built for Canadian high school students and parents ready to explore a thriving industry.
           </p>
 
           <form onSubmit={search} className="mt-9 grid max-w-3xl gap-px overflow-hidden rounded-md bg-white/20 sm:grid-cols-[1fr_180px_auto]">
@@ -66,6 +69,9 @@ export default function Home() {
             </select>
             <button className="bg-signal px-6 py-4 font-semibold text-white hover:bg-signal-dark">Search jobs</button>
           </form>
+          <Link to="/quiz" className="btn mt-4 self-start border border-white/30 bg-white/10 px-6 py-3 text-white hover:bg-white/20">
+            Take the Career Quiz
+          </Link>
         </div>
       </section>
 

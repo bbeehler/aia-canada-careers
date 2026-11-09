@@ -24,6 +24,7 @@ export default function Layout() {
           </Link>
           <nav className="flex flex-wrap items-center gap-1">
             <NavLink to="/jobs" className={navClass}>Find jobs</NavLink>
+            <NavLink to="/quiz" className={navClass}>Career quiz</NavLink>
             {profile?.role === "employer" && <NavLink to="/employer" className={navClass}>My postings</NavLink>}
             {profile?.role === "admin" && <NavLink to="/admin" className={navClass}>Review queue</NavLink>}
             {profile?.role === "candidate" && <NavLink to="/applications" className={navClass}>My applications</NavLink>}
