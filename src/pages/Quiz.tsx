@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import type { Sector } from "../lib/types";
 import { SECTORS } from "../lib/constants";
 import { useContent } from "../lib/content";
 import EditPageLink from "../components/EditPageLink";
+import PageHero, { heroPrimary } from "../components/PageHero";
 
 type Scores = Partial<Record<Sector, number>>;
 interface Question { prompt: string; options: { text: string; scores: Scores }[] }
@@ -83,16 +84,25 @@ export default function Quiz() {
     setStep(step + 1);
   };
 
+  const hero = (compact: boolean, actions?: ReactNode) => (
+    <PageHero compact={compact} tag={c.get("quiz.hero.tag")} title={c.get("quiz.heading")}
+      body={compact ? undefined : c.get("quiz.body")} image={c.get("quiz.hero.image") || undefined} actions={actions} />
+  );
+
   if (step === -1) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-20 text-center">
-        <h1 className="text-5xl">{c.get("quiz.heading")}</h1>
-        <p className="mt-4 text-lg text-steel">
-          {c.get("quiz.body")}
-        </p>
-        <button className="btn-navy mt-8 px-6 py-3" onClick={() => setStep(0)}>Start the quiz</button>
+      <>
+        {hero(false, <button className={heroPrimary} onClick={() => setStep(0)}>Start the quiz <span aria-hidden>→</span></button>)}
+        <div className="mx-auto grid max-w-5xl gap-4 px-4 py-14 sm:grid-cols-3">
+          {[["6 questions", "About what you enjoy and how you like to work"], ["2 minutes", "No account or sign-up needed"], ["Your best match", "Plus real jobs you can explore right away"]].map(([t, d]) => (
+            <div key={t} className="panel p-5">
+              <p className="font-display text-2xl font-bold text-navy">{t}</p>
+              <p className="mt-1 text-sm text-steel">{d}</p>
+            </div>
+          ))}
+        </div>
         <EditPageLink section="quiz" />
-      </div>
+      </>
     );
   }
 
@@ -105,9 +115,11 @@ export default function Quiz() {
     const [top, second] = ranked;
 
     return (
+      <>
+      {hero(true)}
       <div className="mx-auto max-w-3xl px-4 py-14">
         <p className="text-sm font-medium text-signal">Your best match</p>
-        <h1 className="mt-1 text-5xl">{SECTORS[top].label}</h1>
+        <h2 className="mt-1 text-5xl">{SECTORS[top].label}</h2>
         <p className="mt-3 text-lg text-steel">{SECTORS[top].blurb}.</p>
 
         <div className="panel mt-8 p-6">
@@ -128,11 +140,14 @@ export default function Quiz() {
           Retake the quiz
         </button>
       </div>
+      </>
     );
   }
 
   const q = QUESTIONS[step];
   return (
+    <>
+    {hero(true)}
     <div className="mx-auto max-w-2xl px-4 py-14">
       <div className="flex items-center justify-between text-sm text-steel">
         <span>Question {step + 1} of {QUESTIONS.length}</span>
@@ -141,7 +156,7 @@ export default function Quiz() {
       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line" aria-hidden>
         <div className="h-full bg-signal transition-all" style={{ width: `${(step / QUESTIONS.length) * 100}%` }} />
       </div>
-      <h1 className="mt-8 text-4xl">{q.prompt}</h1>
+      <h2 className="mt-8 text-4xl">{q.prompt}</h2>
       <div className="mt-6 space-y-3">
         {q.options.map((o, i) => (
           <button key={o.text} onClick={() => choose(i)}
@@ -154,5 +169,6 @@ export default function Quiz() {
         ))}
       </div>
     </div>
+    </>
   );
 }

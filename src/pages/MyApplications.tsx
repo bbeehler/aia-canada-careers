@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
+import PageHero from "../components/PageHero";
 
 interface Row { id: string; created_at: string; jobs: { id: string; title: string; city: string; province: string; companies: { name: string } | null } | null }
 
@@ -17,9 +18,10 @@ export default function MyApplications() {
   }, [session]);
 
   return (
+    <>
+    <PageHero compact tag="Job seeker" title="My applications" body="Jobs you’ve applied to through Careers in Auto Care. Employers contact you directly." />
     <div className="mx-auto max-w-4xl px-4 py-10">
-      <h1 className="text-4xl">My applications</h1>
-      <div className="mt-6">
+      <div>
         {rows === null ? <p className="text-steel">Loading…</p> : rows.length === 0 ? (
           <div className="panel px-5 py-10">
             <p className="font-medium">You haven’t applied to any jobs yet.</p>
@@ -41,5 +43,6 @@ export default function MyApplications() {
         )}
       </div>
     </div>
+    </>
   );
 }

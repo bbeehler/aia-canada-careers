@@ -5,6 +5,7 @@ import { useAuth } from "../lib/auth";
 import type { Job } from "../lib/types";
 import { EMPLOYMENT_TYPES, SECTORS, formatPay, timeAgo } from "../lib/constants";
 import StatusBadge from "../components/StatusBadge";
+import PageHero from "../components/PageHero";
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -18,26 +19,27 @@ export default function JobDetail() {
   if (job === undefined) return <p className="mx-auto max-w-6xl px-4 py-12 text-steel">Loading…</p>;
   if (job === null) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-16">
-        <h1 className="text-3xl">This job isn’t available</h1>
-        <p className="mt-2 text-steel">It may have been filled or expired.</p>
-        <Link to="/jobs" className="btn-navy mt-6">Browse open jobs</Link>
-      </div>
+      <PageHero compact title="This job isn’t available" body="It may have been filled or expired."
+        actions={<Link to="/jobs" className="btn bg-white px-6 py-3 text-navy hover:bg-navy-soft">Browse open jobs</Link>} />
     );
   }
 
   return (
+    <>
+    <PageHero
+      compact
+      tag={SECTORS[job.sector].label}
+      title={job.title}
+      body={<>
+        {job.companies?.name} – {job.city}, {job.province}{job.remote_ok ? " (some remote)" : ""}
+        {job.status !== "published" && <span className="ml-3 align-middle"><StatusBadge status={job.status} /></span>}
+      </>}
+    >
+      <Link to="/jobs" className="mt-5 self-start text-sm text-white/70 hover:text-white">← Back to jobs</Link>
+    </PageHero>
     <div className="mx-auto grid max-w-6xl gap-10 px-4 py-10 lg:grid-cols-[1fr_340px]">
       <article>
-        <Link to="/jobs" className="text-sm text-steel hover:text-navy">Back to jobs</Link>
-        {job.status !== "published" && <div className="mt-3"><StatusBadge status={job.status} /></div>}
-        <p className="mt-4 text-sm font-medium text-signal">{SECTORS[job.sector].label}</p>
-        <h1 className="mt-1 text-5xl leading-none">{job.title}</h1>
-        <p className="mt-3 text-lg text-steel">
-          {job.companies?.name} – {job.city}, {job.province}{job.remote_ok ? " (some remote)" : ""}
-        </p>
-
-        <dl className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-3">
+        <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-3">
           <div className="bg-white px-4 py-3">
             <dt className="text-xs text-steel">Pay</dt>
             <dd className="font-display text-xl font-semibold text-navy">{formatPay(job.pay_min, job.pay_max, job.pay_period)}</dd>
@@ -81,6 +83,7 @@ export default function JobDetail() {
         )}
       </aside>
     </div>
+    </>
   );
 }
 

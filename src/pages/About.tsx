@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Bold, Highlighted, useContent } from "../lib/content";
 import SmartLink from "../components/SmartLink";
 import EditPageLink from "../components/EditPageLink";
+import PageHero, { heroPrimary, heroSecondary } from "../components/PageHero";
 
 const STEP_COLOURS = [
   { dot: "bg-navy-soft text-navy", chip: "bg-navy-soft text-navy" },
@@ -41,6 +42,16 @@ export default function About() {
 
   return (
     <>
+      <PageHero
+        tag={c.get("about.hero.tag")}
+        title={<Highlighted text={c.get("about.hero.heading")} />}
+        body={c.get("about.hero.body")}
+        image={c.get("about.hero.image") || undefined}
+        actions={<>
+          <Link to="/jobs" className={heroPrimary}>Explore Careers <span aria-hidden>→</span></Link>
+          <Link to="/quiz" className={heroSecondary}>Take the Career Quiz</Link>
+        </>}
+      />
       {/* Numbers strip */}
       <section className="border-b border-line bg-white">
         <div className="mx-auto grid max-w-6xl grid-cols-2 gap-y-8 px-4 py-10 lg:grid-cols-4">
@@ -57,7 +68,7 @@ export default function About() {
       {/* Overview */}
       <section className="mx-auto max-w-3xl px-4 py-16 text-center">
         <Tag>{c.get("about.overview.tag")}</Tag>
-        <h1 className="mt-3 text-4xl sm:text-5xl"><Highlighted text={c.get("about.overview.heading")} className="text-signal" /></h1>
+        <h2 className="mt-3 text-4xl sm:text-5xl"><Highlighted text={c.get("about.overview.heading")} className="text-signal" /></h2>
         {paragraphs.map((p, i) => (
           <p key={i} className={`mt-4 text-lg leading-relaxed ${i === 0 ? "text-ink" : "text-steel"}`}>
             <Bold text={p} className="font-semibold text-ink" />
@@ -148,7 +159,7 @@ export default function About() {
           <SmartLink to={c.get("about.cta.link.url")} className="btn px-4 py-3 text-navy hover:underline">{c.get("about.cta.link.label")}</SmartLink>
         </div>
       </section>
-      <EditPageLink section="about.stats" />
+      <EditPageLink section="about.hero" />
     </>
   );
 }

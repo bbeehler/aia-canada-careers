@@ -5,6 +5,7 @@ import { useCompany } from "../lib/useCompany";
 import type { Job } from "../lib/types";
 import { PROVINCES, formatPay } from "../lib/constants";
 import StatusBadge from "../components/StatusBadge";
+import PageHero from "../components/PageHero";
 
 const PAYMENT_URL = import.meta.env.VITE_NONMEMBER_PAYMENT_URL as string | undefined;
 const FEATURED_PAYMENT_URL = import.meta.env.VITE_NONMEMBER_FEATURED_PAYMENT_URL as string | undefined;
@@ -44,16 +45,11 @@ export default function EmployerDashboard() {
   };
 
   return (
+    <>
+    <PageHero compact tag="My postings" title={company.name}
+      body={company.is_member ? "AIA Canada member: your postings are free." : "Not yet verified as an AIA Canada member. Postings are paid per posting."}
+      actions={<Link to="/employer/jobs/new" className="btn bg-white px-6 py-3 text-navy hover:bg-navy-soft">Post a job</Link>} />
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="text-4xl">{company.name}</h1>
-          <p className="mt-1 text-sm text-steel">
-            {company.is_member ? "AIA Canada member: your postings are free." : "Not yet verified as an AIA Canada member. Postings are paid per posting."}
-          </p>
-        </div>
-        <Link to="/employer/jobs/new" className="btn-primary">Post a job</Link>
-      </div>
 
       {!company.is_member && (
         <p className="panel mt-6 border-l-4 border-l-navy p-4 text-sm">
@@ -124,6 +120,7 @@ export default function EmployerDashboard() {
         )}
       </div>
     </div>
+    </>
   );
 }
 
@@ -147,10 +144,10 @@ function CompanySetup({ onDone }: { onDone: () => void }) {
   };
 
   return (
-    <div className="mx-auto max-w-lg px-4 py-14">
-      <h1 className="text-4xl">Add your company</h1>
-      <p className="mt-2 text-steel">This is the employer name job seekers will see on your postings.</p>
-      <form onSubmit={save} className="panel mt-6 space-y-4 p-6">
+    <>
+    <PageHero compact tag="Get started" title="Add your company" body="This is the employer name job seekers will see on your postings." />
+    <div className="mx-auto max-w-lg px-4 py-12">
+      <form onSubmit={save} className="panel space-y-4 p-6">
         <div>
           <label className="label" htmlFor="name">Company name</label>
           <input id="name" name="name" required minLength={2} className="field" />
@@ -176,5 +173,6 @@ function CompanySetup({ onDone }: { onDone: () => void }) {
         <button className="btn-primary w-full" disabled={busy}>{busy ? "Saving…" : "Save company"}</button>
       </form>
     </div>
+    </>
   );
 }

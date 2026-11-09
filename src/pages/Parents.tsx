@@ -5,6 +5,7 @@ import { Highlighted, useContent } from "../lib/content";
 import { SECTORS, formatPay } from "../lib/constants";
 import type { PayPeriod, Sector } from "../lib/types";
 import EditPageLink from "../components/EditPageLink";
+import PageHero, { heroPrimary, heroSecondary } from "../components/PageHero";
 
 interface PayRow { sector: Sector; pay_min: number; pay_max: number; pay_period: PayPeriod }
 interface Range { min: number; max: number; count: number }
@@ -36,11 +37,19 @@ export default function Parents() {
     (["hour", "year"] as PayPeriod[]).filter((p) => ranges[`${s}|${p}`]).map((p) => ({ s, p, r: ranges[`${s}|${p}`] }))) : [];
 
   return (
+    <>
+    <PageHero
+      tag={c.get("parents.hero.tag")}
+      title={<Highlighted text={c.get("parents.heading")} />}
+      body={c.get("parents.intro")}
+      image={c.get("parents.hero.image") || undefined}
+      actions={<>
+        <a href="#pay" className={heroPrimary}>What jobs pay</a>
+        <Link to="/quiz" className={heroSecondary}>Take the Career Quiz</Link>
+      </>}
+    />
     <div className="mx-auto max-w-4xl px-4 py-12">
-      <h1 className="text-5xl"><Highlighted text={c.get("parents.heading")} className="text-signal" /></h1>
-      <p className="mt-4 max-w-2xl text-lg text-steel">{c.get("parents.intro")}</p>
-
-      <section className="mt-12">
+      <section>
         <h2 className="text-3xl">{c.get("parents.training.heading")}</h2>
         <p className="mt-3 max-w-prose whitespace-pre-line leading-relaxed">{c.get("parents.training.body")}</p>
         <div className="mt-5 flex flex-wrap gap-3">
@@ -87,5 +96,6 @@ export default function Parents() {
       </section>
       <EditPageLink section="parents" />
     </div>
+    </>
   );
 }

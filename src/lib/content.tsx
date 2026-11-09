@@ -76,14 +76,34 @@ export const CONTENT_SECTIONS: ContentSection[] = [
   {
     id: "parents", page: "Parents page", title: "Parents and guardians page",
     fields: [
-      { key: "parents.heading", label: "Headline", type: "text", default: "A guide for parents and guardians", hint: HIGHLIGHT_HINT },
-      { key: "parents.intro", label: "Intro", type: "textarea", default: "If your teen is interested in cars, trucks or how things work, the automotive aftermarket offers skilled, in-demand careers. Here’s how people get started and what the work pays." },
+      { key: "parents.hero.tag", label: "Banner: small tag", type: "text", default: "For Parents & Guardians" },
+      { key: "parents.heading", label: "Banner: headline", type: "text", default: "A guide for parents and guardians", hint: HIGHLIGHT_HINT },
+      { key: "parents.intro", label: "Banner: paragraph", type: "textarea", default: "If your teen is interested in cars, trucks or how things work, the automotive aftermarket offers skilled, in-demand careers. Here’s how people get started and what the work pays." },
+      { key: "parents.hero.image", label: "Banner: background photo", type: "image", default: "", hint: "Optional. Leave empty for the plain navy banner. Wide photos work best." },
       { key: "parents.training.heading", label: "Training: heading", type: "text", default: "How people get started" },
       { key: "parents.training.body", label: "Training: text", type: "textarea", default: "Many technicians start with an apprenticeship, earning a wage while they learn on the job and complete in-school training. Others begin with a college program in automotive service, collision repair or manufacturing. Business roles like service advisor, marketing and accounting are open to college and university graduates. High school co-op placements and technical courses are a great way to try the work first." },
       { key: "parents.pay.heading", label: "Pay: heading", type: "text", default: "What jobs pay right now" },
       { key: "parents.pay.body", label: "Pay: text", type: "textarea", default: "These ranges come from jobs currently posted on Careers in Auto Care. Every posting lists its pay." },
       { key: "parents.market.heading", label: "Job market: heading", type: "text", default: "Employers are hiring" },
       { key: "parents.market.body", label: "Job market: text", type: "textarea", default: "Shops, parts makers and suppliers across Canada are looking for people at every level, from apprentices to experienced technicians and managers. Browse open jobs with your teen to see what’s available near you." },
+    ],
+  },
+  {
+    id: "about.hero", page: "About the Industry page", title: "Banner",
+    fields: [
+      { key: "about.hero.tag", label: "Small tag", type: "text", default: "About the Industry" },
+      { key: "about.hero.heading", label: "Headline", type: "text", default: "Canada’s Automotive Aftermarket", hint: HIGHLIGHT_HINT },
+      { key: "about.hero.body", label: "Paragraph", type: "textarea", default: "Before you choose a career path, it helps to understand the industry you’ll be joining. The Canadian automotive aftermarket is one of the country’s most essential – and most overlooked – economic engines." },
+      { key: "about.hero.image", label: "Background photo", type: "image", default: "", hint: "Optional. Leave empty for the plain navy banner. Wide photos work best." },
+    ],
+  },
+  {
+    id: "jobs.hero", page: "Find jobs page", title: "Banner",
+    fields: [
+      { key: "jobs.hero.tag", label: "Small tag", type: "text", default: "Explore Careers" },
+      { key: "jobs.hero.heading", label: "Headline", type: "text", default: "Find your next job in auto care", hint: HIGHLIGHT_HINT },
+      { key: "jobs.hero.body", label: "Paragraph", type: "textarea", default: "Browse open positions from repair shops, collision centres, parts makers and suppliers across Canada. Every posting lists its pay." },
+      { key: "jobs.hero.image", label: "Background photo", type: "image", default: "", hint: "Optional. Leave empty for the plain navy banner. Wide photos work best." },
     ],
   },
   {
@@ -137,8 +157,10 @@ export const CONTENT_SECTIONS: ContentSection[] = [
   {
     id: "employers", page: "For employers page", title: "For employers page",
     fields: [
-      { key: "employers.headline", label: "Headline", type: "text", default: "Hire from the people who chose this industry." },
-      { key: "employers.body", label: "Paragraph", type: "textarea", default: "Everyone searching here is looking for work in auto care. Post your opening in a few minutes and manage applications in one place." },
+      { key: "employers.hero.tag", label: "Banner: small tag", type: "text", default: "For Employers" },
+      { key: "employers.headline", label: "Banner: headline", type: "text", default: "Hire from the people who chose this industry." },
+      { key: "employers.body", label: "Banner: paragraph", type: "textarea", default: "Everyone searching here is looking for work in auto care. Post your opening in a few minutes and manage applications in one place." },
+      { key: "employers.hero.image", label: "Banner: background photo", type: "image", default: "", hint: "Optional. Leave empty for the plain navy banner. Wide photos work best." },
       { key: "employers.members.price", label: "Members: price", type: "text", default: "Free" },
       { key: "employers.members.text", label: "Members: description", type: "textarea", default: "Unlimited postings for every location of a member company, including featured placement on the home page. Each posting runs 30 days." },
       { key: "employers.nonmembers.price", label: "Non-members: price", type: "text", default: "Per posting" },
@@ -146,10 +168,12 @@ export const CONTENT_SECTIONS: ContentSection[] = [
     ],
   },
   {
-    id: "quiz", page: "Career quiz", title: "Quiz start screen",
+    id: "quiz", page: "Career quiz", title: "Banner",
     fields: [
+      { key: "quiz.hero.tag", label: "Small tag", type: "text", default: "Career Quiz" },
       { key: "quiz.heading", label: "Heading", type: "text", default: "Career Match Quiz" },
       { key: "quiz.body", label: "Paragraph", type: "textarea", default: "Answer six quick questions about what you enjoy, and we’ll show you which part of the automotive industry might fit you best. It takes about two minutes." },
+      { key: "quiz.hero.image", label: "Background photo", type: "image", default: "", hint: "Optional. Leave empty for the plain navy banner. Wide photos work best." },
     ],
   },
   {

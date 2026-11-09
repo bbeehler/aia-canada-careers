@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase";
 import { useCompany } from "../lib/useCompany";
 import type { EmploymentType, Job, Sector } from "../lib/types";
 import { EMPLOYMENT_TYPES, PROVINCES, SECTORS } from "../lib/constants";
+import PageHero from "../components/PageHero";
 
 export default function JobForm() {
   const { id } = useParams();
@@ -74,11 +75,10 @@ export default function JobForm() {
   };
 
   return (
+    <>
+    <PageHero compact tag={company.name} title={id ? "Edit posting" : "Post a job"} body="Postings run for 30 days after AIA Canada approves them." />
     <div className="mx-auto max-w-3xl px-4 py-10">
-      <h1 className="text-4xl">{id ? "Edit posting" : "Post a job"}</h1>
-      <p className="mt-2 text-steel">Postings run for 30 days after AIA Canada approves them.</p>
-
-      <form className="mt-8 space-y-8" onSubmit={(e) => save(e, submitIntent.current)}>
+      <form className="space-y-8" onSubmit={(e) => save(e, submitIntent.current)}>
         <fieldset className="panel space-y-4 p-6">
           <legend className="px-1 font-display text-2xl font-bold text-navy">The job</legend>
           <div>
@@ -212,6 +212,7 @@ export default function JobForm() {
         </div>
       </form>
     </div>
+    </>
   );
 }
 

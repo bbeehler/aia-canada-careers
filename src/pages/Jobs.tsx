@@ -4,6 +4,9 @@ import { supabase } from "../lib/supabase";
 import type { EmploymentType, Job, Sector } from "../lib/types";
 import { EMPLOYMENT_TYPES, PROVINCES, SECTORS } from "../lib/constants";
 import JobRow from "../components/JobRow";
+import PageHero from "../components/PageHero";
+import EditPageLink from "../components/EditPageLink";
+import { Highlighted, useContent } from "../lib/content";
 
 export default function Jobs() {
   const [params, setParams] = useSearchParams();
@@ -13,6 +16,7 @@ export default function Jobs() {
   const type = params.get("type") ?? "";
   const [jobs, setJobs] = useState<Job[] | null>(null);
   const [draftQ, setDraftQ] = useState(q);
+  const c = useContent();
 
   useEffect(() => {
     setJobs(null);
@@ -36,10 +40,15 @@ export default function Jobs() {
   };
 
   return (
+    <>
+    <PageHero
+      tag={c.get("jobs.hero.tag")}
+      title={<Highlighted text={c.get("jobs.hero.heading")} />}
+      body={c.get("jobs.hero.body")}
+      image={c.get("jobs.hero.image") || undefined}
+    />
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-4xl">Find jobs</h1>
-
-      <form className="mt-6 grid gap-3 md:grid-cols-[1fr_repeat(3,180px)]"
+      <form className="grid gap-3 md:grid-cols-[1fr_repeat(3,180px)]"
         onSubmit={(e) => { e.preventDefault(); set("q", draftQ.trim()); }}>
         <div>
           <label htmlFor="kw" className="sr-only">Keyword</label>
@@ -79,5 +88,7 @@ export default function Jobs() {
         )}
       </div>
     </div>
+    <EditPageLink section="jobs.hero" />
+    </>
   );
 }

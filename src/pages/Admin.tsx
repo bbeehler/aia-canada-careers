@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase";
 import type { Company, Job } from "../lib/types";
 import { SECTORS, formatPay } from "../lib/constants";
 import StatusBadge from "../components/StatusBadge";
+import PageHero from "../components/PageHero";
 
 type Tab = "review" | "payment" | "companies";
 
@@ -51,9 +52,10 @@ export default function Admin() {
   const shown = tab === "review" ? review : payment;
 
   return (
+    <>
+    <PageHero compact tag="AIA staff" title="Review queue" body="Approve postings, confirm payments and manage member companies." />
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <h1 className="text-4xl">Review queue</h1>
-      <div className="mt-6 flex gap-1 border-b border-line" role="tablist">
+      <div className="flex gap-1 border-b border-line" role="tablist">
         {([["review", `To review (${review.length})`], ["payment", `Awaiting payment (${payment.length})`], ["companies", "Companies"]] as const).map(([t, l]) => (
           <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}
             className={`-mb-px border-b-2 px-4 py-2.5 text-sm font-medium ${tab === t ? "border-signal text-navy" : "border-transparent text-steel hover:text-navy"}`}>
@@ -110,5 +112,6 @@ export default function Admin() {
         </div>
       )}
     </div>
+    </>
   );
 }

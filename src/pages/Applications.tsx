@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import type { Application, Job } from "../lib/types";
+import PageHero from "../components/PageHero";
 
 const STATUSES: Application["status"][] = ["submitted", "reviewed", "shortlisted", "declined"];
 const LABEL: Record<Application["status"], string> = { submitted: "New", reviewed: "Reviewed", shortlisted: "Shortlisted", declined: "Declined" };
@@ -28,10 +29,12 @@ export default function Applications() {
   };
 
   return (
+    <>
+    <PageHero compact tag="Applications" title={job?.title ?? "Applications"}>
+      <Link to="/employer" className="mt-4 self-start text-sm text-white/70 hover:text-white">← Back to my postings</Link>
+    </PageHero>
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <Link to="/employer" className="text-sm text-steel hover:text-navy">Back to my postings</Link>
-      <h1 className="mt-2 text-4xl">Applications{job ? ` for ${job.title}` : ""}</h1>
-      <div className="mt-6 space-y-3">
+      <div className="space-y-3">
         {apps === null ? <p className="text-steel">Loading…</p> : apps.length === 0 ? (
           <p className="panel px-5 py-8 text-steel">No applications yet.</p>
         ) : apps.map((a) => (
@@ -55,5 +58,6 @@ export default function Applications() {
         ))}
       </div>
     </div>
+    </>
   );
 }

@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import PageHero from "../components/PageHero";
 
 export default function SignIn() {
   const [params] = useSearchParams();
@@ -46,9 +47,11 @@ export default function SignIn() {
   };
 
   return (
-    <div className="mx-auto max-w-md px-4 py-14">
-      <h1 className="text-4xl">{mode === "sign-in" ? "Sign in" : "Create an account"}</h1>
-      <p className="mt-2 text-steel">
+    <>
+    <PageHero compact tag="Your account" title={mode === "sign-in" ? "Sign in" : "Create an account"}
+      body={mode === "sign-in" ? "Job seekers track applications. Employers manage postings." : "Free for job seekers. AIA Canada members post jobs free."} />
+    <div className="mx-auto max-w-md px-4 py-12">
+      <p className="text-steel">
         {mode === "sign-in" ? "New here? " : "Already have an account? "}
         <button className="font-semibold text-navy underline" onClick={() => { setMode(mode === "sign-in" ? "sign-up" : "sign-in"); setError(""); }}>
           {mode === "sign-in" ? "Create an account" : "Sign in"}
@@ -102,5 +105,6 @@ export default function SignIn() {
       </form>
       <p className="mt-4 text-center text-sm text-steel"><Link to="/jobs" className="hover:text-navy">Browse jobs without an account</Link></p>
     </div>
+    </>
   );
 }

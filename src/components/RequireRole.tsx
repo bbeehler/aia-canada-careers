@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import type { Role } from "../lib/types";
+import PageHero from "./PageHero";
 
 export default function RequireRole({ roles, children }: { roles: Role[]; children: ReactNode }) {
   const { session, profile, loading } = useAuth();
@@ -10,10 +11,8 @@ export default function RequireRole({ roles, children }: { roles: Role[]; childr
   if (!session) return <Navigate to={`/sign-in?next=${encodeURIComponent(location.pathname)}`} replace />;
   if (!profile || !roles.includes(profile.role)) {
     return (
-      <div className="mx-auto max-w-xl px-4 py-16">
-        <h1 className="text-3xl">This page is for {roles.join(" or ")} accounts</h1>
-        <p className="mt-2 text-steel">You’re signed in with a {profile?.role ?? "different"} account.</p>
-      </div>
+      <PageHero compact title={`This page is for ${roles.join(" or ")} accounts`}
+        body={`You’re signed in with a ${profile?.role ?? "different"} account.`} />
     );
   }
   return <>{children}</>;

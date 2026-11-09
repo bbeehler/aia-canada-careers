@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { CONTENT_SECTIONS, contentDefault, useContent, type ContentField, type ContentSection } from "../lib/content";
+import PageHero from "../components/PageHero";
 
 export default function ContentEditor() {
   const { hash } = useLocation();
@@ -14,11 +15,11 @@ export default function ContentEditor() {
   }, [hash]);
 
   return (
+    <>
+    <PageHero compact tag="AIA staff" title="Site content" body="Edit the wording and photos on the site. Changes go live as soon as you save." />
     <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 lg:grid-cols-[220px_1fr]">
       <aside className="lg:sticky lg:top-6 lg:self-start">
-        <h1 className="text-3xl">Site content</h1>
-        <p className="mt-1 text-sm text-steel">Changes go live as soon as you save.</p>
-        <nav className="mt-6 space-y-4 text-sm">
+        <nav className="space-y-4 text-sm">
           {pages.map((page) => (
             <div key={page}>
               <p className="font-semibold text-ink">{page}</p>
@@ -35,6 +36,7 @@ export default function ContentEditor() {
         {CONTENT_SECTIONS.map((s) => <SectionForm key={s.id} section={s} />)}
       </div>
     </div>
+    </>
   );
 }
 
@@ -110,14 +112,14 @@ function Field({ field, value, onChange }: { field: ContentField; value: string;
       {(field.type === "textarea" || field.type === "list") && (
         <textarea id={id} className="field" rows={field.type === "list" ? 5 : 3} value={value} onChange={(e) => onChange(e.target.value)} />
       )}
-      {field.type === "image" && <ImageField id={id} value={value} onChange={onChange} />}
+      {field.type === "image" && <ImageField id={id} value={value} onChange={onChange} allowEmpty={field.default === ""} />}
       {field.type === "image" && <p className="hint">After uploading, click Save changes to put the new photo live.</p>}
       {field.hint && <p className="hint">{field.hint}</p>}
     </div>
   );
 }
 
-function ImageField({ id, value, onChange }: { id: string; value: string; onChange: (v: string) => void }) {
+function ImageField({ id, value, onChange, allowEmpty }: { id: string; value: string; onChange: (v: string) => void; allowEmpty: boolean }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -135,7 +137,14 @@ function ImageField({ id, value, onChange }: { id: string; value: string; onChan
 
   return (
     <div className="space-y-3">
-      <img src={value} alt="" className="aspect-[16/7] w-full rounded border border-line object-cover" />
+      {value ? (
+        <img src={value} alt="" className="aspect-[16/7] w-full rounded border border-line object-cover" />
+      ) : (
+        <div className="flex aspect-[16/7] w-full items-center justify-center rounded border border-dashed border-line bg-gradient-to-br from-[#1D3264] to-navy-deep text-sm text-white/70">
+          No photo: plain navy banner
+        </div>
+      )}
+      {allowEmpty && value && <button type="button" className="text-sm text-steel hover:text-signal" onClick={() => onChange("")}>Remove photo</button>}
       <input id={id} type="file" accept="image/jpeg,image/png,image/webp" disabled={busy}
         onChange={(e) => { const f = e.target.files?.[0]; if (f) upload(f); }} className="block text-sm" />
       {busy && <p className="text-sm text-steel">Uploading…</p>}
