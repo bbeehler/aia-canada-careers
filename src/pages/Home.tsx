@@ -1,8 +1,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import type { Job, Sector } from "../lib/types";
-import { PROVINCES, SECTORS } from "../lib/constants";
+import type { Job } from "../lib/types";
+import { PROVINCES } from "../lib/constants";
 import JobRow from "../components/JobRow";
 
 export default function Home() {
@@ -10,20 +10,12 @@ export default function Home() {
   const [q, setQ] = useState("");
   const [province, setProvince] = useState("");
   const [latest, setLatest] = useState<Job[]>([]);
-  const [counts, setCounts] = useState<Partial<Record<Sector, number>>>({});
 
   useEffect(() => {
     supabase.from("jobs").select("*, companies(name, is_member)")
       .eq("status", "published").gt("expires_at", new Date().toISOString())
       .order("published_at", { ascending: false }).limit(6)
       .then(({ data }) => setLatest((data as Job[]) ?? []));
-    supabase.from("jobs").select("sector")
-      .eq("status", "published").gt("expires_at", new Date().toISOString())
-      .then(({ data }) => {
-        const c: Partial<Record<Sector, number>> = {};
-        (data ?? []).forEach((r: { sector: Sector }) => { c[r.sector] = (c[r.sector] ?? 0) + 1; });
-        setCounts(c);
-      });
   }, []);
 
   const search = (e: FormEvent) => {
@@ -76,17 +68,32 @@ export default function Home() {
       </section>
 
       <section className="border-b border-line bg-white">
-        <div className="mx-auto grid max-w-6xl sm:grid-cols-2 lg:grid-cols-4">
-          {(Object.keys(SECTORS) as Sector[]).map((s) => (
-            <Link key={s} to={`/jobs?sector=${s}`}
-              className="border-b border-line px-5 py-6 hover:bg-navy-soft/40 sm:border-r lg:border-b-0 lg:last:border-r-0">
-              <p className="font-display text-2xl font-bold text-navy">{SECTORS[s].label}</p>
-              <p className="mt-1 text-sm text-steel">{SECTORS[s].blurb}</p>
-              <p className="mt-3 text-sm font-semibold text-signal">
-                {counts[s] ? `${counts[s]} open ${counts[s] === 1 ? "job" : "jobs"}` : "See jobs"}
-              </p>
-            </Link>
-          ))}
+        <div className="mx-auto max-w-5xl px-4 py-16">
+          <div className="text-center">
+            <h2 className="text-4xl sm:text-5xl">Two Pathways, Endless Possibilities</h2>
+            <p className="mx-auto mt-3 max-w-2xl text-lg text-steel">
+              The automotive care sector offers diverse career opportunities across two major areas. Find the path that matches your interests.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {PATHWAYS.map((p) => (
+              <div key={p.title} className="rounded-lg border border-line bg-paper p-6">
+                <span className={`flex h-11 w-11 items-center justify-center rounded-md ${p.iconBg}`} aria-hidden>{p.icon}</span>
+                <h3 className="mt-4 font-sans text-2xl font-semibold tracking-normal text-ink">{p.title}</h3>
+                <p className="mt-2 text-steel">{p.text}</p>
+                <ul className="mt-4 flex flex-wrap gap-2">
+                  {p.roles.map((r) => (
+                    <li key={r}>
+                      <Link to={`/jobs?q=${encodeURIComponent(r.replace(/s$/, "").replace(" & ", " "))}`}
+                        className="inline-block rounded bg-line/70 px-2.5 py-1 text-sm font-medium text-ink hover:bg-navy hover:text-white">
+                        {r}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -121,3 +128,31 @@ export default function Home() {
     </>
   );
 }
+
+const icon = "h-5 w-5 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]";
+
+const PATHWAYS = [
+  {
+    title: "Vehicle Repair & Service",
+    text: "From diagnostics to full engine rebuilds, explore the hands-on world of keeping vehicles running safely.",
+    roles: ["Automotive Service Technician", "Diesel Service Technician", "Truck & Transport Mechanic", "Collision Repair"],
+    iconBg: "bg-navy-soft text-navy",
+    icon: (
+      <svg viewBox="0 0 24 24" className={icon}>
+        <path d="M14.7 6.3a4 4 0 0 0-5.4 5.2L3.6 17.2a1.6 1.6 0 0 0 2.3 2.3l5.7-5.7a4 4 0 0 0 5.2-5.4l-2.5 2.5-2.2-.6-.6-2.2z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Business Operations",
+    text: "Love cars but prefer working with people and ideas? Explore business roles that keep automotive companies thriving.",
+    roles: ["Service Advisor", "Marketing", "Shop Manager", "Payroll & Accounting"],
+    iconBg: "bg-emerald-50 text-emerald-700",
+    icon: (
+      <svg viewBox="0 0 24 24" className={icon}>
+        <rect x="3" y="7" width="18" height="13" rx="2" />
+        <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M8 7v13M16 7v13" />
+      </svg>
+    ),
+  },
+];
