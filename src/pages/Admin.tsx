@@ -14,12 +14,18 @@ export default function Admin() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [companies, setCompanies] = useState<Company[]>([]);
   const [filter, setFilter] = useState("");
+  const [memberFilter, setMemberFilter] = useState<"" | "member" | "lapsed" | "non">("");
+  const [lastSync, setLastSync] = useState<{ ran_at: string; trigger: string; summary: Record<string, unknown> } | null>(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMsg, setSyncMsg] = useState("");
 
   const load = async () => {
     const { data } = await supabase.from("jobs").select("*, companies(name, is_member)")
       .in("status", ["pending_review", "pending_payment"]).order("submitted_at", { ascending: true });
     setJobs((data as Job[]) ?? []);
     const c = await supabase.from("companies").select("*").order("name");
+    const s = await supabase.from("membership_sync_runs").select("ran_at, trigger, summary").order("ran_at", { ascending: false }).limit(1).maybeSingle();
+    setLastSync(s.data as typeof lastSync);
     setCompanies((c.data as Company[]) ?? []);
   };
   useEffect(() => { load(); }, []);
@@ -47,6 +53,25 @@ export default function Admin() {
     const r = await checkMembership(co.id);
     setChecking("");
     if (r.status === "not_configured") alert("The Insightly connection isn’t set up yet. Add the Insightly settings in Supabase first.");
+    load();
+  };
+
+  const syncAll = async () => {
+    setSyncing(true); setSyncMsg("");
+    const { data, error } = await supabase.functions.invoke("sync-memberships", { body: {} });
+    setSyncing(false);
+    if (error || !data) { setSyncMsg("The sync didn’t run. Try again."); return; }
+    if (data.status === "not_configured") { setSyncMsg("The Insightly connection isn’t set up yet."); return; }
+    setSyncMsg(`Checked ${data.checked}: ${data.members} current members, ${data.revoked} lapsed (free posting removed), ${data.restored} renewed (free posting restored), ${data.not_found} not found in Insightly.`);
+    load();
+  };
+
+  const linkInsightly = async (co: Company) => {
+    const id = prompt(`Insightly organisation ID for “${co.name}” (the number in the Insightly web address for the organisation). Leave empty to unlink.`, co.insightly_org_id ?? "");
+    if (id === null) return;
+    setChecking(co.id);
+    await supabase.functions.invoke("check-membership", { body: { company_id: co.id, insightly_org_id: id.trim() || null } });
+    setChecking("");
     load();
   };
 
@@ -106,9 +131,30 @@ export default function Admin() {
         </div>
       ) : (
         <div className="mt-6">
-          <input className="field sm:max-w-sm" placeholder="Search companies" value={filter} onChange={(e) => setFilter(e.target.value)} />
+          <div className="panel mb-5 flex flex-col gap-3 p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <p className="font-semibold">Membership sync with Insightly</p>
+              <p className="text-steel">
+                Runs every night: lapsed members lose free posting and renewals get it back.
+                {lastSync ? ` Last run ${new Date(lastSync.ran_at).toLocaleString("en-CA", { dateStyle: "medium", timeStyle: "short" })}${lastSync.trigger === "nightly" ? " (nightly)" : ""}.` : " It hasn’t run yet."}
+              </p>
+              {syncMsg && <p className="mt-1 text-navy" role="status">{syncMsg}</p>}
+            </div>
+            <button className="btn-ghost shrink-0" onClick={syncAll} disabled={syncing}>{syncing ? "Syncing…" : "Sync now"}</button>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-[1fr_220px]">
+            <input className="field" placeholder="Search companies" value={filter} onChange={(e) => setFilter(e.target.value)} />
+            <select aria-label="Membership" className="field" value={memberFilter} onChange={(e) => setMemberFilter(e.target.value as typeof memberFilter)}>
+              <option value="">All companies</option>
+              <option value="member">Members</option>
+              <option value="lapsed">Lapsed members</option>
+              <option value="non">Non-members</option>
+            </select>
+          </div>
           <ul className="mt-4 overflow-hidden rounded-md border border-line bg-white">
-            {companies.filter((c) => c.name.toLowerCase().includes(filter.toLowerCase())).map((c) => (
+            {companies.filter((c) => c.name.toLowerCase().includes(filter.toLowerCase()))
+              .filter((c) => !memberFilter || (memberFilter === "member" ? c.is_member : memberFilter === "lapsed" ? !c.is_member && !!c.membership_lapsed_at : !c.is_member))
+              .map((c) => (
               <li key={c.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3 last:border-b-0 sm:px-5">
                 <div className="min-w-0">
                   <p className="font-medium">{c.name}</p>
@@ -119,7 +165,16 @@ export default function Admin() {
                       {c.member_verified_at ? ` on ${new Date(c.member_verified_at).toLocaleDateString("en-CA")}` : ""}
                     </p>
                   )}
+                  {!c.is_member && c.membership_lapsed_at && (
+                    <p className="mt-0.5 inline-block rounded bg-amber-50 px-1.5 text-xs font-medium text-amber-800">
+                      Lapsed {new Date(c.membership_lapsed_at).toLocaleDateString("en-CA")}
+                    </p>
+                  )}
                   {c.membership_note && <p className="text-xs text-steel">{c.membership_note}</p>}
+                  <p className="text-xs text-steel">
+                    {c.insightly_org_id ? `Insightly ID ${c.insightly_org_id}` : "Not linked to Insightly"}{" "}
+                    <button className="font-medium text-navy hover:underline" onClick={() => linkInsightly(c)}>{c.insightly_org_id ? "Change" : "Link"}</button>
+                  </p>
                 </div>
                 <div className="flex flex-wrap gap-2">
                   <button onClick={() => checkInsightly(c)} disabled={checking === c.id} className="btn-ghost px-3 py-1.5">

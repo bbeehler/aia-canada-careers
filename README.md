@@ -38,8 +38,11 @@ screening, so postings meet Ontario's job posting rules.
 | AIA staff | Review queue: publish postings, confirm payments, manage companies and membership |
 | Super admin | Everything staff can do, plus Site content, Careers, and Users and roles |
 
-Super admins set roles at **Users** (top bar when signed in). New staff sign up like anyone else,
-then a super admin changes their role. Super admins can also connect an employer account to a company.
+Super admins manage people at **Users**: add a person (creates their account and gives you an invite
+link to send, or emails it once email sending is set up), edit names and emails, change roles,
+connect employers to companies, create password reset links, and delete accounts. You can't delete
+yourself or remove the last super admin. Deleting someone keeps the companies and postings they created.
+Everyone can update their own name and password at **My account**.
 
 ## Membership (Insightly)
 
@@ -57,7 +60,15 @@ Set these in Supabase under **Edge Functions > Secrets**:
 - `INSIGHTLY_MEMBER_FIELD`: where membership is recorded on an Organisation, e.g. `Membership_Status__c`, or `TAG:Member` if members are tagged
 - `INSIGHTLY_MEMBER_VALUES`: values that mean current member, comma-separated (default `Active,Member,Current,Yes,true`)
 
-When AIA moves to HubSpot, only this function needs to change.
+**Lapsed memberships:** every night at 3:15 a.m. Eastern, the `sync-memberships` function re-checks
+every member company (and every company linked to an Insightly record). If Insightly no longer shows
+a current membership, free posting is removed straight away, the company is marked **Lapsed**, and the
+employer sees a renewal notice. Renewals switch free posting back on automatically. Live postings stay
+up until they expire. Staff can run the sync any time with **Sync now** on the Companies tab, and can link
+a company to its Insightly record by ID so it's always checked against the right organisation.
+Companies that can't be found in Insightly are left as they are and flagged for staff.
+
+When AIA moves to HubSpot, only `_shared/insightly.ts` needs to change.
 
 ## Editing site content
 

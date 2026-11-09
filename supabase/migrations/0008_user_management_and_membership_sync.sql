@@ -1,0 +1,10 @@
+-- Applied in Supabase as migrations "user_management_and_membership_sync" and "sync_runs_and_role_bypass".
+-- * companies.created_by and jobs.created_by become nullable (on delete set null), so deleting a user
+--   keeps the companies and postings they created.
+-- * companies.membership_lapsed_at records when free posting was removed for a non-renewal.
+-- * public.app_secrets (no API access) holds the secret used by the nightly job.
+-- * pg_cron job "nightly-membership-sync" calls the sync-memberships function at 08:15 UTC
+--   (3:15 a.m. Eastern) with that secret.
+-- * public.membership_sync_runs keeps a history of syncs (readable by staff).
+-- * protect_profile_role and protect_company_membership allow the server functions (service role).
+-- The full SQL is in Supabase's migration history (Database > Migrations).

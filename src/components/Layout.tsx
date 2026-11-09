@@ -64,7 +64,7 @@ export default function Layout() {
             {roleLinks.map(([to, label, end]) => <NavLink key={to} to={to} end={end} className={navClass}>{label}</NavLink>)}
             {session ? (
               <>
-                <span className="ml-2 hidden max-w-[14rem] truncate text-sm text-steel xl:inline" title={session.user.email}>{session.user.email}</span>
+                <NavLink to="/account" className={navClass} title={session.user.email}>My account</NavLink>
                 <button onClick={signOut} className="ml-2 btn-ghost whitespace-nowrap">Sign out</button>
               </>
             ) : (
@@ -101,6 +101,7 @@ export default function Layout() {
                 {session ? (
                   <>
                     <p className="truncate px-3 pb-2 text-sm text-steel">{session.user.email}</p>
+                    <NavLink to="/account" className={drawerClass}>My account</NavLink>
                     <button onClick={signOut} className="btn-ghost w-full py-3">Sign out</button>
                   </>
                 ) : (

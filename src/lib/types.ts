@@ -19,6 +19,7 @@ export interface Company {
   membership_checked_at?: string | null;
   membership_note?: string | null;
   insightly_org_id?: string | null;
+  membership_lapsed_at?: string | null;
 }
 
 export interface Job {

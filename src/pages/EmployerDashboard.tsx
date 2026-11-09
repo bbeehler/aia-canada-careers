@@ -67,7 +67,14 @@ export default function EmployerDashboard() {
     <div className="mx-auto max-w-6xl px-4 py-10">
 
       {notice && <p className="panel mb-6 border-l-4 border-l-emerald-600 p-4 text-sm" role="status">{notice}</p>}
-      {!company.is_member && (
+      {!company.is_member && company.membership_lapsed_at && (
+        <div className="panel mb-6 border-l-4 border-l-amber-500 p-4 text-sm" role="status">
+          <p className="font-semibold">Your AIA Canada membership has lapsed</p>
+          <p className="mt-1">Free posting ended on {new Date(company.membership_lapsed_at).toLocaleDateString("en-CA")}. Postings already live stay up until they expire. New postings are paid until you renew. Once AIA Canada records your renewal, free posting switches back on automatically.</p>
+          <a href="https://www.aiacanada.com" className="mt-2 inline-block font-semibold text-navy hover:underline">Renew your membership</a>
+        </div>
+      )}
+      {!company.is_member && !company.membership_lapsed_at && (
         <div className="panel mb-6 flex flex-col gap-3 border-l-4 border-l-navy p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
           <p>Is your company an AIA Canada member? Members post free. We check AIA Canada’s member records using your work email.</p>
           <button className="btn-ghost shrink-0" disabled={rechecking} onClick={recheck}>{rechecking ? "Checking…" : "Check my membership"}</button>
