@@ -17,12 +17,10 @@ export default function Layout() {
       )}
       <header className="border-b border-line bg-white">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <Link to="/" className="flex items-center gap-2.5" aria-label="Careers in Auto Care home">
-            <span className="h-8 w-1.5 rounded-sm bg-signal" aria-hidden />
-            <span className="leading-none">
-              <span className="block font-display text-2xl font-bold text-navy">Careers in Auto Care</span>
-              <span className="block text-xs text-steel">from AIA Canada</span>
-            </span>
+          <Link to="/" className="flex items-center gap-3" aria-label="Careers in Auto Care home">
+            <img src="/aia-canada-logo.png" alt="AIA Canada" width={45} height={48} className="h-12 w-auto" />
+            <span className="h-9 w-px bg-line" aria-hidden />
+            <span className="font-display text-2xl font-bold leading-none text-navy">Careers in Auto Care</span>
           </Link>
           <nav className="flex flex-wrap items-center gap-1">
             <NavLink to="/jobs" className={navClass}>Find jobs</NavLink>
