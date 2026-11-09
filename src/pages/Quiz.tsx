@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import type { Sector } from "../lib/types";
 import { SECTORS } from "../lib/constants";
+import { useContent } from "../lib/content";
+import EditPageLink from "../components/EditPageLink";
 
 type Scores = Partial<Record<Sector, number>>;
 interface Question { prompt: string; options: { text: string; scores: Scores }[] }
@@ -73,6 +75,7 @@ const ROLES: Record<Sector, string[]> = {
 export default function Quiz() {
   const [step, setStep] = useState(-1);
   const [answers, setAnswers] = useState<number[]>([]);
+  const c = useContent();
 
   const choose = (i: number) => {
     const next = [...answers.slice(0, step), i];
@@ -83,11 +86,12 @@ export default function Quiz() {
   if (step === -1) {
     return (
       <div className="mx-auto max-w-xl px-4 py-20 text-center">
-        <h1 className="text-5xl">Career Match Quiz</h1>
+        <h1 className="text-5xl">{c.get("quiz.heading")}</h1>
         <p className="mt-4 text-lg text-steel">
-          Answer six quick questions about what you enjoy, and we’ll show you which part of the automotive industry might fit you best. It takes about two minutes.
+          {c.get("quiz.body")}
         </p>
         <button className="btn-navy mt-8 px-6 py-3" onClick={() => setStep(0)}>Start the quiz</button>
+        <EditPageLink section="quiz" />
       </div>
     );
   }

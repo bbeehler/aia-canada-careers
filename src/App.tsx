@@ -13,6 +13,7 @@ import MyApplications from "./pages/MyApplications";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import Quiz from "./pages/Quiz";
+import ContentEditor from "./pages/ContentEditor";
 
 export default function App() {
   return (
@@ -30,6 +31,7 @@ export default function App() {
         <Route path="employer/jobs/:id/applications" element={<RequireRole roles={["employer", "admin"]}><Applications /></RequireRole>} />
         <Route path="applications" element={<RequireRole roles={["candidate"]}><MyApplications /></RequireRole>} />
         <Route path="admin" element={<RequireRole roles={["admin"]}><Admin /></RequireRole>} />
+        <Route path="admin/content" element={<RequireRole roles={["admin"]}><ContentEditor /></RequireRole>} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

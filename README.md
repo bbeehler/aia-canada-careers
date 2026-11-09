@@ -29,6 +29,13 @@ remove featured status from the review queue.
 Each posting collects a pay range, whether it's a current vacancy, and whether AI is used in
 screening, so postings meet Ontario's job posting rules.
 
+## Editing site content
+
+Admins can change the wording on the home page, the For employers page, the quiz start screen and
+the footer, and swap the home page photo, at **Site content** in the top menu (or the
+**Edit this page** button that admins see on those pages). Changes go live when saved.
+Each field has **Restore original** to go back to the built-in wording.
+
 ## Setup
 
 ### 1. Supabase

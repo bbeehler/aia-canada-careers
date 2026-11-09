@@ -1,12 +1,14 @@
 import { Link, NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import { supabaseConfigured } from "../lib/supabase";
+import { useContent } from "../lib/content";
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   `px-3 py-2 text-sm font-medium rounded ${isActive ? "text-navy bg-navy-soft" : "text-steel hover:text-navy"}`;
 
 export default function Layout() {
   const { profile, session, signOut } = useAuth();
+  const c = useContent();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -26,7 +28,8 @@ export default function Layout() {
             <NavLink to="/jobs" className={navClass}>Find jobs</NavLink>
             <NavLink to="/quiz" className={navClass}>Career quiz</NavLink>
             {profile?.role === "employer" && <NavLink to="/employer" className={navClass}>My postings</NavLink>}
-            {profile?.role === "admin" && <NavLink to="/admin" className={navClass}>Review queue</NavLink>}
+            {profile?.role === "admin" && <NavLink to="/admin" end className={navClass}>Review queue</NavLink>}
+            {profile?.role === "admin" && <NavLink to="/admin/content" className={navClass}>Site content</NavLink>}
             {profile?.role === "candidate" && <NavLink to="/applications" className={navClass}>My applications</NavLink>}
             {!session && <NavLink to="/employers" className={navClass}>For employers</NavLink>}
             {session ? (
@@ -46,7 +49,7 @@ export default function Layout() {
         <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 text-sm text-steel sm:grid-cols-3">
           <div>
             <p className="font-display text-lg font-bold text-navy">Careers in Auto Care</p>
-            <p className="mt-1">The job board for Canada’s automotive aftermarket, from the Automotive Industries Association of Canada.</p>
+            <p className="mt-1">{c.get("footer.blurb")}</p>
           </div>
           <div className="flex flex-col gap-1.5">
             <Link to="/jobs" className="hover:text-navy">Find jobs</Link>

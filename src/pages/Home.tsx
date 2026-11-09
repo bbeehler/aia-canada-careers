@@ -4,9 +4,12 @@ import { supabase } from "../lib/supabase";
 import type { Job, Sector } from "../lib/types";
 import { EMPLOYMENT_TYPES, PROVINCES, formatPay } from "../lib/constants";
 import JobRow from "../components/JobRow";
+import EditPageLink from "../components/EditPageLink";
+import { Highlighted, useContent } from "../lib/content";
 
 export default function Home() {
   const navigate = useNavigate();
+  const c = useContent();
   const [q, setQ] = useState("");
   const [province, setProvince] = useState("");
   const [latest, setLatest] = useState<Job[]>([]);
@@ -35,8 +38,8 @@ export default function Home() {
     <>
       <section className="relative isolate overflow-hidden bg-navy text-white">
         <img
-          src="/hero-technician-lift.jpg"
-          alt="A technician in coveralls working under a car raised on a lift in a repair shop"
+          src={c.get("home.hero.image")}
+          alt={c.get("home.hero.image_alt")}
           className="absolute inset-0 -z-20 h-full w-full object-cover object-[55%_center]"
           width={1800}
           height={1013}
@@ -44,13 +47,13 @@ export default function Home() {
         <div className="absolute inset-0 -z-10 bg-navy/80 md:bg-transparent md:bg-gradient-to-r md:from-navy md:via-navy/85 md:to-navy/20" aria-hidden />
         <div className="mx-auto flex min-h-[520px] max-w-6xl flex-col justify-center px-4 py-16 sm:min-h-[600px] sm:py-20">
           <span className="inline-block self-start rounded-md border border-white/30 bg-white/10 px-3 py-1 text-sm font-semibold text-white">
-            Career Exploration
+            {c.get("home.hero.tag")}
           </span>
           <h1 className="mt-5 max-w-2xl font-display text-5xl font-bold leading-[0.95] text-white sm:text-7xl">
-            Your Future in <span className="text-[#F0384F]">Automotive</span> Starts Here
+            <Highlighted text={c.get("home.hero.headline")} />
           </h1>
           <p className="mt-5 max-w-xl text-lg text-white/85">
-            Discover rewarding career paths in vehicle repair and automotive business operations. Built for Canadian high school students and parents ready to explore a thriving industry.
+            {c.get("home.hero.body")}
           </p>
 
           <form onSubmit={search} className="mt-9 grid max-w-3xl gap-px overflow-hidden rounded-md bg-white/20 sm:grid-cols-[1fr_180px_auto]">
@@ -67,7 +70,7 @@ export default function Home() {
             <button className="bg-signal px-6 py-4 font-semibold text-white hover:bg-signal-dark">Search jobs</button>
           </form>
           <Link to="/quiz" className="btn mt-4 self-start border border-white/30 bg-white/10 px-6 py-3 text-white hover:bg-white/20">
-            Take the Career Quiz
+            {c.get("home.hero.quiz_button")}
           </Link>
         </div>
       </section>
@@ -75,13 +78,16 @@ export default function Home() {
       <section className="border-b border-line bg-white">
         <div className="mx-auto max-w-5xl px-4 py-16">
           <div className="text-center">
-            <h2 className="text-4xl sm:text-5xl">Two Pathways, Endless Possibilities</h2>
-            <p className="mx-auto mt-3 max-w-2xl text-lg text-steel">
-              The automotive care sector offers diverse career opportunities across two major areas. Find the path that matches your interests.
-            </p>
+            <h2 className="text-4xl sm:text-5xl"><Highlighted text={c.get("home.pathways.heading")} className="text-signal" /></h2>
+            <p className="mx-auto mt-3 max-w-2xl text-lg text-steel">{c.get("home.pathways.intro")}</p>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {PATHWAYS.map((p) => (
+            {PATHWAYS.map((base) => ({
+              ...base,
+              title: c.get(`home.pathways.${base.id}.title`),
+              text: c.get(`home.pathways.${base.id}.text`),
+              roles: c.list(`home.pathways.${base.id}.roles`),
+            })).map((p) => (
               <div key={p.title} className="rounded-lg border border-line bg-paper p-6">
                 <span className={`flex h-11 w-11 items-center justify-center rounded-md ${p.iconBg}`} aria-hidden>{p.icon}</span>
                 <h3 className="mt-4 font-sans text-2xl font-semibold tracking-normal text-ink">{p.title}</h3>
@@ -107,10 +113,10 @@ export default function Home() {
           <div className="mx-auto max-w-6xl px-4 py-14">
             <div className="flex flex-wrap items-end justify-between gap-4">
               <div>
-                <h2 className="text-4xl">Featured Careers</h2>
-                <p className="mt-1 text-steel">Featured openings from employers across the industry</p>
+                <h2 className="text-4xl">{c.get("home.featured.heading")}</h2>
+                <p className="mt-1 text-steel">{c.get("home.featured.subtitle")}</p>
               </div>
-              <Link to="/jobs" className="btn-ghost">View All Careers</Link>
+              <Link to="/jobs" className="btn-ghost">{c.get("home.featured.button")}</Link>
             </div>
             <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {featured.map((j) => (
@@ -136,7 +142,7 @@ export default function Home() {
 
       <section className="mx-auto max-w-6xl px-4 py-12">
         <div className="mb-4 flex items-end justify-between gap-4">
-          <h2 className="text-3xl">Newest jobs</h2>
+          <h2 className="text-3xl">{c.get("home.newest.heading")}</h2>
           <Link to="/jobs" className="text-sm font-semibold text-navy hover:underline">See all jobs</Link>
         </div>
         {latest.length ? (
@@ -151,10 +157,8 @@ export default function Home() {
       <section className="border-t border-line bg-white">
         <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 md:grid-cols-[1.2fr_1fr] md:items-center">
           <div>
-            <h2 className="text-4xl">Hiring? AIA Canada members post free.</h2>
-            <p className="mt-3 max-w-lg text-steel">
-              Reach technicians, apprentices and industry professionals who are looking specifically for work in auto care. Non-members can post too, for a flat fee per posting.
-            </p>
+            <h2 className="text-4xl"><Highlighted text={c.get("home.employers.heading")} className="text-signal" /></h2>
+            <p className="mt-3 max-w-lg text-steel">{c.get("home.employers.body")}</p>
           </div>
           <div className="flex flex-wrap gap-3 md:justify-end">
             <Link to="/employers" className="btn-primary">Post a job</Link>
@@ -162,6 +166,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <EditPageLink section="home.hero" />
     </>
   );
 }
@@ -170,9 +175,7 @@ const icon = "h-5 w-5 fill-none stroke-current stroke-2 [stroke-linecap:round] [
 
 const PATHWAYS = [
   {
-    title: "Vehicle Repair & Service",
-    text: "From diagnostics to full engine rebuilds, explore the hands-on world of keeping vehicles running safely.",
-    roles: ["Automotive Service Technician", "Diesel Service Technician", "Truck & Transport Mechanic", "Collision Repair"],
+    id: "one",
     iconBg: "bg-navy-soft text-navy",
     icon: (
       <svg viewBox="0 0 24 24" className={icon}>
@@ -181,9 +184,7 @@ const PATHWAYS = [
     ),
   },
   {
-    title: "Business Operations",
-    text: "Love cars but prefer working with people and ideas? Explore business roles that keep automotive companies thriving.",
-    roles: ["Service Advisor", "Marketing", "Shop Manager", "Payroll & Accounting"],
+    id: "two",
     iconBg: "bg-emerald-50 text-emerald-700",
     icon: (
       <svg viewBox="0 0 24 24" className={icon}>

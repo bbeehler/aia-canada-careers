@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../lib/auth";
+import { Highlighted, useContent } from "../lib/content";
+import EditPageLink from "../components/EditPageLink";
 
 export default function Employers() {
   const { profile } = useAuth();
+  const c = useContent();
   const start = profile?.role === "employer" ? "/employer/jobs/new" : "/sign-in?mode=sign-up&as=employer";
   return (
     <>
       <section className="bg-navy text-white">
         <div className="mx-auto max-w-6xl px-4 py-16">
-          <h1 className="max-w-2xl font-display text-6xl font-bold leading-[0.95] text-white">Hire from the people who chose this industry.</h1>
+          <h1 className="max-w-2xl font-display text-6xl font-bold leading-[0.95] text-white"><Highlighted text={c.get("employers.headline")} /></h1>
           <p className="mt-5 max-w-xl text-lg text-white/80">
-            Everyone searching here is looking for work in auto care. Post your opening in a few minutes and manage applications in one place.
+            {c.get("employers.body")}
           </p>
           <Link to={start} className="btn-primary mt-8">Post a job</Link>
         </div>
@@ -18,13 +21,13 @@ export default function Employers() {
       <section className="mx-auto grid max-w-6xl gap-px overflow-hidden px-4 py-12 md:grid-cols-2">
         <div className="panel rounded-r-none p-6 md:border-r-0">
           <p className="font-display text-3xl font-bold text-navy">AIA Canada members</p>
-          <p className="mt-1 font-display text-5xl font-bold text-signal">Free</p>
-          <p className="mt-3 text-steel">Unlimited postings for every location of a member company, including featured placement on the home page. Each posting runs 30 days.</p>
+          <p className="mt-1 font-display text-5xl font-bold text-signal">{c.get("employers.members.price")}</p>
+          <p className="mt-3 text-steel">{c.get("employers.members.text")}</p>
         </div>
         <div className="panel rounded-l-none p-6">
           <p className="font-display text-3xl font-bold text-navy">Non-members</p>
-          <p className="mt-1 font-display text-5xl font-bold text-navy">Per posting</p>
-          <p className="mt-3 text-steel">Pay a flat fee for each 30-day posting, plus an optional fee to feature it on the home page. Becoming a member makes both free.</p>
+          <p className="mt-1 font-display text-5xl font-bold text-navy">{c.get("employers.nonmembers.price")}</p>
+          <p className="mt-3 text-steel">{c.get("employers.nonmembers.text")}</p>
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-4 pb-14">
@@ -43,6 +46,7 @@ export default function Employers() {
           ))}
         </ol>
       </section>
+      <EditPageLink section="employers" />
     </>
   );
 }
