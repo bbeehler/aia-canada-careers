@@ -5,6 +5,7 @@ import { useCompany } from "../lib/useCompany";
 import type { Job } from "../lib/types";
 import { PROVINCES, formatPay } from "../lib/constants";
 import StatusBadge from "../components/StatusBadge";
+import { checkMembership, MEMBERSHIP_MESSAGES } from "../lib/membership";
 import PageHero from "../components/PageHero";
 
 const PAYMENT_URL = import.meta.env.VITE_NONMEMBER_PAYMENT_URL as string | undefined;
@@ -16,6 +17,20 @@ export default function EmployerDashboard() {
   const { company, reload } = useCompany();
   const [jobs, setJobs] = useState<JobWithCount[]>([]);
   const [message, setMessage] = useState("");
+  const [notice, setNotice] = useState(() => {
+    const r = sessionStorage.getItem("membership-result");
+    sessionStorage.removeItem("membership-result");
+    return r ? MEMBERSHIP_MESSAGES[r as keyof typeof MEMBERSHIP_MESSAGES] ?? "" : "";
+  });
+  const [rechecking, setRechecking] = useState(false);
+  const recheck = async () => {
+    if (!company) return;
+    setRechecking(true);
+    const r = await checkMembership(company.id);
+    setRechecking(false);
+    setNotice(MEMBERSHIP_MESSAGES[r.status]);
+    if (r.status === "member") reload();
+  };
 
   const loadJobs = async (companyId: string) => {
     const { data } = await supabase.from("jobs").select("*, applications(count)")
@@ -51,10 +66,12 @@ export default function EmployerDashboard() {
       actions={<Link to="/employer/jobs/new" className="btn bg-white px-6 py-3 text-navy hover:bg-navy-soft">Post a job</Link>} />
     <div className="mx-auto max-w-6xl px-4 py-10">
 
+      {notice && <p className="panel mb-6 border-l-4 border-l-emerald-600 p-4 text-sm" role="status">{notice}</p>}
       {!company.is_member && (
-        <p className="panel mt-6 border-l-4 border-l-navy p-4 text-sm">
-          Is your company an AIA Canada member? Email AIA Canada with your company name and we’ll switch your account to free posting.
-        </p>
+        <div className="panel mb-6 flex flex-col gap-3 border-l-4 border-l-navy p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
+          <p>Is your company an AIA Canada member? Members post free. We check AIA Canada’s member records using your work email.</p>
+          <button className="btn-ghost shrink-0" disabled={rechecking} onClick={recheck}>{rechecking ? "Checking…" : "Check my membership"}</button>
+        </div>
       )}
       {message && <p className="panel mt-6 p-4 text-sm" role="status">{message}</p>}
 
@@ -164,19 +181,23 @@ export default function EmployerDashboard() {
 function CompanySetup({ onDone }: { onDone: () => void }) {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [checking, setChecking] = useState(false);
 
   const save = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setBusy(true); setError("");
     const f = new FormData(e.currentTarget);
-    const { error: err } = await supabase.from("companies").insert({
+    const { data, error: err } = await supabase.from("companies").insert({
       name: String(f.get("name")),
       website: String(f.get("website") ?? "") || null,
       city: String(f.get("city") ?? "") || null,
       province: String(f.get("province") ?? "") || null,
-    });
+    }).select("id").single();
+    if (err || !data) { setBusy(false); setError("Your company didn’t save. Check the name and try again."); return; }
+    setChecking(true);
+    const result = await checkMembership(data.id);
+    sessionStorage.setItem("membership-result", result.status);
     setBusy(false);
-    if (err) { setError("Your company didn’t save. Check the name and try again."); return; }
     onDone();
   };
 
@@ -207,7 +228,8 @@ function CompanySetup({ onDone }: { onDone: () => void }) {
           </div>
         </div>
         {error && <p className="text-sm text-signal" role="alert">{error}</p>}
-        <button className="btn-primary w-full" disabled={busy}>{busy ? "Saving…" : "Save company"}</button>
+        <button className="btn-primary w-full" disabled={busy}>{checking ? "Checking AIA Canada membership…" : busy ? "Saving…" : "Save company"}</button>
+        <p className="text-xs text-steel">We’ll check AIA Canada’s member records using your work email. Members post free.</p>
       </form>
     </div>
     </>

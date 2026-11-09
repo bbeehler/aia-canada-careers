@@ -32,11 +32,12 @@ export default function Layout() {
   }, [open]);
 
   const roleLinks: [string, string, boolean?][] =
-    profile?.role === "admin" ? [["/admin", "Review queue", true], ["/admin/careers", "Careers"], ["/admin/content", "Site content"]]
+    profile?.role === "admin" ? [["/admin", "Review queue", true], ["/admin/users", "Users"], ["/admin/careers", "Careers"], ["/admin/content", "Site content"]]
+    : profile?.role === "staff" ? [["/admin", "Review queue", true]]
     : profile?.role === "employer" ? [["/employer", "My postings", true], ["/employer/jobs/new", "Post a job"]]
     : profile?.role === "candidate" ? [["/applications", "My applications"]]
     : [];
-  const roleLabel = profile?.role === "admin" ? "AIA staff" : profile?.role === "employer" ? "Employer" : "Job seeker";
+  const roleLabel = profile?.role === "admin" ? "Super admin" : profile?.role === "staff" ? "AIA staff" : profile?.role === "employer" ? "Employer" : "Job seeker";
   const publicLinks = session ? PUBLIC_LINKS : [...PUBLIC_LINKS, ["/employers", "For Employers"] as [string, string]];
 
   return (

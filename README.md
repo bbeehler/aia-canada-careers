@@ -29,6 +29,36 @@ remove featured status from the review queue.
 Each posting collects a pay range, whether it's a current vacancy, and whether AI is used in
 screening, so postings meet Ontario's job posting rules.
 
+## Roles
+
+| Role | Can do |
+| --- | --- |
+| Job seeker | Apply to jobs, track applications |
+| Employer | Post jobs and review applicants for their company |
+| AIA staff | Review queue: publish postings, confirm payments, manage companies and membership |
+| Super admin | Everything staff can do, plus Site content, Careers, and Users and roles |
+
+Super admins set roles at **Users** (top bar when signed in). New staff sign up like anyone else,
+then a super admin changes their role. Super admins can also connect an employer account to a company.
+
+## Membership (Insightly)
+
+When an employer adds their company, the site asks the `check-membership` Supabase Edge Function to
+look them up in Insightly: first by an Insightly contact with the employer's exact email, then by an
+organisation with the same name whose website or email domain matches the employer's work email.
+Members are switched to free posting automatically. Staff can re-run the check from the Companies tab,
+and employers from their dashboard. Personal email addresses (Gmail, Outlook and so on) are never
+matched by name alone, so staff verify those manually.
+
+Set these in Supabase under **Edge Functions > Secrets**:
+
+- `INSIGHTLY_API_KEY`: from Insightly, User Settings > API
+- `INSIGHTLY_POD`: the part after `api.` in your Insightly API URL, e.g. `na1`
+- `INSIGHTLY_MEMBER_FIELD`: where membership is recorded on an Organisation, e.g. `Membership_Status__c`, or `TAG:Member` if members are tagged
+- `INSIGHTLY_MEMBER_VALUES`: values that mean current member, comma-separated (default `Active,Member,Current,Yes,true`)
+
+When AIA moves to HubSpot, only this function needs to change.
+
 ## Editing site content
 
 Admins can change the wording on the home page, the For employers page, the quiz start screen and

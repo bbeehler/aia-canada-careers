@@ -1,4 +1,4 @@
-export type Role = "candidate" | "employer" | "admin";
+export type Role = "candidate" | "employer" | "staff" | "admin";
 export type JobStatus = "draft" | "pending_payment" | "pending_review" | "published" | "rejected" | "expired";
 export type Sector = "mechanical" | "collision" | "parts_manufacturing" | "business_operations";
 export type EmploymentType = "full_time" | "part_time" | "contract" | "apprenticeship" | "co_op" | "seasonal";
@@ -14,6 +14,11 @@ export interface Company {
   city: string | null;
   province: string | null;
   is_member: boolean;
+  member_verified_at?: string | null;
+  membership_source?: "manual" | "insightly" | "hubspot";
+  membership_checked_at?: string | null;
+  membership_note?: string | null;
+  insightly_org_id?: string | null;
 }
 
 export interface Job {

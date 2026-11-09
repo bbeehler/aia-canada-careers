@@ -1,0 +1,9 @@
+-- Applied in Supabase as migration "roles_and_membership". Summary:
+-- * is_admin() now means AIA staff or super admin; new is_super_admin() means super admin only.
+-- * Site content, careers and site images are editable by super admins only.
+-- * Only super admins can change roles (protect_profile_role).
+-- * companies gains membership_source, membership_checked_at, membership_note, insightly_org_id.
+-- * protect_company_membership lets staff and the server-side membership check set membership.
+-- * New super-admin functions: admin_list_users(search), admin_set_role(target, new_role),
+--   admin_link_company(target, company, link). You can't remove your own super admin access.
+-- The full SQL is kept in Supabase's migration history (Database > Migrations).

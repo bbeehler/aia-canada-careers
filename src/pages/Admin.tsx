@@ -4,6 +4,7 @@ import { supabase } from "../lib/supabase";
 import type { Company, Job } from "../lib/types";
 import { SECTORS, formatPay } from "../lib/constants";
 import StatusBadge from "../components/StatusBadge";
+import { checkMembership } from "../lib/membership";
 import PageHero from "../components/PageHero";
 
 type Tab = "review" | "payment" | "companies";
@@ -40,9 +41,19 @@ export default function Admin() {
     load();
   };
 
+  const [checking, setChecking] = useState("");
+  const checkInsightly = async (co: Company) => {
+    setChecking(co.id);
+    const r = await checkMembership(co.id);
+    setChecking("");
+    if (r.status === "not_configured") alert("The Insightly connection isn’t set up yet. Add the Insightly settings in Supabase first.");
+    load();
+  };
+
   const toggleMember = async (c: Company) => {
     await supabase.from("companies").update({
       is_member: !c.is_member, member_verified_at: !c.is_member ? new Date().toISOString() : null,
+      membership_source: "manual", membership_note: !c.is_member ? "Marked as member by AIA staff" : "Membership removed by AIA staff",
     }).eq("id", c.id);
     load();
   };
@@ -99,13 +110,25 @@ export default function Admin() {
           <ul className="mt-4 overflow-hidden rounded-md border border-line bg-white">
             {companies.filter((c) => c.name.toLowerCase().includes(filter.toLowerCase())).map((c) => (
               <li key={c.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3 last:border-b-0 sm:px-5">
-                <div>
+                <div className="min-w-0">
                   <p className="font-medium">{c.name}</p>
                   <p className="text-sm text-steel">{[c.city, c.province].filter(Boolean).join(", ") || "No location"}</p>
+                  {c.is_member && (
+                    <p className="text-xs text-emerald-700">
+                      Member{c.membership_source === "insightly" ? ", verified in Insightly" : ", set by staff"}
+                      {c.member_verified_at ? ` on ${new Date(c.member_verified_at).toLocaleDateString("en-CA")}` : ""}
+                    </p>
+                  )}
+                  {c.membership_note && <p className="text-xs text-steel">{c.membership_note}</p>}
                 </div>
-                <button onClick={() => toggleMember(c)} className={c.is_member ? "btn-navy px-3 py-1.5" : "btn-ghost px-3 py-1.5"}>
-                  {c.is_member ? "Member" : "Mark as member"}
-                </button>
+                <div className="flex flex-wrap gap-2">
+                  <button onClick={() => checkInsightly(c)} disabled={checking === c.id} className="btn-ghost px-3 py-1.5">
+                    {checking === c.id ? "Checking…" : "Check Insightly"}
+                  </button>
+                  <button onClick={() => toggleMember(c)} className={c.is_member ? "btn-navy px-3 py-1.5" : "btn-ghost px-3 py-1.5"}>
+                    {c.is_member ? "Member" : "Mark as member"}
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
