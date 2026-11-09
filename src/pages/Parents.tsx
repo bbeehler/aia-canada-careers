@@ -67,7 +67,7 @@ export default function Parents() {
           <p className="panel mt-5 px-5 py-6 text-steel">Pay ranges will appear here as employers post jobs.</p>
         ) : (
           <div className="mt-5 overflow-x-auto">
-            <table className="w-full min-w-[520px] border-collapse overflow-hidden rounded-md border border-line bg-white text-sm">
+            <table className="w-full border-collapse overflow-hidden rounded-md border border-line bg-white text-sm">
               <thead className="bg-paper text-left text-steel">
                 <tr>
                   <th className="px-4 py-3 font-medium">Career area</th>

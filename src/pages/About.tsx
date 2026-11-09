@@ -54,10 +54,10 @@ export default function About() {
       />
       {/* Numbers strip */}
       <section className="border-b border-line bg-white">
-        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-y-8 px-4 py-10 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-2 gap-y-8 px-4 py-10 lg:grid-cols-4">
           {stats.map(([value, label, caption]) => (
             <div key={label} className="px-3 text-center">
-              <p className="font-display text-4xl font-bold text-navy sm:text-5xl">{value}</p>
+              <p className="font-display text-3xl font-bold leading-tight text-navy sm:text-5xl">{value}</p>
               <p className="mt-1 font-semibold text-ink">{label}</p>
               {caption && <p className="mt-0.5 text-xs text-steel">{caption}</p>}
             </div>

@@ -16,6 +16,8 @@ export default function Jobs() {
   const type = params.get("type") ?? "";
   const [jobs, setJobs] = useState<Job[] | null>(null);
   const [draftQ, setDraftQ] = useState(q);
+  const [showFilters, setShowFilters] = useState(false);
+  const activeFilters = [sector, province, type].filter(Boolean).length;
   const c = useContent();
 
   useEffect(() => {
@@ -48,13 +50,18 @@ export default function Jobs() {
       image={c.get("jobs.hero.image") || undefined}
     />
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <form className="grid gap-3 md:grid-cols-[1fr_repeat(3,180px)]"
+      <form className="grid gap-3 md:grid-cols-[1fr_repeat(3,170px)]"
         onSubmit={(e) => { e.preventDefault(); set("q", draftQ.trim()); }}>
-        <div>
+        <div className="flex gap-2">
           <label htmlFor="kw" className="sr-only">Keyword</label>
           <input id="kw" className="field" placeholder="Title, keyword or city" value={draftQ}
-            onChange={(e) => setDraftQ(e.target.value)} onBlur={() => set("q", draftQ.trim())} />
+            onChange={(e) => setDraftQ(e.target.value)} onBlur={() => set("q", draftQ.trim())} enterKeyHint="search" />
+          <button type="button" onClick={() => setShowFilters(!showFilters)} aria-expanded={showFilters}
+            className="btn-ghost shrink-0 md:hidden">
+            Filters{activeFilters ? ` (${activeFilters})` : ""}
+          </button>
         </div>
+        <div className={`${showFilters ? "grid" : "hidden"} gap-3 sm:grid-cols-3 md:contents`}>
         <select aria-label="Sector" className="field" value={sector} onChange={(e) => set("sector", e.target.value)}>
           <option value="">All sectors</option>
           {(Object.keys(SECTORS) as Sector[]).map((s) => <option key={s} value={s}>{SECTORS[s].label}</option>)}
@@ -67,6 +74,7 @@ export default function Jobs() {
           <option value="">All job types</option>
           {(Object.keys(EMPLOYMENT_TYPES) as EmploymentType[]).map((t) => <option key={t} value={t}>{EMPLOYMENT_TYPES[t]}</option>)}
         </select>
+        </div>
       </form>
 
       <div className="mt-6">

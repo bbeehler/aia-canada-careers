@@ -65,8 +65,44 @@ export default function EmployerDashboard() {
             <Link to="/employer/jobs/new" className="btn-navy mt-4">Write your first posting</Link>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[720px] border-collapse overflow-hidden rounded-md border border-line bg-white text-sm">
+          <>
+          <ul className="space-y-3 md:hidden">
+            {jobs.map((j) => (
+              <li key={j.id} className="panel p-4">
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <StatusBadge status={j.status} />
+                  {j.is_featured && <span className="inline-block rounded border border-signal/30 bg-red-50 px-2 py-0.5 text-xs font-medium text-signal-dark">Featured</span>}
+                </div>
+                <Link to={`/jobs/${j.id}`} className="mt-2 block font-semibold text-navy hover:underline">{j.title}</Link>
+                <p className="text-sm text-steel">{j.city}, {j.province} – {formatPay(j.pay_min, j.pay_max, j.pay_period)}</p>
+                {j.status === "rejected" && j.rejection_reason && <p className="mt-1 text-sm text-signal-dark">AIA Canada: {j.rejection_reason}</p>}
+                <p className="mt-2 text-sm text-steel">
+                  {j.apply_method === "external" ? "Applications on your site" : (
+                    j.applications?.[0]?.count
+                      ? <Link to={`/employer/jobs/${j.id}/applications`} className="font-semibold text-navy hover:underline">{j.applications[0].count} applications</Link>
+                      : "No applications yet"
+                  )}
+                  {j.expires_at && ` – expires ${new Date(j.expires_at).toLocaleDateString("en-CA")}`}
+                </p>
+                {(j.status === "draft" || j.status === "rejected" || (j.status === "pending_payment" && (j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL))) && (
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    {(j.status === "draft" || j.status === "rejected") && (
+                      <>
+                        <Link to={`/employer/jobs/${j.id}/edit`} className="btn-ghost">Edit</Link>
+                        <button onClick={() => submit(j)} className="btn-navy">Submit</button>
+                      </>
+                    )}
+                    {j.status === "pending_payment" && (
+                      <a href={j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL} target="_blank" rel="noopener noreferrer" className="btn-primary col-span-2">Pay for posting</a>
+                    )}
+                    {j.status === "draft" && <button onClick={() => remove(j)} className="btn col-span-2 text-steel hover:text-signal">Delete draft</button>}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+          <div className="hidden overflow-x-auto md:block">
+            <table className="w-full border-collapse overflow-hidden rounded-md border border-line bg-white text-sm">
               <thead className="bg-paper text-left text-steel">
                 <tr>
                   <th className="px-4 py-3 font-medium">Job</th>
@@ -117,6 +153,7 @@ export default function EmployerDashboard() {
               </tbody>
             </table>
           </div>
+          </>
         )}
       </div>
     </div>

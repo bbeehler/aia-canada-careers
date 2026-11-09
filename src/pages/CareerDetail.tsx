@@ -58,11 +58,11 @@ export default function CareerDetail() {
       </PageHero>
 
       <section className="border-b border-line bg-white">
-        <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-y-6 px-4 py-8 lg:grid-cols-4">
+        <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-x-4 gap-y-6 px-4 py-6 sm:py-8 lg:grid-cols-4">
           {facts.map(([k, v]) => (
-            <div key={k} className="px-2">
+            <div key={k} className="min-w-0 sm:px-2">
               <dt className="text-xs font-medium uppercase tracking-wide text-steel">{k}</dt>
-              <dd className={`mt-1 font-display text-2xl font-bold ${k === "Salary range" ? "text-emerald-700" : "text-navy"}`}>{v}</dd>
+              <dd className={`mt-1 break-words font-display text-xl font-bold leading-tight sm:text-2xl ${k === "Salary range" ? "text-emerald-700" : "text-navy"}`}>{v}</dd>
             </div>
           ))}
         </dl>

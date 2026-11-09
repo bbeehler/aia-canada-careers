@@ -55,10 +55,10 @@ export default function Admin() {
     <>
     <PageHero compact tag="AIA staff" title="Review queue" body="Approve postings, confirm payments and manage member companies." />
     <div className="mx-auto max-w-6xl px-4 py-10">
-      <div className="flex gap-1 border-b border-line" role="tablist">
+      <div className="-mx-4 flex gap-1 overflow-x-auto border-b border-line px-4" role="tablist">
         {([["review", `To review (${review.length})`], ["payment", `Awaiting payment (${payment.length})`], ["companies", "Companies"]] as const).map(([t, l]) => (
           <button key={t} role="tab" aria-selected={tab === t} onClick={() => setTab(t)}
-            className={`-mb-px border-b-2 px-4 py-2.5 text-sm font-medium ${tab === t ? "border-signal text-navy" : "border-transparent text-steel hover:text-navy"}`}>
+            className={`-mb-px shrink-0 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-medium ${tab === t ? "border-signal text-navy" : "border-transparent text-steel hover:text-navy"}`}>
             {l}
           </button>
         ))}
@@ -95,10 +95,10 @@ export default function Admin() {
         </div>
       ) : (
         <div className="mt-6">
-          <input className="field max-w-sm" placeholder="Search companies" value={filter} onChange={(e) => setFilter(e.target.value)} />
+          <input className="field sm:max-w-sm" placeholder="Search companies" value={filter} onChange={(e) => setFilter(e.target.value)} />
           <ul className="mt-4 overflow-hidden rounded-md border border-line bg-white">
             {companies.filter((c) => c.name.toLowerCase().includes(filter.toLowerCase())).map((c) => (
-              <li key={c.id} className="flex items-center justify-between gap-4 border-b border-line px-5 py-3 last:border-b-0">
+              <li key={c.id} className="flex flex-wrap items-center justify-between gap-3 border-b border-line px-4 py-3 last:border-b-0 sm:px-5">
                 <div>
                   <p className="font-medium">{c.name}</p>
                   <p className="text-sm text-steel">{[c.city, c.province].filter(Boolean).join(", ") || "No location"}</p>

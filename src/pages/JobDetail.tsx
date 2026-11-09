@@ -70,8 +70,8 @@ export default function JobDetail() {
         </div>
       </article>
 
-      <aside className="space-y-5">
-        <ApplyBox job={job} />
+      <aside className="space-y-5 lg:sticky lg:top-24 lg:self-start">
+        <div id="apply" className="scroll-mt-24"><ApplyBox job={job} /></div>
         {job.icar_training && (
           <div className="panel border-l-4 border-l-signal p-5">
             <p className="font-display text-xl font-bold text-navy">Training this employer values</p>
@@ -83,6 +83,16 @@ export default function JobDetail() {
         )}
       </aside>
     </div>
+    {job.status === "published" && (
+      <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 px-4 py-3 backdrop-blur lg:hidden" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
+        {job.apply_method === "external" && job.apply_url ? (
+          <a href={job.apply_url} target="_blank" rel="noopener noreferrer" className="btn-primary w-full">Apply on employer’s site</a>
+        ) : (
+          <a href="#apply" className="btn-primary w-full">Apply for this job</a>
+        )}
+      </div>
+    )}
+    {job.status === "published" && <div className="h-20 lg:hidden" aria-hidden />}
     </>
   );
 }

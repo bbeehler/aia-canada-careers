@@ -30,7 +30,14 @@ export default function CareersEditor() {
       <PageHero compact tag="AIA staff" title="Careers" body="Add and edit the careers shown in Explore Careers. Unpublished careers are hidden from visitors."
         actions={<button className={heroPrimary} onClick={() => setParams({ edit: "new" })}>Add a career</button>} />
       <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 lg:grid-cols-[280px_1fr]">
-        <ul className="overflow-hidden rounded-md border border-line bg-white lg:self-start">
+        <div className="lg:hidden">
+          <label htmlFor="career-pick" className="label">Career to edit</label>
+          <select id="career-pick" className="field" value={editId ?? ""} onChange={(e) => setParams(e.target.value ? { edit: e.target.value } : {})}>
+            <option value="">Choose a career…</option>
+            {careers.map((x) => <option key={x.id} value={x.id}>{x.title}{x.is_published ? "" : " (hidden)"}</option>)}
+          </select>
+        </div>
+        <ul className="hidden overflow-hidden rounded-md border border-line bg-white lg:block lg:self-start">
           {careers.map((x) => (
             <li key={x.id}>
               <button onClick={() => setParams({ edit: x.id })}
@@ -105,7 +112,7 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
   );
 
   return (
-    <form onSubmit={save} className="panel space-y-5 p-6">
+    <form onSubmit={save} className="panel space-y-5 p-4 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-3xl">{id ? v.title || "Untitled career" : "New career"}</h2>
         {id && v.is_published && <Link to={`/careers/${v.slug}`} className="text-sm font-semibold text-navy hover:underline">View on site</Link>}

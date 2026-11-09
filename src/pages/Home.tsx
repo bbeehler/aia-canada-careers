@@ -46,11 +46,11 @@ export default function Home() {
           height={1013}
         />
         <div className="absolute inset-0 -z-10 bg-navy/80 md:bg-transparent md:bg-gradient-to-r md:from-navy md:via-navy/85 md:to-navy/20" aria-hidden />
-        <div className="mx-auto flex min-h-[520px] max-w-6xl flex-col justify-center px-4 py-16 sm:min-h-[600px] sm:py-20">
+        <div className="mx-auto flex max-w-6xl flex-col justify-center px-4 py-12 sm:min-h-[560px] sm:py-20 lg:min-h-[600px]">
           <span className="inline-block self-start rounded-md border border-white/30 bg-white/10 px-3 py-1 text-sm font-semibold text-white">
             {c.get("home.hero.tag")}
           </span>
-          <h1 className="mt-5 max-w-2xl font-display text-5xl font-bold leading-[0.95] text-white sm:text-7xl">
+          <h1 className="mt-5 max-w-2xl font-display text-[2.75rem] font-bold leading-[0.95] text-white sm:text-6xl lg:text-7xl">
             <Highlighted text={c.get("home.hero.headline")} />
           </h1>
           <p className="mt-5 max-w-xl text-lg text-white/85">
@@ -60,7 +60,7 @@ export default function Home() {
           <form onSubmit={search} className="mt-9 grid max-w-3xl gap-px overflow-hidden rounded-md bg-white/20 sm:grid-cols-[1fr_180px_auto]">
             <label className="sr-only" htmlFor="q">Job title or keyword</label>
             <input id="q" value={q} onChange={(e) => setQ(e.target.value)}
-              placeholder="Job title or keyword, like “licensed technician”"
+              placeholder="Job title or keyword"
               className="bg-white px-4 py-4 text-ink placeholder:text-steel/70 focus:outline-none" />
             <label className="sr-only" htmlFor="province">Province</label>
             <select id="province" value={province} onChange={(e) => setProvince(e.target.value)}
@@ -70,15 +70,15 @@ export default function Home() {
             </select>
             <button className="bg-signal px-6 py-4 font-semibold text-white hover:bg-signal-dark">Search jobs</button>
           </form>
-          <Link to="/quiz" className="btn mt-4 self-start border border-white/30 bg-white/10 px-6 py-3 text-white hover:bg-white/20">
+          <Link to="/quiz" className="btn mt-4 w-full border border-white/30 bg-white/10 px-6 py-3 text-white hover:bg-white/20 sm:w-auto sm:self-start">
             {c.get("home.hero.quiz_button")}
           </Link>
         </div>
       </section>
 
       <section className="mx-auto max-w-6xl px-4 py-12">
-        <div className="grid items-center gap-6 rounded-xl bg-gradient-to-br from-[#1D3264] to-navy-deep px-6 py-9 text-white sm:px-10 md:grid-cols-[auto_1fr_auto] md:gap-8">
-          <span className="hidden h-14 w-14 items-center justify-center rounded-full bg-white/10 md:flex" aria-hidden>
+        <div className="grid items-center gap-6 rounded-xl bg-gradient-to-br from-[#1D3264] to-navy-deep px-5 py-8 text-white sm:px-10 sm:py-9 lg:grid-cols-[auto_1fr_auto] lg:gap-8">
+          <span className="hidden h-14 w-14 items-center justify-center rounded-full bg-white/10 lg:flex" aria-hidden>
             <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current stroke-2 [stroke-linecap:round] [stroke-linejoin:round]">
               <path d="M3 21V10l5 3V10l5 3V5h4l1 16zM3 21h18M8 17h1M12 17h1M16 17h1" />
             </svg>
@@ -89,7 +89,7 @@ export default function Home() {
             <p className="mt-3 max-w-2xl leading-relaxed text-white/85"><Bold text={c.get("home.didyouknow.body")} /></p>
           </div>
           <SmartLink to={c.get("home.didyouknow.button.url")}
-            className="btn self-start bg-white px-6 py-3 text-navy hover:bg-navy-soft md:self-center">
+            className="btn w-full bg-white px-6 py-3 text-navy hover:bg-navy-soft sm:w-auto sm:justify-self-start lg:self-center">
             {c.get("home.didyouknow.button.label")} <span aria-hidden>→</span>
           </SmartLink>
         </div>
@@ -98,7 +98,7 @@ export default function Home() {
       <section className="border-b border-line bg-white">
         <div className="mx-auto max-w-5xl px-4 py-16">
           <div className="text-center">
-            <h2 className="text-4xl sm:text-5xl"><Highlighted text={c.get("home.pathways.heading")} className="text-signal" /></h2>
+            <h2 className="text-[2.15rem] leading-tight sm:text-5xl"><Highlighted text={c.get("home.pathways.heading")} className="text-signal" /></h2>
             <p className="mx-auto mt-3 max-w-2xl text-lg text-steel">{c.get("home.pathways.intro")}</p>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -191,7 +191,7 @@ export default function Home() {
           <img src={c.get("home.parents.image")} alt={c.get("home.parents.image_alt")}
             className="absolute inset-0 -z-20 h-full w-full object-cover object-[68%_18%]" loading="lazy" width={1800} height={1013} />
           <div className="absolute inset-0 -z-10 bg-ink/75 md:bg-transparent md:bg-gradient-to-r md:from-ink/90 md:via-ink/70 md:to-ink/10" aria-hidden />
-          <div className="flex min-h-[340px] max-w-xl flex-col justify-center px-6 py-12 sm:px-12 sm:py-16 lg:min-h-[400px]">
+          <div className="flex max-w-xl flex-col justify-center px-5 py-10 sm:min-h-[340px] sm:px-12 sm:py-16 lg:min-h-[400px]">
             <h2 className="font-sans text-3xl font-bold tracking-normal text-white sm:text-4xl">
               <Highlighted text={c.get("home.parents.heading")} />
             </h2>

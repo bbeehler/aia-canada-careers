@@ -109,7 +109,7 @@ export const CONTENT_SECTIONS: ContentSection[] = [
   {
     id: "jobs.hero", page: "Find jobs page", title: "Banner",
     fields: [
-      { key: "jobs.hero.tag", label: "Small tag", type: "text", default: "Explore Careers" },
+      { key: "jobs.hero.tag", label: "Small tag", type: "text", default: "Find Jobs" },
       { key: "jobs.hero.heading", label: "Headline", type: "text", default: "Find your next job in auto care", hint: HIGHLIGHT_HINT },
       { key: "jobs.hero.body", label: "Paragraph", type: "textarea", default: "Browse open positions from repair shops, collision centres, parts makers and suppliers across Canada. Every posting lists its pay." },
       { key: "jobs.hero.image", label: "Background photo", type: "image", default: "", hint: "Optional. Leave empty for the plain navy banner. Wide photos work best." },

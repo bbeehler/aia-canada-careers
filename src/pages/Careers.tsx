@@ -15,6 +15,8 @@ export default function Careers() {
   const q = params.get("q") ?? "";
   const category = params.get("category") ?? "";
   const level = params.get("level") ?? "";
+  const [showFilters, setShowFilters] = useState(false);
+  const activeFilters = [category, level].filter(Boolean).length;
 
   useEffect(() => {
     supabase.from("careers").select("*").eq("is_published", true).order("sort_order").order("title")
@@ -44,13 +46,19 @@ export default function Careers() {
       />
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="grid gap-3 md:grid-cols-[1fr_220px_220px]">
-          <div className="relative">
+          <div className="flex gap-2">
+          <div className="relative flex-1">
             <label htmlFor="career-q" className="sr-only">Search careers</label>
             <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 fill-none stroke-steel stroke-2" aria-hidden>
               <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
             </svg>
-            <input id="career-q" className="field pl-9" placeholder="Search careers…" value={q} onChange={(e) => set("q", e.target.value)} />
+            <input id="career-q" className="field pl-9" placeholder="Search careers…" value={q} onChange={(e) => set("q", e.target.value)} enterKeyHint="search" />
           </div>
+          <button type="button" onClick={() => setShowFilters(!showFilters)} aria-expanded={showFilters} className="btn-ghost shrink-0 md:hidden">
+            Filters{activeFilters ? ` (${activeFilters})` : ""}
+          </button>
+          </div>
+          <div className={`${showFilters ? "grid" : "hidden"} gap-3 sm:grid-cols-2 md:contents`}>
           <select aria-label="Category" className="field" value={category} onChange={(e) => set("category", e.target.value)}>
             <option value="">All Categories</option>
             {(Object.keys(SECTORS) as Sector[]).map((s) => <option key={s} value={s}>{SECTORS[s].label}</option>)}
@@ -59,6 +67,7 @@ export default function Careers() {
             <option value="">All Levels</option>
             {levels.map((l) => <option key={l} value={l}>{l}</option>)}
           </select>
+          </div>
         </div>
 
         {careers === null ? (

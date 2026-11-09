@@ -1,15 +1,45 @@
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import { supabaseConfigured } from "../lib/supabase";
 import { useContent } from "../lib/content";
 import SmartLink from "./SmartLink";
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
-  `px-3 py-2 text-sm font-medium rounded ${isActive ? "text-navy bg-navy-soft" : "text-steel hover:text-navy"}`;
+  `px-2.5 py-2 text-sm font-medium rounded whitespace-nowrap xl:px-3 ${isActive ? "text-navy bg-navy-soft" : "text-steel hover:text-navy"}`;
+const drawerClass = ({ isActive }: { isActive: boolean }) =>
+  `block rounded px-3 py-3 text-base font-medium ${isActive ? "bg-navy-soft text-navy" : "text-ink hover:bg-paper"}`;
+const barClass = ({ isActive }: { isActive: boolean }) =>
+  `whitespace-nowrap rounded px-2.5 py-1 ${isActive ? "bg-white/15 text-white" : "text-white/75 hover:text-white"}`;
+
+const PUBLIC_LINKS: [string, string][] = [
+  ["/about-the-industry", "About the Industry"],
+  ["/careers", "Explore Careers"],
+  ["/jobs", "Find Jobs"],
+  ["/quiz", "Career Quiz"],
+];
 
 export default function Layout() {
   const { profile, session, signOut } = useAuth();
   const c = useContent();
+  const [open, setOpen] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => { setOpen(false); }, [location.pathname, location.search]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const roleLinks: [string, string, boolean?][] =
+    profile?.role === "admin" ? [["/admin", "Review queue", true], ["/admin/careers", "Careers"], ["/admin/content", "Site content"]]
+    : profile?.role === "employer" ? [["/employer", "My postings", true], ["/employer/jobs/new", "Post a job"]]
+    : profile?.role === "candidate" ? [["/applications", "My applications"]]
+    : [];
+  const roleLabel = profile?.role === "admin" ? "AIA staff" : profile?.role === "employer" ? "Employer" : "Job seeker";
+  const publicLinks = session ? PUBLIC_LINKS : [...PUBLIC_LINKS, ["/employers", "For Employers"] as [string, string]];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -18,31 +48,66 @@ export default function Layout() {
           Supabase isn’t connected yet. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to see live data.
         </div>
       )}
-      <header className="border-b border-line bg-white">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <Link to="/" className="flex items-center gap-3" aria-label="Careers in Auto Care home">
-            <img src="/aia-canada-logo.png" alt="AIA Canada" width={45} height={48} className="h-12 w-auto" />
-            <span className="h-9 w-px bg-line" aria-hidden />
-            <span className="font-display text-2xl font-bold leading-none text-navy">Careers in Auto Care</span>
-          </Link>
-          <nav className="flex flex-wrap items-center gap-1">
-            <NavLink to="/about-the-industry" className={navClass}>About the Industry</NavLink>
-            <NavLink to="/careers" className={navClass}>Explore Careers</NavLink>
-            <NavLink to="/jobs" className={navClass}>Find jobs</NavLink>
-            <NavLink to="/quiz" className={navClass}>Career quiz</NavLink>
-            {profile?.role === "employer" && <NavLink to="/employer" className={navClass}>My postings</NavLink>}
-            {profile?.role === "admin" && <NavLink to="/admin" end className={navClass}>Review queue</NavLink>}
-            {profile?.role === "admin" && <NavLink to="/admin/careers" className={navClass}>Careers</NavLink>}
-            {profile?.role === "admin" && <NavLink to="/admin/content" className={navClass}>Site content</NavLink>}
-            {profile?.role === "candidate" && <NavLink to="/applications" className={navClass}>My applications</NavLink>}
-            {!session && <NavLink to="/employers" className={navClass}>For employers</NavLink>}
-            {session ? (
-              <button onClick={signOut} className="ml-2 btn-ghost">Sign out</button>
-            ) : (
-              <Link to="/sign-in" className="ml-2 btn-navy">Sign in</Link>
-            )}
-          </nav>
+
+      {session && (
+        <div className="hidden bg-navy-deep text-sm lg:block">
+          <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-1.5">
+            <nav className="flex items-center gap-1" aria-label="Account">
+              <span className="mr-2 text-xs font-semibold uppercase tracking-wide text-white/50">{roleLabel}</span>
+              {roleLinks.map(([to, label, end]) => <NavLink key={to} to={to} end={end} className={barClass}>{label}</NavLink>)}
+            </nav>
+            <div className="flex items-center gap-3 text-white/75">
+              <span className="truncate">{session.user.email}</span>
+              <button onClick={signOut} className="rounded px-2.5 py-1 text-white hover:bg-white/15">Sign out</button>
+            </div>
+          </div>
         </div>
+      )}
+
+      <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-4 py-2.5 sm:py-3">
+          <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label="Careers in Auto Care home">
+            <img src="/aia-canada-logo.png" alt="AIA Canada" width={45} height={48} className="h-10 w-auto sm:h-12" />
+            <span className="h-8 w-px shrink-0 bg-line sm:h-9" aria-hidden />
+            <span className="truncate font-display text-xl font-bold leading-none text-navy sm:text-2xl lg:text-xl xl:text-2xl">Careers in Auto Care</span>
+          </Link>
+
+          <nav className="hidden shrink-0 items-center gap-0.5 lg:flex xl:gap-1" aria-label="Main">
+            {publicLinks.map(([to, label]) => <NavLink key={to} to={to} className={navClass}>{label}</NavLink>)}
+            {!session && <Link to="/sign-in" className="ml-2 btn-navy whitespace-nowrap">Sign in</Link>}
+          </nav>
+
+          <button type="button" className="-mr-2 flex h-11 w-11 shrink-0 items-center justify-center rounded text-navy hover:bg-paper lg:hidden"
+            aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? "Close menu" : "Open menu"} onClick={() => setOpen(!open)}>
+            <svg viewBox="0 0 24 24" className="h-6 w-6 fill-none stroke-current stroke-2 [stroke-linecap:round]" aria-hidden>
+              {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+            </svg>
+          </button>
+        </div>
+
+        {open && (
+          <div id="mobile-menu" className="max-h-[calc(100dvh-4rem)] overflow-y-auto border-t border-line bg-white lg:hidden">
+            <nav className="mx-auto max-w-6xl space-y-1 px-4 py-3" aria-label="Main">
+              {publicLinks.map(([to, label]) => <NavLink key={to} to={to} className={drawerClass}>{label}</NavLink>)}
+              {roleLinks.length > 0 && (
+                <div className="mt-3 border-t border-line pt-3">
+                  <p className="px-3 pb-1 text-xs font-semibold uppercase tracking-wide text-steel">{roleLabel}</p>
+                  {roleLinks.map(([to, label, end]) => <NavLink key={to} to={to} end={end} className={drawerClass}>{label}</NavLink>)}
+                </div>
+              )}
+              <div className="mt-3 border-t border-line pt-4 pb-1">
+                {session ? (
+                  <>
+                    <p className="truncate px-3 pb-2 text-sm text-steel">{session.user.email}</p>
+                    <button onClick={signOut} className="btn-ghost w-full py-3">Sign out</button>
+                  </>
+                ) : (
+                  <Link to="/sign-in" className="btn-navy w-full py-3">Sign in</Link>
+                )}
+              </div>
+            </nav>
+          </div>
+        )}
       </header>
 
       <main className="flex-1">
@@ -50,8 +115,8 @@ export default function Layout() {
       </main>
 
       <footer className="border-t border-line bg-paper">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 text-sm sm:grid-cols-2 lg:grid-cols-4">
-          <div>
+        <div className="mx-auto grid max-w-6xl grid-cols-2 gap-8 px-4 py-12 text-sm lg:grid-cols-4">
+          <div className="col-span-2 lg:col-span-1">
             <Link to="/" className="flex items-center gap-2.5">
               <img src="/aia-canada-logo.png" alt="AIA Canada" width={30} height={32} className="h-8 w-auto" />
               <span className="font-display text-xl font-bold text-navy">Careers in Auto Care</span>

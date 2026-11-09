@@ -18,8 +18,14 @@ export default function ContentEditor() {
     <>
     <PageHero compact tag="AIA staff" title="Site content" body="Edit the wording and photos on the site. Changes go live as soon as you save." />
     <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 lg:grid-cols-[220px_1fr]">
-      <aside className="lg:sticky lg:top-6 lg:self-start">
-        <nav className="space-y-4 text-sm">
+      <aside className="lg:sticky lg:top-24 lg:self-start">
+        <details className="panel p-4 lg:hidden">
+          <summary className="cursor-pointer font-semibold text-navy">Jump to a section</summary>
+          <ul className="mt-3 space-y-1 text-sm">
+            {CONTENT_SECTIONS.map((s) => <li key={s.id}><a href={`#${s.id}`} className="block py-1.5 text-steel hover:text-navy">{s.page}: {s.title}</a></li>)}
+          </ul>
+        </details>
+        <nav className="hidden space-y-4 text-sm lg:block">
           {pages.map((page) => (
             <div key={page}>
               <p className="font-semibold text-ink">{page}</p>
@@ -70,7 +76,7 @@ function SectionForm({ section }: { section: ContentSection }) {
   };
 
   return (
-    <section id={section.id} className="panel scroll-mt-6 p-6">
+    <section id={section.id} className="panel scroll-mt-24 p-4 sm:p-6">
       <p className="text-xs font-medium text-steel">{section.page}</p>
       <h2 className="text-2xl">{section.title}</h2>
       <div className="mt-5 space-y-5">
