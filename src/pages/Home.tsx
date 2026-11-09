@@ -36,8 +36,9 @@ export default function Home() {
 
   return (
     <>
-      <section className="bg-navy text-white">
-        <div className="mx-auto max-w-6xl px-4 pb-14 pt-14 sm:pt-20">
+      <section className="overflow-hidden bg-navy text-white">
+        <div className="mx-auto grid max-w-6xl lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="px-4 pb-14 pt-14 sm:pt-20 lg:pr-10">
           <h1 className="max-w-3xl font-display text-5xl font-bold leading-[0.95] text-white sm:text-7xl">
             Work that keeps Canada moving.
           </h1>
@@ -45,7 +46,7 @@ export default function Home() {
             Jobs in mechanical repair, collision repair, parts and the businesses behind them, posted by employers across the automotive aftermarket.
           </p>
 
-          <form onSubmit={search} className="mt-9 grid max-w-3xl gap-px overflow-hidden rounded-md bg-white/20 sm:grid-cols-[1fr_220px_auto]">
+          <form onSubmit={search} className="mt-9 grid max-w-3xl gap-px overflow-hidden rounded-md bg-white/20 sm:grid-cols-[1fr_180px_auto]">
             <label className="sr-only" htmlFor="q">Job title or keyword</label>
             <input id="q" value={q} onChange={(e) => setQ(e.target.value)}
               placeholder="Job title or keyword, like “licensed technician”"
@@ -58,6 +59,16 @@ export default function Home() {
             </select>
             <button className="bg-signal px-6 py-4 font-semibold text-white hover:bg-signal-dark">Search jobs</button>
           </form>
+        </div>
+        <div className="relative h-72 sm:h-96 lg:h-auto">
+          <img
+            src="/hero-shop-team.jpg"
+            alt="A team of auto repair technicians in coveralls standing outside their shop's service bays"
+            className="absolute inset-0 h-full w-full object-cover object-[center_40%] lg:object-center"
+            width={1100}
+            height={1370}
+          />
+        </div>
         </div>
       </section>
 
