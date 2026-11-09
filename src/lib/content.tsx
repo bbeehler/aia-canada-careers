@@ -22,6 +22,16 @@ export const CONTENT_SECTIONS: ContentSection[] = [
     ],
   },
   {
+    id: "home.didyouknow", page: "Home page", title: "Did you know? banner",
+    fields: [
+      { key: "home.didyouknow.tag", label: "Small tag", type: "text", default: "Did You Know?" },
+      { key: "home.didyouknow.heading", label: "Heading", type: "text", default: "Canada’s Automotive Aftermarket" },
+      { key: "home.didyouknow.body", label: "Paragraph", type: "textarea", default: "The Canadian automotive aftermarket reached a **record $43.9 billion** in economic output, supporting over **400,000 jobs** across 29,000+ businesses nationwide – and it’s growing. Learn how the industry works, what sets the aftermarket apart from dealerships, and why now is one of the best times to enter this field.", hint: "Put **double asterisks** around words to make them bold." },
+      { key: "home.didyouknow.button.label", label: "Button label", type: "text", default: "Learn More" },
+      { key: "home.didyouknow.button.url", label: "Button link", type: "text", default: "https://www.aiacanada.com/about-us/" },
+    ],
+  },
+  {
     id: "home.pathways", page: "Home page", title: "Two pathways",
     fields: [
       { key: "home.pathways.heading", label: "Heading", type: "text", default: "Two Pathways, Endless Possibilities" },
@@ -129,6 +139,12 @@ export function ContentProvider({ children }: { children: ReactNode }) {
 
 export const useContent = () => useContext(ContentContext);
 export const contentDefault = (key: string) => DEFAULTS[key] ?? "";
+
+// Renders text with **bold** words.
+export function Bold({ text, className = "font-semibold text-white" }: { text: string; className?: string }) {
+  const parts = text.split(/\*\*([^*]+)\*\*/g);
+  return <>{parts.map((p, i) => (i % 2 ? <strong key={i} className={className}>{p}</strong> : p))}</>;
+}
 
 // Renders text with *highlighted* words in red.
 export function Highlighted({ text, className = "text-[#F0384F]" }: { text: string; className?: string }) {
