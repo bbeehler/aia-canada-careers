@@ -170,9 +170,9 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-4 py-14">
         <div className="relative isolate overflow-hidden rounded-xl bg-navy-deep">
           <img src={c.get("home.parents.image")} alt={c.get("home.parents.image_alt")}
-            className="absolute inset-0 -z-20 h-full w-full object-cover object-[70%_center]" loading="lazy" width={1800} height={1013} />
+            className="absolute inset-0 -z-20 h-full w-full object-cover object-[68%_18%]" loading="lazy" width={1800} height={1013} />
           <div className="absolute inset-0 -z-10 bg-ink/75 md:bg-transparent md:bg-gradient-to-r md:from-ink/90 md:via-ink/70 md:to-ink/10" aria-hidden />
-          <div className="max-w-xl px-6 py-12 sm:px-12 sm:py-16">
+          <div className="flex min-h-[340px] max-w-xl flex-col justify-center px-6 py-12 sm:px-12 sm:py-16 lg:min-h-[400px]">
             <h2 className="font-sans text-3xl font-bold tracking-normal text-white sm:text-4xl">
               <Highlighted text={c.get("home.parents.heading")} />
             </h2>
