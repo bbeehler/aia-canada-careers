@@ -62,11 +62,11 @@ export default function Home() {
         </div>
         <div className="relative h-72 sm:h-96 lg:h-auto">
           <img
-            src="/hero-shop-team.jpg"
-            alt="A team of auto repair technicians in coveralls standing outside their shop's service bays"
-            className="absolute inset-0 h-full w-full object-cover object-[center_40%] lg:object-center"
-            width={1100}
-            height={1370}
+            src="/hero-technician-lift.jpg"
+            alt="A technician in coveralls working under a car raised on a lift in a repair shop"
+            className="absolute inset-0 h-full w-full object-cover object-[45%_center]"
+            width={1800}
+            height={1013}
           />
         </div>
         </div>
