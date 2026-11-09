@@ -51,6 +51,32 @@ export const CONTENT_SECTIONS: ContentSection[] = [
     ],
   },
   {
+    id: "home.parents", page: "Home page", title: "For parents and guardians banner",
+    fields: [
+      { key: "home.parents.heading", label: "Heading", type: "text", default: "For Parents & Guardians", hint: HIGHLIGHT_HINT },
+      { key: "home.parents.body", label: "Paragraph", type: "textarea", default: "Help your teen make an informed decision. Learn about training programs, salary expectations, and the strong job market in automotive careers." },
+      { key: "home.parents.button1.label", label: "First button: label", type: "text", default: "Parent Resources" },
+      { key: "home.parents.button1.url", label: "First button: link", type: "text", default: "/parents", hint: "A page on this site (like /parents) or a full web address." },
+      { key: "home.parents.button2.label", label: "Second button: label", type: "text", default: "Compare Careers" },
+      { key: "home.parents.button2.url", label: "Second button: link", type: "text", default: "/parents#pay" },
+      { key: "home.parents.image", label: "Background photo", type: "image", default: "/parents-youth-shop.jpg", hint: "Wide photos work best. Keep the people on the right side, since the text sits on the left." },
+      { key: "home.parents.image_alt", label: "Photo description (for screen readers)", type: "text", default: "A teenager holding a wrench and clipboard while a technician explains an engine repair" },
+    ],
+  },
+  {
+    id: "parents", page: "Parents page", title: "Parents and guardians page",
+    fields: [
+      { key: "parents.heading", label: "Headline", type: "text", default: "A guide for parents and guardians", hint: HIGHLIGHT_HINT },
+      { key: "parents.intro", label: "Intro", type: "textarea", default: "If your teen is interested in cars, trucks or how things work, the automotive aftermarket offers skilled, in-demand careers. Here’s how people get started and what the work pays." },
+      { key: "parents.training.heading", label: "Training: heading", type: "text", default: "How people get started" },
+      { key: "parents.training.body", label: "Training: text", type: "textarea", default: "Many technicians start with an apprenticeship, earning a wage while they learn on the job and complete in-school training. Others begin with a college program in automotive service, collision repair or manufacturing. Business roles like service advisor, marketing and accounting are open to college and university graduates. High school co-op placements and technical courses are a great way to try the work first." },
+      { key: "parents.pay.heading", label: "Pay: heading", type: "text", default: "What jobs pay right now" },
+      { key: "parents.pay.body", label: "Pay: text", type: "textarea", default: "These ranges come from jobs currently posted on Careers in Auto Care. Every posting lists its pay." },
+      { key: "parents.market.heading", label: "Job market: heading", type: "text", default: "Employers are hiring" },
+      { key: "parents.market.body", label: "Job market: text", type: "textarea", default: "Shops, parts makers and suppliers across Canada are looking for people at every level, from apprentices to experienced technicians and managers. Browse open jobs with your teen to see what’s available near you." },
+    ],
+  },
+  {
     id: "employers", page: "For employers page", title: "For employers page",
     fields: [
       { key: "employers.headline", label: "Headline", type: "text", default: "Hire from the people who chose this industry." },
@@ -71,7 +97,8 @@ export const CONTENT_SECTIONS: ContentSection[] = [
   {
     id: "footer", page: "Every page", title: "Footer",
     fields: [
-      { key: "footer.blurb", label: "Footer description", type: "textarea", default: "The job board for Canada’s automotive aftermarket, from the Automotive Industries Association of Canada." },
+      { key: "footer.blurb", label: "Footer description", type: "textarea", default: "Helping Canadian high school students and parents explore rewarding career paths in the automotive care sector. Powered by AIA Canada." },
+      { key: "footer.bottom", label: "Bottom line", type: "text", default: "Careers in Auto Care by AIA Canada – Career exploration for the next generation of Canadian automotive professionals" },
     ],
   },
 ];

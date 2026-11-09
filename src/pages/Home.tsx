@@ -5,6 +5,7 @@ import type { Job, Sector } from "../lib/types";
 import { EMPLOYMENT_TYPES, PROVINCES, formatPay } from "../lib/constants";
 import JobRow from "../components/JobRow";
 import EditPageLink from "../components/EditPageLink";
+import SmartLink from "../components/SmartLink";
 import { Highlighted, useContent } from "../lib/content";
 
 export default function Home() {
@@ -163,6 +164,27 @@ export default function Home() {
           <div className="flex flex-wrap gap-3 md:justify-end">
             <Link to="/employers" className="btn-primary">Post a job</Link>
             <a href="https://www.aiacanada.com" className="btn-ghost">About AIA membership</a>
+          </div>
+        </div>
+      </section>
+      <section className="mx-auto max-w-6xl px-4 py-14">
+        <div className="relative isolate overflow-hidden rounded-xl bg-navy-deep">
+          <img src={c.get("home.parents.image")} alt={c.get("home.parents.image_alt")}
+            className="absolute inset-0 -z-20 h-full w-full object-cover object-[70%_center]" loading="lazy" width={1800} height={1013} />
+          <div className="absolute inset-0 -z-10 bg-ink/75 md:bg-transparent md:bg-gradient-to-r md:from-ink/90 md:via-ink/70 md:to-ink/10" aria-hidden />
+          <div className="max-w-xl px-6 py-12 sm:px-12 sm:py-16">
+            <h2 className="font-sans text-3xl font-bold tracking-normal text-white sm:text-4xl">
+              <Highlighted text={c.get("home.parents.heading")} />
+            </h2>
+            <p className="mt-4 text-lg text-white/85">{c.get("home.parents.body")}</p>
+            <div className="mt-7 flex flex-wrap gap-3">
+              <SmartLink to={c.get("home.parents.button1.url")} className="btn border border-white/25 bg-white/10 px-5 py-3 text-white hover:bg-white/20">
+                {c.get("home.parents.button1.label")} <span aria-hidden>›</span>
+              </SmartLink>
+              <SmartLink to={c.get("home.parents.button2.url")} className="btn border border-white/25 bg-white/10 px-5 py-3 text-white hover:bg-white/20">
+                {c.get("home.parents.button2.label")}
+              </SmartLink>
+            </div>
           </div>
         </div>
       </section>

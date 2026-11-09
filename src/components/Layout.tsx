@@ -2,6 +2,7 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { useAuth } from "../lib/auth";
 import { supabaseConfigured } from "../lib/supabase";
 import { useContent } from "../lib/content";
+import SmartLink from "./SmartLink";
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   `px-3 py-2 text-sm font-medium rounded ${isActive ? "text-navy bg-navy-soft" : "text-steel hover:text-navy"}`;
@@ -45,22 +46,36 @@ export default function Layout() {
         <Outlet />
       </main>
 
-      <footer className="border-t border-line bg-white">
-        <div className="mx-auto grid max-w-6xl gap-6 px-4 py-8 text-sm text-steel sm:grid-cols-3">
+      <footer className="border-t border-line bg-paper">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-12 text-sm sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <p className="font-display text-lg font-bold text-navy">Careers in Auto Care</p>
-            <p className="mt-1">{c.get("footer.blurb")}</p>
+            <Link to="/" className="flex items-center gap-2.5">
+              <img src="/aia-canada-logo.png" alt="AIA Canada" width={30} height={32} className="h-8 w-auto" />
+              <span className="font-display text-xl font-bold text-navy">Careers in Auto Care</span>
+            </Link>
+            <p className="mt-3 max-w-xs leading-relaxed text-steel">{c.get("footer.blurb")}</p>
           </div>
-          <div className="flex flex-col gap-1.5">
-            <Link to="/jobs" className="hover:text-navy">Find jobs</Link>
-            <Link to="/employers" className="hover:text-navy">Post a job</Link>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <a href="https://www.aiacanada.com" className="hover:text-navy">AIA Canada</a>
-            <a href="https://www.i-car.ca" className="hover:text-navy">I-CAR Canada training</a>
-          </div>
+          <FooterColumn title="Explore" links={[["All Careers", "/jobs"], ["Career Quiz", "/quiz"], ["Resources", "/parents"]]} />
+          <FooterColumn title="Career Areas" links={[["Vehicle Repair", "/jobs?sector=mechanical"], ["Collision Repair", "/jobs?sector=collision"], ["Parts & Manufacturing", "/jobs?sector=parts_manufacturing"], ["Business Operations", "/jobs?sector=business_operations"]]} />
+          <FooterColumn title="For Parents" links={[["Parent Guide", "/parents"], ["Salary Information", "/parents#pay"], ["AIA Canada", "https://www.aiacanada.com"]]} />
+        </div>
+        <div className="border-t border-line">
+          <p className="mx-auto max-w-6xl px-4 py-5 text-center text-xs text-steel">{c.get("footer.bottom")}</p>
         </div>
       </footer>
+    </div>
+  );
+}
+
+function FooterColumn({ title, links }: { title: string; links: [string, string][] }) {
+  return (
+    <div>
+      <p className="font-semibold text-ink">{title}</p>
+      <ul className="mt-3 space-y-2">
+        {links.map(([label, to]) => (
+          <li key={label}><SmartLink to={to} className="text-steel hover:text-navy">{label}</SmartLink></li>
+        ))}
+      </ul>
     </div>
   );
 }
