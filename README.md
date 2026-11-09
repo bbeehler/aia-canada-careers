@@ -21,6 +21,11 @@ Posting flow: **Draft → Submit → (non-members) Awaiting payment → In revie
 Members skip the payment step. All of this is enforced in the database, not just the app, so
 employers can't publish their own postings or mark themselves as members.
 
+**Featured postings** appear in the Featured Careers block on the home page. Employers turn it on
+while writing a posting. It's free for members; non-members pay for it together with the posting,
+using a second HubSpot payment link (`VITE_NONMEMBER_FEATURED_PAYMENT_URL`). Staff can also add or
+remove featured status from the review queue.
+
 Each posting collects a pay range, whether it's a current vacancy, and whether AI is used in
 screening, so postings meet Ontario's job posting rules.
 
@@ -47,6 +52,7 @@ screening, so postings meet Ontario's job posting rules.
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
    - `VITE_NONMEMBER_PAYMENT_URL` (the HubSpot payment link for a non-member posting)
+   - `VITE_NONMEMBER_FEATURED_PAYMENT_URL` (the HubSpot payment link for a non-member posting plus featured placement)
 4. Deploy. Every push to `main` deploys automatically.
 
 ### 3. Local development (optional)

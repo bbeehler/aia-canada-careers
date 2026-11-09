@@ -7,6 +7,7 @@ import { PROVINCES, formatPay } from "../lib/constants";
 import StatusBadge from "../components/StatusBadge";
 
 const PAYMENT_URL = import.meta.env.VITE_NONMEMBER_PAYMENT_URL as string | undefined;
+const FEATURED_PAYMENT_URL = import.meta.env.VITE_NONMEMBER_FEATURED_PAYMENT_URL as string | undefined;
 
 type JobWithCount = Job & { applications: { count: number }[] };
 
@@ -89,7 +90,10 @@ export default function EmployerDashboard() {
                         <p className="mt-1 text-signal-dark">AIA Canada: {j.rejection_reason}</p>
                       )}
                     </td>
-                    <td className="px-4 py-3"><StatusBadge status={j.status} /></td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={j.status} />
+                      {j.is_featured && <span className="ml-1.5 inline-block rounded border border-signal/30 bg-red-50 px-2 py-0.5 text-xs font-medium text-signal-dark">Featured</span>}
+                    </td>
                     <td className="px-4 py-3">
                       {j.applications?.[0]?.count ? (
                         <Link to={`/employer/jobs/${j.id}/applications`} className="font-semibold text-navy hover:underline">
@@ -106,8 +110,8 @@ export default function EmployerDashboard() {
                             <button onClick={() => submit(j)} className="btn-navy px-3 py-1.5">Submit for review</button>
                           </>
                         )}
-                        {j.status === "pending_payment" && PAYMENT_URL && (
-                          <a href={PAYMENT_URL} target="_blank" rel="noopener noreferrer" className="btn-primary px-3 py-1.5">Pay for posting</a>
+                        {j.status === "pending_payment" && (j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL) && (
+                          <a href={j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL} target="_blank" rel="noopener noreferrer" className="btn-primary px-3 py-1.5">Pay for posting</a>
                         )}
                         {j.status === "draft" && <button onClick={() => remove(j)} className="px-2 text-steel hover:text-signal">Delete</button>}
                       </div>

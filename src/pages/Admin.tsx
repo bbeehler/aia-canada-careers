@@ -33,6 +33,12 @@ export default function Admin() {
     if (reason) act("admin_reject_job", { job: job.id, reason });
   };
 
+  const toggleFeatured = async (job: Job) => {
+    const { error } = await supabase.from("jobs").update({ is_featured: !job.is_featured }).eq("id", job.id);
+    if (error) alert(error.message);
+    load();
+  };
+
   const toggleMember = async (c: Company) => {
     await supabase.from("companies").update({
       is_member: !c.is_member, member_verified_at: !c.is_member ? new Date().toISOString() : null,
@@ -65,6 +71,7 @@ export default function Admin() {
                 <div className="flex flex-wrap items-center gap-2">
                   <StatusBadge status={j.status} />
                   <span className="text-xs text-steel">{j.companies?.is_member ? "Member" : "Non-member"}</span>
+                  {j.is_featured && <span className="rounded border border-signal/30 bg-red-50 px-2 py-0.5 text-xs font-medium text-signal-dark">Featured{j.companies?.is_member ? "" : " (paid add-on)"}</span>}
                 </div>
                 <Link to={`/jobs/${j.id}`} className="mt-1 block text-lg font-semibold text-navy hover:underline">{j.title}</Link>
                 <p className="text-sm text-steel">
@@ -78,6 +85,7 @@ export default function Admin() {
                 ) : (
                   <button className="btn-primary px-3 py-1.5" onClick={() => act("admin_publish_job", { job: j.id })}>Publish</button>
                 )}
+                <button className="btn-ghost px-3 py-1.5" onClick={() => toggleFeatured(j)}>{j.is_featured ? "Remove featured" : "Make featured"}</button>
                 <button className="btn-ghost px-3 py-1.5" onClick={() => reject(j)}>Send back</button>
               </div>
             </div>

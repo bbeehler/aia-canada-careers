@@ -33,6 +33,7 @@ export interface Job {
   icar_training: string | null;
   uses_ai_screening: boolean;
   is_existing_vacancy: boolean;
+  is_featured: boolean;
   apply_method: ApplyMethod;
   apply_url: string | null;
   status: JobStatus;

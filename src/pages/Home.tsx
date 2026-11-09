@@ -1,8 +1,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import type { Job } from "../lib/types";
-import { PROVINCES } from "../lib/constants";
+import type { Job, Sector } from "../lib/types";
+import { EMPLOYMENT_TYPES, PROVINCES, formatPay } from "../lib/constants";
 import JobRow from "../components/JobRow";
 
 export default function Home() {
@@ -10,12 +10,17 @@ export default function Home() {
   const [q, setQ] = useState("");
   const [province, setProvince] = useState("");
   const [latest, setLatest] = useState<Job[]>([]);
+  const [featured, setFeatured] = useState<Job[]>([]);
 
   useEffect(() => {
     supabase.from("jobs").select("*, companies(name, is_member)")
       .eq("status", "published").gt("expires_at", new Date().toISOString())
       .order("published_at", { ascending: false }).limit(6)
       .then(({ data }) => setLatest((data as Job[]) ?? []));
+    supabase.from("jobs").select("*, companies(name, is_member)")
+      .eq("status", "published").eq("is_featured", true).gt("expires_at", new Date().toISOString())
+      .order("published_at", { ascending: false }).limit(9)
+      .then(({ data }) => setFeatured((data as Job[]) ?? []));
   }, []);
 
   const search = (e: FormEvent) => {
@@ -97,6 +102,38 @@ export default function Home() {
         </div>
       </section>
 
+      {featured.length > 0 && (
+        <section className="border-b border-line">
+          <div className="mx-auto max-w-6xl px-4 py-14">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <h2 className="text-4xl">Featured Careers</h2>
+                <p className="mt-1 text-steel">Featured openings from employers across the industry</p>
+              </div>
+              <Link to="/jobs" className="btn-ghost">View All Careers</Link>
+            </div>
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {featured.map((j) => (
+                <li key={j.id}>
+                  <Link to={`/jobs/${j.id}`} className="flex h-full flex-col rounded-lg border border-line bg-white p-5 hover:border-navy">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="font-sans text-lg font-semibold leading-snug tracking-normal text-ink">{j.title}</h3>
+                      <span className="shrink-0 rounded bg-line/70 px-2 py-0.5 text-xs font-medium text-ink">{SECTOR_TAG[j.sector]}</span>
+                    </div>
+                    <p className="mt-1 text-sm text-steel">{j.companies?.name} – {j.city}, {j.province}</p>
+                    <p className="mt-2 line-clamp-2 text-sm text-ink/80">{j.description}</p>
+                    <p className="mt-auto pt-4 text-sm">
+                      <span className="font-semibold text-emerald-700">{formatPay(j.pay_min, j.pay_max, j.pay_period)}</span>
+                      <span className="ml-2 text-steel">{EMPLOYMENT_TYPES[j.employment_type]}</span>
+                    </p>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
       <section className="mx-auto max-w-6xl px-4 py-12">
         <div className="mb-4 flex items-end justify-between gap-4">
           <h2 className="text-3xl">Newest jobs</h2>
@@ -156,3 +193,10 @@ const PATHWAYS = [
     ),
   },
 ];
+
+const SECTOR_TAG: Record<Sector, string> = {
+  mechanical: "Repair",
+  collision: "Collision",
+  parts_manufacturing: "Manufacturing",
+  business_operations: "Business",
+};

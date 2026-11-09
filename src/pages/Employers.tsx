@@ -19,12 +19,12 @@ export default function Employers() {
         <div className="panel rounded-r-none p-6 md:border-r-0">
           <p className="font-display text-3xl font-bold text-navy">AIA Canada members</p>
           <p className="mt-1 font-display text-5xl font-bold text-signal">Free</p>
-          <p className="mt-3 text-steel">Unlimited postings for every location of a member company. Each posting runs 30 days.</p>
+          <p className="mt-3 text-steel">Unlimited postings for every location of a member company, including featured placement on the home page. Each posting runs 30 days.</p>
         </div>
         <div className="panel rounded-l-none p-6">
           <p className="font-display text-3xl font-bold text-navy">Non-members</p>
           <p className="mt-1 font-display text-5xl font-bold text-navy">Per posting</p>
-          <p className="mt-3 text-steel">Pay a flat fee for each 30-day posting. Becoming a member makes every posting free.</p>
+          <p className="mt-3 text-steel">Pay a flat fee for each 30-day posting, plus an optional fee to feature it on the home page. Becoming a member makes both free.</p>
         </div>
       </section>
       <section className="mx-auto max-w-6xl px-4 pb-14">

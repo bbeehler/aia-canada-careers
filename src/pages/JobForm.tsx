@@ -50,6 +50,7 @@ export default function JobForm() {
       icar_training: String(f.get("icar_training") ?? "").trim() || null,
       uses_ai_screening: f.get("uses_ai_screening") === "yes",
       is_existing_vacancy: f.get("is_existing_vacancy") === "yes",
+      is_featured: f.get("is_featured") === "on",
       apply_method: applyMethod,
       apply_url: applyMethod === "external" ? String(f.get("apply_url")).trim() : null,
     };
@@ -185,6 +186,21 @@ export default function JobForm() {
               <input id="apply_url" name="apply_url" type="url" required placeholder="https://" defaultValue={job.apply_url ?? ""} className="field" />
             </div>
           )}
+        </fieldset>
+
+        <fieldset className="panel border-l-4 border-l-signal p-6">
+          <legend className="px-1 font-display text-2xl font-bold text-navy">Feature this posting</legend>
+          <label className="flex items-start gap-3">
+            <input type="checkbox" name="is_featured" defaultChecked={job.is_featured} className="mt-1" />
+            <span>
+              <span className="block font-medium">Show this job in Featured Careers on the home page</span>
+              <span className="mt-0.5 block text-sm text-steel">
+                {company.is_member
+                  ? "Included free with your AIA Canada membership."
+                  : "Available for an additional fee, paid together with your posting. AIA Canada members feature postings free."}
+              </span>
+            </span>
+          </label>
         </fieldset>
 
         {error && <p className="text-sm text-signal" role="alert">{error}</p>}
