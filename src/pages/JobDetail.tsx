@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { Link } from "../components/L";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
 import type { Job } from "../lib/types";
@@ -8,6 +9,7 @@ import StatusBadge from "../components/StatusBadge";
 import PageHero from "../components/PageHero";
 import PayComparison from "../components/PayComparison";
 
+import { t } from "../lib/i18n";
 export default function JobDetail() {
   const { id } = useParams();
   const [job, setJob] = useState<Job | null | undefined>(undefined);
@@ -17,11 +19,11 @@ export default function JobDetail() {
       .then(({ data }) => setJob((data as Job) ?? null));
   }, [id]);
 
-  if (job === undefined) return <p className="mx-auto max-w-6xl px-4 py-12 text-steel">Loading…</p>;
+  if (job === undefined) return <p className="mx-auto max-w-6xl px-4 py-12 text-steel">{t("Loading…")}</p>;
   if (job === null) {
     return (
-      <PageHero compact title="This job isn’t available" body="It may have been filled or expired."
-        actions={<Link to="/jobs" className="btn bg-white px-6 py-3 text-navy hover:bg-navy-soft">Browse open jobs</Link>} />
+      <PageHero compact title={t("This job isn’t available")} body={t("It may have been filled or expired.")}
+        actions={<Link to="/jobs" className="btn bg-white px-6 py-3 text-navy hover:bg-navy-soft">{t("Browse open jobs")}</Link>} />
     );
   }
 
@@ -36,40 +38,40 @@ export default function JobDetail() {
         {job.status !== "published" && <span className="ml-3 align-middle"><StatusBadge status={job.status} /></span>}
       </>}
     >
-      <Link to="/jobs" className="mt-5 self-start text-sm text-white/70 hover:text-white">← Back to jobs</Link>
+      <Link to="/jobs" className="mt-5 self-start text-sm text-white/70 hover:text-white">{t("← Back to jobs")}</Link>
     </PageHero>
     <div className="mx-auto grid max-w-6xl gap-10 px-4 py-10 lg:grid-cols-[1fr_340px]">
       <article>
         <dl className="grid grid-cols-2 gap-px overflow-hidden rounded-md border border-line bg-line sm:grid-cols-3">
           <div className="bg-white px-4 py-3">
-            <dt className="text-xs text-steel">Pay</dt>
+            <dt className="text-xs text-steel">{t("Pay")}</dt>
             <dd className="font-display text-xl font-semibold text-navy">{formatPay(job.pay_min, job.pay_max, job.pay_period)}</dd>
           </div>
           <div className="bg-white px-4 py-3">
-            <dt className="text-xs text-steel">Job type</dt>
+            <dt className="text-xs text-steel">{t("Job type")}</dt>
             <dd className="font-medium">{EMPLOYMENT_TYPES[job.employment_type]}</dd>
           </div>
           <div className="col-span-2 bg-white px-4 py-3 sm:col-span-1">
-            <dt className="text-xs text-steel">Posted</dt>
-            <dd className="font-medium">{timeAgo(job.published_at) || "Not yet published"}</dd>
+            <dt className="text-xs text-steel">{t("Posted")}</dt>
+            <dd className="font-medium">{timeAgo(job.published_at) || t("Not yet published")}</dd>
           </div>
         </dl>
 
         {job.career_id && <PayComparison job={job} />}
 
-        <h2 className="mt-10 text-2xl">About the job</h2>
+        <h2 className="mt-10 text-2xl">{t("About the job")}</h2>
         <p className="mt-3 max-w-prose whitespace-pre-line leading-relaxed">{job.description}</p>
 
         {job.requirements && (
           <>
-            <h2 className="mt-8 text-2xl">What you’ll need</h2>
+            <h2 className="mt-8 text-2xl">{t("What you’ll need")}</h2>
             <p className="mt-3 max-w-prose whitespace-pre-line leading-relaxed">{job.requirements}</p>
           </>
         )}
 
         <div className="mt-8 max-w-prose space-y-1 border-t border-line pt-4 text-sm text-steel">
-          <p>{job.is_existing_vacancy ? "This posting is for a current vacancy." : "This posting is for a future or anticipated vacancy, not a current opening."}</p>
-          <p>{job.uses_ai_screening ? "This employer uses AI to screen, assess or select applicants." : "This employer does not use AI to screen applicants."}</p>
+          <p>{job.is_existing_vacancy ? t("This posting is for a current vacancy.") : t("This posting is for a future or anticipated vacancy, not a current opening.")}</p>
+          <p>{job.uses_ai_screening ? t("This employer uses AI to screen, assess or select applicants.") : t("This employer does not use AI to screen applicants.")}</p>
         </div>
       </article>
 
@@ -77,10 +79,10 @@ export default function JobDetail() {
         <div id="apply" className="scroll-mt-32"><ApplyBox job={job} /></div>
         {job.icar_training && (
           <div className="panel border-l-4 border-l-signal p-5">
-            <p className="font-display text-xl font-bold text-navy">Training this employer values</p>
+            <p className="font-display text-xl font-bold text-navy">{t("Training this employer values")}</p>
             <p className="mt-2 text-sm">{job.icar_training}</p>
             <a href="https://www.i-car.ca" className="mt-3 inline-block text-sm font-semibold text-navy hover:underline">
-              Find I-CAR courses in Canada
+              {t("Find I-CAR courses in Canada")}
             </a>
           </div>
         )}
@@ -89,9 +91,9 @@ export default function JobDetail() {
     {job.status === "published" && (
       <div className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-white/95 px-4 py-3 backdrop-blur lg:hidden" style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}>
         {job.apply_method === "external" && job.apply_url ? (
-          <a href={job.apply_url} target="_blank" rel="noopener noreferrer" className="btn-primary w-full">Apply on employer’s site</a>
+          <a href={job.apply_url} target="_blank" rel="noopener noreferrer" className="btn-primary w-full">{t("Apply on employer’s site")}</a>
         ) : (
-          <a href="#apply" className="btn-primary w-full">Apply for this job</a>
+          <a href="#apply" className="btn-primary w-full">{t("Apply for this job")}</a>
         )}
       </div>
     )}
@@ -111,10 +113,10 @@ function ApplyBox({ job }: { job: Job }) {
   if (job.apply_method === "external" && job.apply_url) {
     return (
       <div className="panel p-5">
-        <p className="font-display text-xl font-bold text-navy">Apply for this job</p>
-        <p className="mt-1 text-sm text-steel">This employer takes applications on their own website.</p>
+        <p className="font-display text-xl font-bold text-navy">{t("Apply for this job")}</p>
+        <p className="mt-1 text-sm text-steel">{t("This employer takes applications on their own website.")}</p>
         <a href={job.apply_url} target="_blank" rel="noopener noreferrer" className="btn-primary mt-4 w-full">
-          Apply on employer’s site
+          {t("Apply on employer’s site")}
         </a>
       </div>
     );
@@ -123,24 +125,24 @@ function ApplyBox({ job }: { job: Job }) {
   if (!session) {
     return (
       <div className="panel p-5">
-        <p className="font-display text-xl font-bold text-navy">Apply for this job</p>
-        <p className="mt-1 text-sm text-steel">Create a free account to apply and keep track of your applications.</p>
-        <Link to={`/sign-in?mode=sign-up&next=/jobs/${job.id}`} className="btn-primary mt-4 w-full">Create account to apply</Link>
-        <Link to={`/sign-in?next=/jobs/${job.id}`} className="btn-ghost mt-2 w-full">I already have an account</Link>
+        <p className="font-display text-xl font-bold text-navy">{t("Apply for this job")}</p>
+        <p className="mt-1 text-sm text-steel">{t("Create a free account to apply and keep track of your applications.")}</p>
+        <Link to={`/sign-in?mode=sign-up&next=/jobs/${job.id}`} className="btn-primary mt-4 w-full">{t("Create account to apply")}</Link>
+        <Link to={`/sign-in?next=/jobs/${job.id}`} className="btn-ghost mt-2 w-full">{t("I already have an account")}</Link>
       </div>
     );
   }
 
   if (profile?.role !== "candidate") {
-    return <div className="panel p-5 text-sm text-steel">Applications are submitted from job seeker accounts.</div>;
+    return <div className="panel p-5 text-sm text-steel">{t("Applications are submitted from job seeker accounts.")}</div>;
   }
 
   if (sent) {
     return (
       <div className="panel p-5">
-        <p className="font-display text-xl font-bold text-navy">Application sent</p>
-        <p className="mt-1 text-sm text-steel">The employer will contact you directly if they’d like to move forward.</p>
-        <Link to="/applications" className="btn-ghost mt-4 w-full">See my applications</Link>
+        <p className="font-display text-xl font-bold text-navy">{t("Application sent")}</p>
+        <p className="mt-1 text-sm text-steel">{t("The employer will contact you directly if they’d like to move forward.")}</p>
+        <Link to="/applications" className="btn-ghost mt-4 w-full">{t("See my applications")}</Link>
       </div>
     );
   }
@@ -170,7 +172,7 @@ function ApplyBox({ job }: { job: Job }) {
     });
     setBusy(false);
     if (err) {
-      setError(err.code === "23505" ? "You’ve already applied to this job." : "Your application didn’t send. Check the form and try again.");
+      setError(err.code === "23505" ? t("You’ve already applied to this job.") : t("Your application didn’t send. Check the form and try again."));
       return;
     }
     setSent(true);
@@ -178,30 +180,30 @@ function ApplyBox({ job }: { job: Job }) {
 
   return (
     <form onSubmit={submit} className="panel space-y-4 p-5">
-      <p className="font-display text-xl font-bold text-navy">Apply for this job</p>
+      <p className="font-display text-xl font-bold text-navy">{t("Apply for this job")}</p>
       <div>
-        <label className="label" htmlFor="full_name">Full name</label>
+        <label className="label" htmlFor="full_name">{t("Full name")}</label>
         <input id="full_name" name="full_name" required className="field" defaultValue={profile.full_name ?? ""} />
       </div>
       <div>
-        <label className="label" htmlFor="email">Email</label>
+        <label className="label" htmlFor="email">{t("Email")}</label>
         <input id="email" name="email" type="email" required className="field" defaultValue={session.user.email ?? ""} />
       </div>
       <div>
-        <label className="label" htmlFor="phone">Phone (optional)</label>
+        <label className="label" htmlFor="phone">{t("Phone (optional)")}</label>
         <input id="phone" name="phone" type="tel" className="field" />
       </div>
       <div>
-        <label className="label" htmlFor="resume">Resume</label>
+        <label className="label" htmlFor="resume">{t("Resume")}</label>
         <input id="resume" name="resume" type="file" accept=".pdf,.doc,.docx" className="block w-full text-sm" />
-        <p className="hint">PDF or Word, up to 5 MB.</p>
+        <p className="hint">{t("PDF or Word, up to 5 MB.")}</p>
       </div>
       <div>
-        <label className="label" htmlFor="message">Message to the employer (optional)</label>
+        <label className="label" htmlFor="message">{t("Message to the employer (optional)")}</label>
         <textarea id="message" name="message" rows={4} className="field" />
       </div>
       {error && <p className="text-sm text-signal" role="alert">{error}</p>}
-      <button className="btn-primary w-full" disabled={busy}>{busy ? "Sending…" : "Send application"}</button>
+      <button className="btn-primary w-full" disabled={busy}>{busy ? t("Sending…") : t("Send application")}</button>
     </form>
   );
 }

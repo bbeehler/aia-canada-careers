@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { Link } from "../components/L";
 import { supabase } from "../lib/supabase";
 import { Highlighted, useContent } from "../lib/content";
 import { SECTORS } from "../lib/constants";
@@ -8,6 +9,7 @@ import PageHero from "../components/PageHero";
 import SectorIcon from "../components/SectorIcon";
 import EditPageLink from "../components/EditPageLink";
 
+import { localize, t } from "../lib/i18n";
 export default function Careers() {
   const c = useContent();
   const [params, setParams] = useSearchParams();
@@ -20,7 +22,7 @@ export default function Careers() {
 
   useEffect(() => {
     supabase.from("careers").select("*").eq("is_published", true).order("sort_order").order("title")
-      .then(({ data }) => setCareers((data as Career[]) ?? []));
+      .then(({ data }) => setCareers(((data as Career[]) ?? []).map(localize)));
   }, []);
 
   const levels = useMemo(() => Array.from(new Set((careers ?? []).map((x) => x.education_level).filter(Boolean))), [careers]);
@@ -48,37 +50,37 @@ export default function Careers() {
         <div className="grid gap-3 md:grid-cols-[1fr_220px_220px]">
           <div className="flex gap-2">
           <div className="relative flex-1">
-            <label htmlFor="career-q" className="sr-only">Search careers</label>
+            <label htmlFor="career-q" className="sr-only">{t("Search careers")}</label>
             <svg viewBox="0 0 24 24" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 fill-none stroke-steel stroke-2" aria-hidden>
               <circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" />
             </svg>
-            <input id="career-q" className="field pl-9" placeholder="Search careers…" value={q} onChange={(e) => set("q", e.target.value)} enterKeyHint="search" />
+            <input id="career-q" className="field pl-9" placeholder={t("Search careers…")} value={q} onChange={(e) => set("q", e.target.value)} enterKeyHint="search" />
           </div>
           <button type="button" onClick={() => setShowFilters(!showFilters)} aria-expanded={showFilters} className="btn-ghost shrink-0 md:hidden">
             Filters{activeFilters ? ` (${activeFilters})` : ""}
           </button>
           </div>
           <div className={`${showFilters ? "grid" : "hidden"} gap-3 sm:grid-cols-2 md:contents`}>
-          <select aria-label="Category" className="field" value={category} onChange={(e) => set("category", e.target.value)}>
-            <option value="">All Categories</option>
+          <select aria-label={t("Category")} className="field" value={category} onChange={(e) => set("category", e.target.value)}>
+            <option value="">{t("All Categories")}</option>
             {(Object.keys(SECTORS) as Sector[]).map((s) => <option key={s} value={s}>{SECTORS[s].label}</option>)}
           </select>
-          <select aria-label="Education level" className="field" value={level} onChange={(e) => set("level", e.target.value)}>
-            <option value="">All Levels</option>
+          <select aria-label={t("Education level")} className="field" value={level} onChange={(e) => set("level", e.target.value)}>
+            <option value="">{t("All Levels")}</option>
             {levels.map((l) => <option key={l} value={l}>{l}</option>)}
           </select>
           </div>
         </div>
 
         {careers === null ? (
-          <p className="mt-8 text-steel">Loading careers…</p>
+          <p className="mt-8 text-steel">{t("Loading careers…")}</p>
         ) : (
           <>
-            <p className="mt-6 text-sm text-steel">Showing {shown.length} {shown.length === 1 ? "career" : "careers"}</p>
+            <p className="mt-6 text-sm text-steel">{t(shown.length === 1 ? "Showing {n} career" : "Showing {n} careers", { n: shown.length })}</p>
             {shown.length === 0 ? (
               <div className="panel mt-4 px-5 py-10">
-                <p className="font-medium">No careers match those filters.</p>
-                <button className="btn-ghost mt-4" onClick={() => setParams(new URLSearchParams(), { replace: true })}>Clear filters</button>
+                <p className="font-medium">{t("No careers match those filters.")}</p>
+                <button className="btn-ghost mt-4" onClick={() => setParams(new URLSearchParams(), { replace: true })}>{t("Clear filters")}</button>
               </div>
             ) : (
               <ul className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -92,7 +94,7 @@ export default function Careers() {
                       <p className="mt-3 line-clamp-2 text-sm text-ink/80">{x.summary}</p>
                       <p className="mt-auto flex flex-wrap gap-x-4 gap-y-1 pt-4 text-sm">
                         {x.salary_range && <span className="font-semibold text-emerald-700">{x.salary_range}</span>}
-                        {x.growth && <span className="text-steel"><span aria-hidden>↗ </span>{x.growth}<span className="sr-only"> job growth</span></span>}
+                        {x.growth && <span className="text-steel"><span aria-hidden>↗ </span>{x.growth}<span className="sr-only"> {t("job growth")}</span></span>}
                         {x.education_level && <span className="text-steel">{x.education_level}</span>}
                       </p>
                     </Link>

@@ -1,8 +1,10 @@
 import { useState, type FormEvent } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
+import { Link, useNavigate } from "../components/L";
 import { supabase } from "../lib/supabase";
 import PageHero from "../components/PageHero";
 
+import { lp, t } from "../lib/i18n";
 export default function SignIn() {
   const [params] = useSearchParams();
   const navigate = useNavigate();
@@ -37,24 +39,24 @@ export default function SignIn() {
       email, password,
       options: {
         data: { role, full_name: String(f.get("full_name")) },
-        emailRedirectTo: `${window.location.origin}${role === "employer" ? "/employer" : next || "/jobs"}`,
+        emailRedirectTo: `${window.location.origin}${lp(role === "employer" ? "/employer" : next || "/jobs")}`,
       },
     });
     setBusy(false);
     if (err) { setError(err.message); return; }
     if (data.session) navigate(role === "employer" ? "/employer" : next || "/jobs");
-    else setNotice(`Check ${email} for a link to confirm your account.`);
+    else setNotice(t("Check {email} for a link to confirm your account.", { email }));
   };
 
   return (
     <>
-    <PageHero compact tag="Your account" title={mode === "sign-in" ? "Sign in" : "Create an account"}
-      body={mode === "sign-in" ? "Job seekers track applications. Employers manage postings." : "Free for job seekers. AIA Canada members post jobs free."} />
+    <PageHero compact tag={t("Your account")} title={mode === "sign-in" ? t("Sign in") : t("Create an account")}
+      body={mode === "sign-in" ? t("Job seekers track applications. Employers manage postings.") : t("Free for job seekers. AIA Canada members post jobs free.")} />
     <div className="mx-auto max-w-md px-4 py-12">
       <p className="text-steel">
-        {mode === "sign-in" ? "New here? " : "Already have an account? "}
+        {mode === "sign-in" ? t("New here? ") : t("Already have an account? ")}
         <button className="font-semibold text-navy underline" onClick={() => { setMode(mode === "sign-in" ? "sign-up" : "sign-in"); setError(""); }}>
-          {mode === "sign-in" ? "Create an account" : "Sign in"}
+          {mode === "sign-in" ? t("Create an account") : t("Sign in")}
         </button>
       </p>
 
@@ -62,48 +64,48 @@ export default function SignIn() {
         {mode === "sign-up" && (
           <>
             <fieldset>
-              <legend className="label">I’m here to</legend>
+              <legend className="label">{t("I’m here to")}</legend>
               <div className="grid grid-cols-2 gap-2">
                 {(["candidate", "employer"] as const).map((r) => (
                   <label key={r} className={`cursor-pointer rounded border px-3 py-3 text-sm font-medium ${role === r ? "border-navy bg-navy-soft text-navy" : "border-line"}`}>
                     <input type="radio" name="role" value={r} checked={role === r} onChange={() => setRole(r)} className="sr-only" />
-                    {r === "candidate" ? "Find a job" : "Hire people"}
+                    {r === "candidate" ? t("Find a job") : t("Hire people")}
                   </label>
                 ))}
               </div>
             </fieldset>
             <div>
-              <label className="label" htmlFor="full_name">Full name</label>
+              <label className="label" htmlFor="full_name">{t("Full name")}</label>
               <input id="full_name" name="full_name" required className="field" autoComplete="name" />
             </div>
           </>
         )}
         <div>
-          <label className="label" htmlFor="email">{role === "employer" && mode === "sign-up" ? "Work email" : "Email"}</label>
+          <label className="label" htmlFor="email">{role === "employer" && mode === "sign-up" ? t("Work email") : t("Email")}</label>
           <input id="email" name="email" type="email" required className="field" autoComplete="email" />
         </div>
         <div>
-          <label className="label" htmlFor="password">Password</label>
+          <label className="label" htmlFor="password">{t("Password")}</label>
           <input id="password" name="password" type="password" required minLength={8} className="field"
             autoComplete={mode === "sign-in" ? "current-password" : "new-password"} />
-          {mode === "sign-up" && <p className="hint">At least 8 characters.</p>}
+          {mode === "sign-up" && <p className="hint">{t("At least 8 characters.")}</p>}
         </div>
         {mode === "sign-up" && role === "candidate" && (
           <label className="flex items-start gap-2 text-sm">
             <input type="checkbox" name="age_ok" className="mt-0.5" />
-            <span>I’m 16 or older.</span>
+            <span>{t("I’m 16 or older.")}</span>
           </label>
         )}
         {mode === "sign-up" && role === "employer" && (
-          <p className="text-sm text-steel">AIA Canada members post free. We’ll confirm your membership when you add your company.</p>
+          <p className="text-sm text-steel">{t("AIA Canada members post free. We’ll confirm your membership when you add your company.")}</p>
         )}
         {error && <p className="text-sm text-signal" role="alert">{error}</p>}
         {notice && <p className="text-sm text-navy" role="status">{notice}</p>}
         <button className="btn-primary w-full" disabled={busy}>
-          {busy ? "One moment…" : mode === "sign-in" ? "Sign in" : "Create account"}
+          {busy ? t("One moment…") : mode === "sign-in" ? t("Sign in") : t("Create account")}
         </button>
       </form>
-      <p className="mt-4 text-center text-sm text-steel"><Link to="/jobs" className="hover:text-navy">Browse jobs without an account</Link></p>
+      <p className="mt-4 text-center text-sm text-steel"><Link to="/jobs" className="hover:text-navy">{t("Browse jobs without an account")}</Link></p>
     </div>
     </>
   );

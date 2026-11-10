@@ -1,5 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { supabase } from "./supabase";
+import { getLang, type Lang } from "./i18n";
+import { FR_DEFAULTS } from "./contentFr";
 
 export type FieldType = "text" | "textarea" | "list" | "image";
 export interface ContentField { key: string; label: string; type: FieldType; default: string; hint?: string }
@@ -210,29 +212,38 @@ const DEFAULTS: Record<string, string> = Object.fromEntries(
   CONTENT_SECTIONS.flatMap((s) => s.fields.map((f) => [f.key, f.default])),
 );
 
-interface ContentState { get: (key: string) => string; list: (key: string) => string[]; rows: (key: string) => string[][]; reload: () => Promise<void> }
-const ContentContext = createContext<ContentState>({ get: (k) => DEFAULTS[k] ?? "", list: () => [], rows: () => [], reload: async () => {} });
+interface ContentState {
+  get: (key: string) => string; list: (key: string) => string[]; rows: (key: string) => string[][];
+  saved: (key: string, lang: Lang) => string | undefined; reload: () => Promise<void>;
+}
+const ContentContext = createContext<ContentState>({ get: (k) => DEFAULTS[k] ?? "", list: () => [], rows: () => [], saved: () => undefined, reload: async () => {} });
 
 export function ContentProvider({ children }: { children: ReactNode }) {
-  const [values, setValues] = useState<Record<string, string>>({});
+  const [values, setValues] = useState<Record<Lang, Record<string, string>>>({ en: {}, fr: {} });
   const reload = useCallback(async () => {
-    const { data } = await supabase.from("site_content").select("key, value");
-    setValues(Object.fromEntries((data ?? []).map((r: { key: string; value: string }) => [r.key, r.value])));
+    const { data } = await supabase.from("site_content").select("key, value, lang");
+    const next: Record<Lang, Record<string, string>> = { en: {}, fr: {} };
+    (data ?? []).forEach((r: { key: string; value: string; lang: Lang }) => { next[r.lang === "fr" ? "fr" : "en"][r.key] = r.value; });
+    setValues(next);
   }, []);
   useEffect(() => { reload(); }, [reload]);
 
   // Memoized so editors don't lose unsaved typing when the app re-renders for other reasons.
+  // French: saved French, else the built-in French default, else English.
   const state = useMemo<ContentState>(() => {
-    const get = (key: string) => values[key] ?? DEFAULTS[key] ?? "";
+    const get = (key: string) => getLang() === "fr"
+      ? values.fr[key] ?? FR_DEFAULTS[key] ?? values.en[key] ?? DEFAULTS[key] ?? ""
+      : values.en[key] ?? DEFAULTS[key] ?? "";
     const list = (key: string) => get(key).split("\n").map((s) => s.trim()).filter(Boolean);
     const rows = (key: string) => list(key).map((line) => line.split("|").map((p) => p.trim()));
-    return { get, list, rows, reload };
+    const saved = (key: string, lang: Lang) => values[lang][key];
+    return { get, list, rows, saved, reload };
   }, [values, reload]);
   return <ContentContext.Provider value={state}>{children}</ContentContext.Provider>;
 }
 
 export const useContent = () => useContext(ContentContext);
-export const contentDefault = (key: string) => DEFAULTS[key] ?? "";
+export const contentDefault = (key: string, lang: Lang = "en") => (lang === "fr" ? FR_DEFAULTS[key] ?? DEFAULTS[key] ?? "" : DEFAULTS[key] ?? "");
 
 // Renders text with **bold** words.
 export function Bold({ text, className = "font-semibold text-white" }: { text: string; className?: string }) {

@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../components/L";
 import { Bold, Highlighted, useContent } from "../lib/content";
 import SmartLink from "../components/SmartLink";
 import EditPageLink from "../components/EditPageLink";
 import PageHero, { heroPrimary, heroSecondary } from "../components/PageHero";
 
+import { t } from "../lib/i18n";
 const STEP_COLOURS = [
   { dot: "bg-navy-soft text-navy", chip: "bg-navy-soft text-navy" },
   { dot: "bg-violet-100 text-violet-800", chip: "bg-violet-50 text-violet-800" },
@@ -48,8 +49,8 @@ export default function About() {
         body={c.get("about.hero.body")}
         image={c.get("about.hero.image") || undefined}
         actions={<>
-          <Link to="/careers" className={heroPrimary}>Explore Careers <span aria-hidden>→</span></Link>
-          <Link to="/quiz" className={heroSecondary}>Take the Career Quiz</Link>
+          <Link to="/careers" className={heroPrimary}>{t("Explore Careers")} <span aria-hidden>→</span></Link>
+          <Link to="/quiz" className={heroSecondary}>{t("Take the Career Quiz")}</Link>
         </>}
       />
       {/* Numbers strip */}
@@ -117,10 +118,10 @@ export default function About() {
                   {i < steps.length - 1 && <span className="mt-2 w-px flex-1 bg-line" aria-hidden />}
                 </div>
                 <div className="panel p-5">
-                  <p className="font-semibold text-ink">{title} <span className="ml-1 rounded border border-line px-1.5 py-0.5 text-xs font-medium text-steel">Step {i + 1}</span></p>
+                  <p className="font-semibold text-ink">{title} <span className="ml-1 rounded border border-line px-1.5 py-0.5 text-xs font-medium text-steel">{t("Step {n}", { n: i + 1 })}</span></p>
                   {text && <p className="mt-2 text-sm leading-relaxed text-ink/80">{text}</p>}
                   {examples && (
-                    <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Examples">
+                    <ul className="mt-3 flex flex-wrap gap-1.5" aria-label={t("Examples")}>
                       {examples.split(",").map((e) => e.trim()).filter(Boolean).map((e) => (
                         <li key={e} className={`rounded px-2 py-0.5 text-xs font-medium ${colour.chip}`}>{e}</li>
                       ))}
@@ -154,8 +155,8 @@ export default function About() {
         <h2 className="text-4xl sm:text-5xl"><Highlighted text={c.get("about.cta.heading")} className="text-signal" /></h2>
         <p className="mt-3 text-lg text-steel">{c.get("about.cta.body")}</p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
-          <Link to="/careers" className="btn-navy px-5 py-3">Explore All Careers <span aria-hidden>→</span></Link>
-          <Link to="/quiz" className="btn-ghost px-5 py-3">Take the Career Quiz</Link>
+          <Link to="/careers" className="btn-navy px-5 py-3">{t("Explore All Careers")} <span aria-hidden>→</span></Link>
+          <Link to="/quiz" className="btn-ghost px-5 py-3">{t("Take the Career Quiz")}</Link>
           <SmartLink to={c.get("about.cta.link.url")} className="btn px-4 py-3 text-navy hover:underline">{c.get("about.cta.link.label")}</SmartLink>
         </div>
       </section>

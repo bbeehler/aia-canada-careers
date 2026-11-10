@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "../components/L";
 import { supabase } from "../lib/supabase";
 import type { Job, Sector } from "../lib/types";
 import { EMPLOYMENT_TYPES, PROVINCES, formatPay } from "../lib/constants";
@@ -8,6 +8,7 @@ import EditPageLink from "../components/EditPageLink";
 import SmartLink from "../components/SmartLink";
 import { Bold, Highlighted, useContent } from "../lib/content";
 
+import { t } from "../lib/i18n";
 export default function Home() {
   const navigate = useNavigate();
   const c = useContent();
@@ -58,17 +59,17 @@ export default function Home() {
           </p>
 
           <form onSubmit={search} className="mt-9 grid max-w-3xl gap-px overflow-hidden rounded-md bg-white/20 sm:grid-cols-[1fr_180px_auto]">
-            <label className="sr-only" htmlFor="q">Job title or keyword</label>
+            <label className="sr-only" htmlFor="q">{t("Job title or keyword")}</label>
             <input id="q" value={q} onChange={(e) => setQ(e.target.value)}
-              placeholder="Job title or keyword"
+              placeholder={t("Job title or keyword")}
               className="bg-white px-4 py-4 text-ink placeholder:text-steel/70 focus:outline-none" />
-            <label className="sr-only" htmlFor="province">Province</label>
+            <label className="sr-only" htmlFor="province">{t("Province")}</label>
             <select id="province" value={province} onChange={(e) => setProvince(e.target.value)}
               className="bg-white px-4 py-4 text-ink focus:outline-none">
-              <option value="">All of Canada</option>
+              <option value="">{t("All of Canada")}</option>
               {PROVINCES.map(([code, name]) => <option key={code} value={code}>{name}</option>)}
             </select>
-            <button className="bg-signal px-6 py-4 font-semibold text-white hover:bg-signal-dark">Search jobs</button>
+            <button className="bg-signal px-6 py-4 font-semibold text-white hover:bg-signal-dark">{t("Search jobs")}</button>
           </form>
           <Link to="/quiz" className="btn mt-4 w-full border border-white/30 bg-white/10 px-6 py-3 text-white hover:bg-white/20 sm:w-auto sm:self-start">
             {c.get("home.hero.quiz_button")}
@@ -164,14 +165,14 @@ export default function Home() {
       <section className="mx-auto max-w-6xl px-4 py-12">
         <div className="mb-4 flex items-end justify-between gap-4">
           <h2 className="text-3xl">{c.get("home.newest.heading")}</h2>
-          <Link to="/jobs" className="text-sm font-semibold text-navy hover:underline">See all jobs</Link>
+          <Link to="/jobs" className="text-sm font-semibold text-navy hover:underline">{t("See all jobs")}</Link>
         </div>
         {latest.length ? (
           <ul className="overflow-hidden rounded-md border border-line border-b-0">
             {latest.map((j) => <JobRow key={j.id} job={j} />)}
           </ul>
         ) : (
-          <p className="panel px-5 py-8 text-steel">New jobs will appear here as employers post them.</p>
+          <p className="panel px-5 py-8 text-steel">{t("New jobs will appear here as employers post them.")}</p>
         )}
       </section>
 
@@ -182,8 +183,8 @@ export default function Home() {
             <p className="mt-3 max-w-lg text-steel">{c.get("home.employers.body")}</p>
           </div>
           <div className="flex flex-wrap gap-3 md:justify-end">
-            <Link to="/employers" className="btn-primary">Post a job</Link>
-            <a href="https://www.aiacanada.com" className="btn-ghost">About AIA membership</a>
+            <Link to="/employers" className="btn-primary">{t("Post a job")}</Link>
+            <a href="https://www.aiacanada.com" className="btn-ghost">{t("About AIA membership")}</a>
           </div>
         </div>
       </section>
@@ -238,8 +239,8 @@ const PATHWAYS = [
 ];
 
 const SECTOR_TAG: Record<Sector, string> = {
-  mechanical: "Repair",
-  collision: "Collision",
-  parts_manufacturing: "Manufacturing",
-  business_operations: "Business",
+  mechanical: t("Repair"),
+  collision: t("Collision"),
+  parts_manufacturing: t("Manufacturing"),
+  business_operations: t("Business"),
 };

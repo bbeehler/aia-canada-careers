@@ -91,6 +91,7 @@ export interface Career {
   education_required: string;
   education_text: string;
   noc_code: string;
+  translations?: { fr?: Partial<Record<string, string>> };
 }
 
 export type ResourceKind = "organization" | "website" | "program" | "guide";
@@ -104,4 +105,5 @@ export interface Resource {
   audience: Audience;
   sort_order: number;
   is_published: boolean;
+  translations?: { fr?: Partial<Record<string, string>> };
 }

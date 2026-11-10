@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { Link } from "../components/L";
 import { supabase } from "../lib/supabase";
 import { Highlighted, useContent } from "../lib/content";
 import { SECTORS, formatPay } from "../lib/constants";
@@ -8,6 +9,7 @@ import EditPageLink from "../components/EditPageLink";
 import StatcanWages from "../components/StatcanWages";
 import PageHero, { heroPrimary, heroSecondary } from "../components/PageHero";
 
+import { t } from "../lib/i18n";
 interface PayRow { sector: Sector; pay_min: number; pay_max: number; pay_period: PayPeriod }
 interface Range { min: number; max: number; count: number }
 
@@ -45,8 +47,8 @@ export default function Parents() {
       body={c.get("parents.intro")}
       image={c.get("parents.hero.image") || undefined}
       actions={<>
-        <a href="#pay" className={heroPrimary}>What jobs pay</a>
-        <Link to="/quiz" className={heroSecondary}>Take the Career Quiz</Link>
+        <a href="#pay" className={heroPrimary}>{t("What jobs pay")}</a>
+        <Link to="/quiz" className={heroSecondary}>{t("Take the Career Quiz")}</Link>
       </>}
     />
     <div className="mx-auto max-w-4xl px-4 py-12">
@@ -54,8 +56,8 @@ export default function Parents() {
         <h2 className="text-3xl">{c.get("parents.training.heading")}</h2>
         <p className="mt-3 max-w-prose whitespace-pre-line leading-relaxed">{c.get("parents.training.body")}</p>
         <div className="mt-5 flex flex-wrap gap-3">
-          <Link to="/quiz" className="btn-navy">Take the Career Quiz together</Link>
-          <a href="https://www.i-car.ca" className="btn-ghost">Explore I-CAR training</a>
+          <Link to="/quiz" className="btn-navy">{t("Take the Career Quiz together")}</Link>
+          <a href="https://www.i-car.ca" className="btn-ghost">{t("Explore I-CAR training")}</a>
         </div>
       </section>
 
@@ -67,17 +69,17 @@ export default function Parents() {
         <h3 className="mt-10 font-sans text-xl font-semibold tracking-normal text-ink">{c.get("parents.postings.heading")}</h3>
         <p className="mt-2 max-w-prose text-steel">{c.get("parents.pay.body")}</p>
         {ranges === null ? (
-          <p className="mt-5 text-steel">Loading pay ranges…</p>
+          <p className="mt-5 text-steel">{t("Loading pay ranges…")}</p>
         ) : rows.length === 0 ? (
-          <p className="panel mt-5 px-5 py-6 text-steel">Pay ranges will appear here as employers post jobs.</p>
+          <p className="panel mt-5 px-5 py-6 text-steel">{t("Pay ranges will appear here as employers post jobs.")}</p>
         ) : (
           <div className="mt-5 overflow-x-auto">
             <table className="w-full border-collapse overflow-hidden rounded-md border border-line bg-white text-sm">
               <thead className="bg-paper text-left text-steel">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Career area</th>
-                  <th className="px-4 py-3 font-medium">Pay range in current postings</th>
-                  <th className="px-4 py-3 font-medium">Open jobs</th>
+                  <th className="px-4 py-3 font-medium">{t("Career area")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Pay range in current postings")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Open jobs")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -97,7 +99,7 @@ export default function Parents() {
       <section className="mt-14">
         <h2 className="text-3xl">{c.get("parents.market.heading")}</h2>
         <p className="mt-3 max-w-prose leading-relaxed">{c.get("parents.market.body")}</p>
-        <Link to="/jobs" className="btn-primary mt-5">Browse open jobs</Link>
+        <Link to="/jobs" className="btn-primary mt-5">{t("Browse open jobs")}</Link>
       </section>
       <EditPageLink section="parents" />
     </div>

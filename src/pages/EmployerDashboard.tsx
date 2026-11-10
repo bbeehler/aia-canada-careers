@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../components/L";
 import { supabase } from "../lib/supabase";
 import { useCompany } from "../lib/useCompany";
 import type { Job } from "../lib/types";
@@ -8,6 +8,7 @@ import StatusBadge from "../components/StatusBadge";
 import { checkMembership, MEMBERSHIP_MESSAGES } from "../lib/membership";
 import PageHero from "../components/PageHero";
 
+import { locale, t } from "../lib/i18n";
 const PAYMENT_URL = import.meta.env.VITE_NONMEMBER_PAYMENT_URL as string | undefined;
 const FEATURED_PAYMENT_URL = import.meta.env.VITE_NONMEMBER_FEATURED_PAYMENT_URL as string | undefined;
 
@@ -20,7 +21,7 @@ export default function EmployerDashboard() {
   const [notice, setNotice] = useState(() => {
     const r = sessionStorage.getItem("membership-result");
     sessionStorage.removeItem("membership-result");
-    return r ? MEMBERSHIP_MESSAGES[r as keyof typeof MEMBERSHIP_MESSAGES] ?? "" : "";
+    return r ? t(MEMBERSHIP_MESSAGES[r as keyof typeof MEMBERSHIP_MESSAGES] ?? "") : "";
   });
   const [rechecking, setRechecking] = useState(false);
   const recheck = async () => {
@@ -28,7 +29,7 @@ export default function EmployerDashboard() {
     setRechecking(true);
     const r = await checkMembership(company.id);
     setRechecking(false);
-    setNotice(MEMBERSHIP_MESSAGES[r.status]);
+    setNotice(t(MEMBERSHIP_MESSAGES[r.status]));
     if (r.status === "member") reload();
   };
 
@@ -40,7 +41,7 @@ export default function EmployerDashboard() {
 
   useEffect(() => { if (company) loadJobs(company.id); }, [company]);
 
-  if (company === undefined) return <p className="mx-auto max-w-6xl px-4 py-12 text-steel">Loading…</p>;
+  if (company === undefined) return <p className="mx-auto max-w-6xl px-4 py-12 text-steel">{t("Loading…")}</p>;
   if (company === null) return <CompanySetup onDone={reload} />;
 
   const submit = async (job: Job) => {
@@ -48,36 +49,36 @@ export default function EmployerDashboard() {
     const { data, error } = await supabase.rpc("submit_job", { job: job.id });
     if (error) { setMessage(error.message); return; }
     setMessage(data === "pending_payment"
-      ? `“${job.title}” is saved. Complete payment and AIA Canada will review it.`
-      : `“${job.title}” is with AIA Canada for review. It usually goes live within one business day.`);
+      ? t("“{title}” is saved. Complete payment and AIA Canada will review it.", { title: job.title })
+      : t("“{title}” is with AIA Canada for review. It usually goes live within one business day.", { title: job.title }));
     loadJobs(company.id);
   };
 
   const remove = async (job: Job) => {
-    if (!confirm(`Delete the draft “${job.title}”?`)) return;
+    if (!confirm(t("Delete the draft “{title}”?", { title: job.title }))) return;
     await supabase.from("jobs").delete().eq("id", job.id);
     loadJobs(company.id);
   };
 
   return (
     <>
-    <PageHero compact tag="My postings" title={company.name}
-      body={company.is_member ? "AIA Canada member: your postings are free." : "Not yet verified as an AIA Canada member. Postings are paid per posting."}
-      actions={<Link to="/employer/jobs/new" className="btn bg-white px-6 py-3 text-navy hover:bg-navy-soft">Post a job</Link>} />
+    <PageHero compact tag={t("My postings")} title={company.name}
+      body={company.is_member ? t("AIA Canada member: your postings are free.") : t("Not yet verified as an AIA Canada member. Postings are paid per posting.")}
+      actions={<Link to="/employer/jobs/new" className="btn bg-white px-6 py-3 text-navy hover:bg-navy-soft">{t("Post a job")}</Link>} />
     <div className="mx-auto max-w-6xl px-4 py-10">
 
       {notice && <p className="panel mb-6 border-l-4 border-l-emerald-600 p-4 text-sm" role="status">{notice}</p>}
       {!company.is_member && company.membership_lapsed_at && (
         <div className="panel mb-6 border-l-4 border-l-amber-500 p-4 text-sm" role="status">
-          <p className="font-semibold">Your AIA Canada membership has lapsed</p>
-          <p className="mt-1">Free posting ended on {new Date(company.membership_lapsed_at).toLocaleDateString("en-CA")}. Postings already live stay up until they expire. New postings are paid until you renew. Once AIA Canada records your renewal, free posting switches back on automatically.</p>
-          <a href="https://www.aiacanada.com" className="mt-2 inline-block font-semibold text-navy hover:underline">Renew your membership</a>
+          <p className="font-semibold">{t("Your AIA Canada membership has lapsed")}</p>
+          <p className="mt-1">{t("Free posting ended on {date}. Postings already live stay up until they expire. New postings are paid until you renew. Once AIA Canada records your renewal, free posting switches back on automatically.", { date: new Date(company.membership_lapsed_at).toLocaleDateString(locale()) })}</p>
+          <a href="https://www.aiacanada.com" className="mt-2 inline-block font-semibold text-navy hover:underline">{t("Renew your membership")}</a>
         </div>
       )}
       {!company.is_member && !company.membership_lapsed_at && (
         <div className="panel mb-6 flex flex-col gap-3 border-l-4 border-l-navy p-4 text-sm sm:flex-row sm:items-center sm:justify-between">
-          <p>Is your company an AIA Canada member? Members post free. We check AIA Canada’s member records using your work email.</p>
-          <button className="btn-ghost shrink-0" disabled={rechecking} onClick={recheck}>{rechecking ? "Checking…" : "Check my membership"}</button>
+          <p>{t("Is your company an AIA Canada member? Members post free. We check AIA Canada’s member records using your work email.")}</p>
+          <button className="btn-ghost shrink-0" disabled={rechecking} onClick={recheck}>{rechecking ? t("Checking…") : t("Check my membership")}</button>
         </div>
       )}
       {message && <p className="panel mt-6 p-4 text-sm" role="status">{message}</p>}
@@ -85,8 +86,8 @@ export default function EmployerDashboard() {
       <div className="mt-8">
         {jobs.length === 0 ? (
           <div className="panel px-5 py-10">
-            <p className="font-medium">You haven’t posted any jobs yet.</p>
-            <Link to="/employer/jobs/new" className="btn-navy mt-4">Write your first posting</Link>
+            <p className="font-medium">{t("You haven’t posted any jobs yet.")}</p>
+            <Link to="/employer/jobs/new" className="btn-navy mt-4">{t("Write your first posting")}</Link>
           </div>
         ) : (
           <>
@@ -95,31 +96,31 @@ export default function EmployerDashboard() {
               <li key={j.id} className="panel p-4">
                 <div className="flex flex-wrap items-center gap-1.5">
                   <StatusBadge status={j.status} />
-                  {j.is_featured && <span className="inline-block rounded border border-signal/30 bg-red-50 px-2 py-0.5 text-xs font-medium text-signal-dark">Featured</span>}
+                  {j.is_featured && <span className="inline-block rounded border border-signal/30 bg-red-50 px-2 py-0.5 text-xs font-medium text-signal-dark">{t("Featured")}</span>}
                 </div>
                 <Link to={`/jobs/${j.id}`} className="mt-2 block font-semibold text-navy hover:underline">{j.title}</Link>
                 <p className="text-sm text-steel">{j.city}, {j.province} – {formatPay(j.pay_min, j.pay_max, j.pay_period)}</p>
-                {j.status === "rejected" && j.rejection_reason && <p className="mt-1 text-sm text-signal-dark">AIA Canada: {j.rejection_reason}</p>}
+                {j.status === "rejected" && j.rejection_reason && <p className="mt-1 text-sm text-signal-dark">{t("AIA Canada:")} {j.rejection_reason}</p>}
                 <p className="mt-2 text-sm text-steel">
-                  {j.apply_method === "external" ? "Applications on your site" : (
+                  {j.apply_method === "external" ? t("Applications on your site") : (
                     j.applications?.[0]?.count
-                      ? <Link to={`/employer/jobs/${j.id}/applications`} className="font-semibold text-navy hover:underline">{j.applications[0].count} applications</Link>
-                      : "No applications yet"
+                      ? <Link to={`/employer/jobs/${j.id}/applications`} className="font-semibold text-navy hover:underline">{t("{n} applications", { n: j.applications[0].count })}</Link>
+                      : t("No applications yet")
                   )}
-                  {j.expires_at && ` – expires ${new Date(j.expires_at).toLocaleDateString("en-CA")}`}
+                  {j.expires_at && ` – ${t("expires {date}", { date: new Date(j.expires_at).toLocaleDateString(locale()) })}`}
                 </p>
                 {(j.status === "draft" || j.status === "rejected" || (j.status === "pending_payment" && (j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL))) && (
                   <div className="mt-3 grid grid-cols-2 gap-2">
                     {(j.status === "draft" || j.status === "rejected") && (
                       <>
-                        <Link to={`/employer/jobs/${j.id}/edit`} className="btn-ghost">Edit</Link>
-                        <button onClick={() => submit(j)} className="btn-navy">Submit</button>
+                        <Link to={`/employer/jobs/${j.id}/edit`} className="btn-ghost">{t("Edit")}</Link>
+                        <button onClick={() => submit(j)} className="btn-navy">{t("Submit")}</button>
                       </>
                     )}
                     {j.status === "pending_payment" && (
-                      <a href={j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL} target="_blank" rel="noopener noreferrer" className="btn-primary col-span-2">Pay for posting</a>
+                      <a href={j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL} target="_blank" rel="noopener noreferrer" className="btn-primary col-span-2">{t("Pay for posting")}</a>
                     )}
-                    {j.status === "draft" && <button onClick={() => remove(j)} className="btn col-span-2 text-steel hover:text-signal">Delete draft</button>}
+                    {j.status === "draft" && <button onClick={() => remove(j)} className="btn col-span-2 text-steel hover:text-signal">{t("Delete draft")}</button>}
                   </div>
                 )}
               </li>
@@ -129,11 +130,11 @@ export default function EmployerDashboard() {
             <table className="w-full border-collapse overflow-hidden rounded-md border border-line bg-white text-sm">
               <thead className="bg-paper text-left text-steel">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Job</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium">Applications</th>
-                  <th className="px-4 py-3 font-medium">Expires</th>
-                  <th className="px-4 py-3"><span className="sr-only">Actions</span></th>
+                  <th className="px-4 py-3 font-medium">{t("Job")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Status")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Applications")}</th>
+                  <th className="px-4 py-3 font-medium">{t("Expires")}</th>
+                  <th className="px-4 py-3"><span className="sr-only">{t("Actions")}</span></th>
                 </tr>
               </thead>
               <tbody>
@@ -143,33 +144,33 @@ export default function EmployerDashboard() {
                       <Link to={`/jobs/${j.id}`} className="font-semibold text-navy hover:underline">{j.title}</Link>
                       <p className="text-steel">{j.city}, {j.province} – {formatPay(j.pay_min, j.pay_max, j.pay_period)}</p>
                       {j.status === "rejected" && j.rejection_reason && (
-                        <p className="mt-1 text-signal-dark">AIA Canada: {j.rejection_reason}</p>
+                        <p className="mt-1 text-signal-dark">{t("AIA Canada:")} {j.rejection_reason}</p>
                       )}
                     </td>
                     <td className="px-4 py-3">
                       <StatusBadge status={j.status} />
-                      {j.is_featured && <span className="ml-1.5 inline-block rounded border border-signal/30 bg-red-50 px-2 py-0.5 text-xs font-medium text-signal-dark">Featured</span>}
+                      {j.is_featured && <span className="ml-1.5 inline-block rounded border border-signal/30 bg-red-50 px-2 py-0.5 text-xs font-medium text-signal-dark">{t("Featured")}</span>}
                     </td>
                     <td className="px-4 py-3">
                       {j.applications?.[0]?.count ? (
                         <Link to={`/employer/jobs/${j.id}/applications`} className="font-semibold text-navy hover:underline">
                           {j.applications[0].count}
                         </Link>
-                      ) : j.apply_method === "external" ? <span className="text-steel">On your site</span> : "0"}
+                      ) : j.apply_method === "external" ? <span className="text-steel">{t("On your site")}</span> : "0"}
                     </td>
-                    <td className="px-4 py-3 text-steel">{j.expires_at ? new Date(j.expires_at).toLocaleDateString("en-CA") : "–"}</td>
+                    <td className="px-4 py-3 text-steel">{j.expires_at ? new Date(j.expires_at).toLocaleDateString(locale()) : "–"}</td>
                     <td className="px-4 py-3">
                       <div className="flex justify-end gap-2">
                         {(j.status === "draft" || j.status === "rejected") && (
                           <>
-                            <Link to={`/employer/jobs/${j.id}/edit`} className="btn-ghost px-3 py-1.5">Edit</Link>
-                            <button onClick={() => submit(j)} className="btn-navy px-3 py-1.5">Submit for review</button>
+                            <Link to={`/employer/jobs/${j.id}/edit`} className="btn-ghost px-3 py-1.5">{t("Edit")}</Link>
+                            <button onClick={() => submit(j)} className="btn-navy px-3 py-1.5">{t("Submit for review")}</button>
                           </>
                         )}
                         {j.status === "pending_payment" && (j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL) && (
-                          <a href={j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL} target="_blank" rel="noopener noreferrer" className="btn-primary px-3 py-1.5">Pay for posting</a>
+                          <a href={j.is_featured ? FEATURED_PAYMENT_URL : PAYMENT_URL} target="_blank" rel="noopener noreferrer" className="btn-primary px-3 py-1.5">{t("Pay for posting")}</a>
                         )}
-                        {j.status === "draft" && <button onClick={() => remove(j)} className="px-2 text-steel hover:text-signal">Delete</button>}
+                        {j.status === "draft" && <button onClick={() => remove(j)} className="px-2 text-steel hover:text-signal">{t("Delete")}</button>}
                       </div>
                     </td>
                   </tr>
@@ -210,33 +211,33 @@ function CompanySetup({ onDone }: { onDone: () => void }) {
 
   return (
     <>
-    <PageHero compact tag="Get started" title="Add your company" body="This is the employer name job seekers will see on your postings." />
+    <PageHero compact tag={t("Get started")} title={t("Add your company")} body={t("This is the employer name job seekers will see on your postings.")} />
     <div className="mx-auto max-w-lg px-4 py-12">
       <form onSubmit={save} className="panel space-y-4 p-6">
         <div>
-          <label className="label" htmlFor="name">Company name</label>
+          <label className="label" htmlFor="name">{t("Company name")}</label>
           <input id="name" name="name" required minLength={2} className="field" />
         </div>
         <div>
-          <label className="label" htmlFor="website">Website (optional)</label>
-          <input id="website" name="website" type="url" placeholder="https://" className="field" />
+          <label className="label" htmlFor="website">{t("Website (optional)")}</label>
+          <input id="website" name="website" type="url" placeholder={t("https://")} className="field" />
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="label" htmlFor="city">City</label>
+            <label className="label" htmlFor="city">{t("City")}</label>
             <input id="city" name="city" className="field" />
           </div>
           <div>
-            <label className="label" htmlFor="province">Province</label>
+            <label className="label" htmlFor="province">{t("Province")}</label>
             <select id="province" name="province" className="field" defaultValue="">
-              <option value="">Choose</option>
+              <option value="">{t("Choose")}</option>
               {PROVINCES.map(([c, n]) => <option key={c} value={c}>{n}</option>)}
             </select>
           </div>
         </div>
         {error && <p className="text-sm text-signal" role="alert">{error}</p>}
-        <button className="btn-primary w-full" disabled={busy}>{checking ? "Checking AIA Canada membership…" : busy ? "Saving…" : "Save company"}</button>
-        <p className="text-xs text-steel">We’ll check AIA Canada’s member records using your work email. Members post free.</p>
+        <button className="btn-primary w-full" disabled={busy}>{checking ? t("Checking AIA Canada membership…") : busy ? t("Saving…") : t("Save company")}</button>
+        <p className="text-xs text-steel">{t("We’ll check AIA Canada’s member records using your work email. Members post free.")}</p>
       </form>
     </div>
     </>

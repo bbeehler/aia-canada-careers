@@ -84,7 +84,7 @@ Deno.serve(async (req) => {
   const header = parseLine(lines[0]);
   const col = (re: RegExp) => header.findIndex((h) => re.test(h));
   const c = {
-    noc: col(/^NOC_CNP/i), title: col(/^NOC_Title_eng/i), prov: col(/^prov$/i), er: col(/^ER_Code/i), erName: col(/^ER_Name/i),
+    noc: col(/^NOC_CNP/i), title: col(/^NOC_Title_eng/i), titleFr: col(/^NOC_Title_fra/i), prov: col(/^prov$/i), er: col(/^ER_Code/i), erName: col(/^ER_Name/i), erNameFr: col(/^Nom_RE/i),
     low: col(/^Low_Wage/i), median: col(/^Median_Wage/i), high: col(/^High_Wage/i), avg: col(/^Average_Wage/i),
     period: col(/^Reference_Period/i), revised: col(/^Revision_Date/i), annual: col(/^Annual_Wage_Flag/i),
   };
@@ -100,7 +100,9 @@ Deno.serve(async (req) => {
     const median = num(f[c.median]);
     if (!median) continue; // Job Bank leaves wages blank where there isn't enough data
     rows.push({
-      noc, noc_title: f[c.title] ?? "", prov: f[c.prov], region_code: f[c.er] || "ER00", region_name: f[c.erName] || f[c.prov],
+      noc, noc_title: f[c.title] ?? "", noc_title_fr: c.titleFr >= 0 ? f[c.titleFr] || null : null,
+      prov: f[c.prov], region_code: f[c.er] || "ER00", region_name: f[c.erName] || f[c.prov],
+      region_name_fr: c.erNameFr >= 0 ? f[c.erNameFr] || null : null,
       low: num(f[c.low]), median, high: num(f[c.high]), average: num(f[c.avg]),
       annual: String(f[c.annual] ?? "0").trim() === "1",
       reference_period: f[c.period] || null, revised: /^\d{4}-\d{2}-\d{2}$/.test(f[c.revised] ?? "") ? f[c.revised] : null,

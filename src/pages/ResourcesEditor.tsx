@@ -1,11 +1,11 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../components/L";
 import { supabase } from "../lib/supabase";
 import type { Audience, Resource, ResourceKind } from "../lib/types";
 import PageHero, { heroPrimary } from "../components/PageHero";
 import { AUDIENCE_LABEL, KIND_LABEL } from "./Resources";
 
-const BLANK: Omit<Resource, "id"> = { title: "", description: "", url: "", kind: "website", audience: "both", sort_order: 100, is_published: true };
+const BLANK: Omit<Resource, "id"> = { title: "", description: "", url: "", kind: "website", audience: "both", sort_order: 100, is_published: true, translations: {} };
 
 export default function ResourcesEditor() {
   const [items, setItems] = useState<Resource[]>([]);
@@ -67,7 +67,11 @@ function ResourceForm({ id, initial, onDone }: { id?: string; initial: Omit<Reso
       title: String(f.get("title")).trim(), description: String(f.get("description")).trim(), url,
       kind: f.get("kind") as ResourceKind, audience: f.get("audience") as Audience,
       sort_order: Number(f.get("sort_order")) || 100, is_published: f.get("is_published") === "on",
+      translations: { ...(initial.translations ?? {}), fr: {
+        title: String(f.get("title_fr") ?? "").trim(), description: String(f.get("description_fr") ?? "").trim(), url: String(f.get("url_fr") ?? "").trim(),
+      } },
     };
+    if (record.translations.fr.url && !/^(https?:\/\/|\/)/.test(record.translations.fr.url)) { setError("The French link must start with https:// (or / for a page on this site)."); return; }
     setBusy(true);
     const { error: err } = id ? await supabase.from("resources").update(record).eq("id", id) : await supabase.from("resources").insert(record);
     setBusy(false);
@@ -84,6 +88,17 @@ function ResourceForm({ id, initial, onDone }: { id?: string; initial: Omit<Reso
         <input id={`u-${id ?? "new"}`} name="url" defaultValue={initial.url} placeholder="https://" className="field" />
         <p className="hint">A full web address, or a page on this site such as /parents.</p>
       </div>
+      <fieldset className="space-y-4 rounded-md border border-line p-4">
+        <legend className="px-1 font-display text-lg font-bold text-navy">Français</legend>
+        <p className="hint -mt-2">Shown on the French Resources page. Leave a field empty to use the English.</p>
+        <div><label className="label" htmlFor={`tf-${id ?? "new"}`}>Title (French)</label><input id={`tf-${id ?? "new"}`} name="title_fr" defaultValue={initial.translations?.fr?.title ?? ""} className="field" /></div>
+        <div><label className="label" htmlFor={`df-${id ?? "new"}`}>Description (French)</label><textarea id={`df-${id ?? "new"}`} name="description_fr" rows={3} defaultValue={initial.translations?.fr?.description ?? ""} className="field" /></div>
+        <div>
+          <label className="label" htmlFor={`uf-${id ?? "new"}`}>Link (French, optional)</label>
+          <input id={`uf-${id ?? "new"}`} name="url_fr" defaultValue={initial.translations?.fr?.url ?? ""} placeholder="https://" className="field" />
+          <p className="hint">Use this if the organization has a French version of its site.</p>
+        </div>
+      </fieldset>
       <div className="grid gap-4 sm:grid-cols-3">
         <div><label className="label" htmlFor={`k-${id ?? "new"}`}>Type</label>
           <select id={`k-${id ?? "new"}`} name="kind" defaultValue={initial.kind} className="field">

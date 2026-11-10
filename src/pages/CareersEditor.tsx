@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent, type ReactNode } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { SECTORS } from "../lib/constants";
 import type { Career, Sector } from "../lib/types";
@@ -10,7 +10,13 @@ const BLANK: Omit<Career, "id"> = {
   education_level: "", salary_range: "", growth: "", search_terms: "", sort_order: 200, is_published: false,
   outlook: "", day_in_life: "", certifications: "", red_seal_intro: "", red_seal: "", red_seal_note: "", hs_courses: "",
   provincial_programs: "", provincial_programs_note: "", education_required: "", education_text: "", noc_code: "",
+  translations: {},
 };
+
+// Fields that have a French version (everything else is shared between languages)
+const TRANSLATABLE = new Set(["title", "summary", "salary_range", "growth", "education_level", "outlook", "description", "day_in_life",
+  "skills", "certifications", "red_seal_intro", "red_seal", "red_seal_note", "hs_courses", "provincial_programs",
+  "provincial_programs_note", "education_required", "education_text"]);
 
 const slugify = (s: string) => s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
@@ -69,6 +75,12 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
   id?: string; initial: Omit<Career, "id">; onSaved: (id: string) => void; onDeleted?: () => void;
 }) {
   const [v, setV] = useState(initial);
+  const [lang, setLang] = useState<"en" | "fr">("en");
+  const fr = (k: string) => v.translations?.fr?.[k] ?? "";
+  const setFr = (k: string, val: string) => { setV((o) => ({ ...o, translations: { ...(o.translations ?? {}), fr: { ...(o.translations?.fr ?? {}), [k]: val } } })); setStatus(""); };
+  const english = (k: string) => (
+    <p className="mt-1.5 whitespace-pre-line rounded bg-paper px-2 py-1.5 text-xs text-steel"><span className="font-semibold">English:</span> {String(v[k as keyof typeof v] ?? "") || "(empty)"}</p>
+  );
   const [status, setStatus] = useState("");
   const [error, setError] = useState("");
   const set = <K extends keyof typeof v>(k: K, val: (typeof v)[K]) => { setV((o) => ({ ...o, [k]: val })); setStatus(""); };
@@ -99,7 +111,14 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
     onDeleted?.();
   };
 
-  const text = (k: keyof typeof v, label: string, hint?: string, placeholder?: string) => (
+  const text = (k: keyof typeof v, label: string, hint?: string, placeholder?: string) => lang === "fr" ? (TRANSLATABLE.has(k) ? (
+    <div>
+      <label className="label" htmlFor={`cf-${k}`}>{label} (français)</label>
+      <input id={`cf-${k}`} className="field" value={fr(k)} onChange={(e) => setFr(k, e.target.value)} />
+      {hint && <p className="hint">{hint}</p>}
+      {english(k)}
+    </div>
+  ) : null) : (
     <div>
       <label className="label" htmlFor={`c-${k}`}>{label}</label>
       <input id={`c-${k}`} className="field" value={String(v[k] ?? "")} placeholder={placeholder}
@@ -107,7 +126,14 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
       {hint && <p className="hint">{hint}</p>}
     </div>
   );
-  const area = (k: keyof typeof v, label: string, hint?: string, rows = 4) => (
+  const area = (k: keyof typeof v, label: string, hint?: string, rows = 4) => lang === "fr" ? (TRANSLATABLE.has(k) ? (
+    <div>
+      <label className="label" htmlFor={`cf-${k}`}>{label} (français)</label>
+      <textarea id={`cf-${k}`} className="field" rows={rows} value={fr(k)} onChange={(e) => setFr(k, e.target.value)} />
+      {hint && <p className="hint">{hint}</p>}
+      {english(k)}
+    </div>
+  ) : null) : (
     <div>
       <label className="label" htmlFor={`c-${k}`}>{label}</label>
       <textarea id={`c-${k}`} className="field" rows={rows} value={String(v[k] ?? "")} onChange={(e) => set(k, e.target.value as never)} />
@@ -119,9 +145,20 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
     <form onSubmit={save} className="panel space-y-5 p-4 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-3xl">{id ? v.title || "Untitled career" : "New career"}</h2>
-        {id && v.is_published && <Link to={`/careers/${v.slug}`} className="text-sm font-semibold text-navy hover:underline">View on site</Link>}
+        {id && v.is_published && <a href={`${lang === "fr" ? "/fr" : ""}/careers/${v.slug}`} className="text-sm font-semibold text-navy hover:underline">View on site{lang === "fr" ? " (French)" : ""}</a>}
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="inline-flex rounded-lg bg-line/60 p-1" role="tablist" aria-label="Language">
+          {(["en", "fr"] as const).map((l) => (
+            <button type="button" key={l} role="tab" aria-selected={lang === l} onClick={() => setLang(l)}
+              className={`min-h-[40px] rounded-md px-4 text-sm font-semibold ${lang === l ? "bg-white text-navy shadow-sm" : "text-steel hover:text-navy"}`}>
+              {l === "en" ? "English" : "Français"}
+            </button>
+          ))}
+        </div>
+        {lang === "fr" && <p className="text-sm text-steel">Leave a French field empty to show the English text on the French page. Category, web address, occupation code and other settings are shared.</p>}
+      </div>
+      {lang === "fr" ? text("title", "Career title") : <div className="grid gap-4 sm:grid-cols-2">
         <div>
           <label className="label" htmlFor="c-title">Career title</label>
           <input id="c-title" required className="field" value={v.title}
@@ -133,7 +170,7 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
             {(Object.keys(SECTORS) as Sector[]).map((s) => <option key={s} value={s}>{SECTORS[s].label}</option>)}
           </select>
         </div>
-      </div>
+      </div>}
       {text("slug", "Web address", "Lowercase letters, numbers and dashes. Changing it breaks links people have saved.", "automotive-service-technician")}
       {area("summary", "Summary", "One or two sentences, shown on the career card and in the banner.", 2)}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

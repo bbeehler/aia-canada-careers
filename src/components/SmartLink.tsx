@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "./L";
 
 // Uses in-app navigation for site paths (/jobs) and a normal link for full web addresses.
 export default function SmartLink({ to, className, children }: { to: string; className?: string; children: ReactNode }) {

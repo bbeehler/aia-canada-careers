@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import { Link } from "../components/L";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
 import { SECTORS } from "../lib/constants";
@@ -8,6 +9,7 @@ import PageHero, { heroPrimary, heroSecondary } from "../components/PageHero";
 import JobRow from "../components/JobRow";
 import JobBankWages from "../components/JobBankWages";
 
+import { localize, t } from "../lib/i18n";
 const lines = (s: string) => (s ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
 const rows = (s: string) => lines(s).map((l) => l.split("|").map((p) => p.trim()));
 const anchor = (t: string) => t.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -21,7 +23,7 @@ function Linkify({ text }: { text: string }) {
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section id={anchor(title)} className="scroll-mt-24">
-      <h2 className="text-3xl">{title}</h2>
+      <h2 className="text-3xl">{t(title)}</h2>
       <div className="mt-4">{children}</div>
     </section>
   );
@@ -44,7 +46,7 @@ export default function CareerDetail() {
 
   useEffect(() => {
     setCareer(undefined);
-    supabase.from("careers").select("*").eq("slug", slug).maybeSingle().then(({ data }) => setCareer((data as Career) ?? null));
+    supabase.from("careers").select("*").eq("slug", slug).maybeSingle().then(({ data }) => setCareer(data ? localize(data as Career) : null));
   }, [slug]);
 
   useEffect(() => {
@@ -68,17 +70,17 @@ export default function CareerDetail() {
   }, [career]);
   const provinces = useMemo(() => Array.from(new Set([...redSeal.map((r) => r[0]), ...programs.map((p) => p.province)])), [redSeal, programs]);
 
-  if (career === undefined) return <p className="mx-auto max-w-6xl px-4 py-12 text-steel">Loading…</p>;
+  if (career === undefined) return <p className="mx-auto max-w-6xl px-4 py-12 text-steel">{t("Loading…")}</p>;
   if (career === null) {
-    return <PageHero compact title="Career not found" body="This career may have been renamed or removed."
-      actions={<Link to="/careers" className={heroPrimary}>Explore all careers</Link>} />;
+    return <PageHero compact title={t("Career not found")} body={t("This career may have been renamed or removed.")}
+      actions={<Link to="/careers" className={heroPrimary}>{t("Explore all careers")}</Link>} />;
   }
 
   const facts = [
-    ["Annual Salary", career.salary_range],
-    ["Job Growth (10yr)", career.growth],
-    ["Education", career.education_level],
-    ["Job Outlook", career.outlook],
+    [t("Annual Salary"), career.salary_range],
+    [t("Job Growth (10yr)"), career.growth],
+    [t("Education"), career.education_level],
+    [t("Job Outlook"), career.outlook],
   ].filter(([, v]) => v);
 
   const sections = [
@@ -99,9 +101,9 @@ export default function CareerDetail() {
 
   const provincePicker = provinces.length > 1 && (
     <div className="mb-5 flex flex-col gap-2 sm:flex-row sm:items-center">
-      <label htmlFor="prov" className="text-sm font-medium">Show my province:</label>
+      <label htmlFor="prov" className="text-sm font-medium">{t("Show my province:")}</label>
       <select id="prov" className="field sm:w-64" value={province} onChange={(e) => setProvince(e.target.value)}>
-        <option value="">All provinces and territories</option>
+        <option value="">{t("All provinces and territories")}</option>
         {provinces.map((p) => <option key={p} value={p}>{p}</option>)}
       </select>
     </div>
@@ -114,18 +116,18 @@ export default function CareerDetail() {
         title={career.title}
         body={career.summary}
         actions={<>
-          <a href="#open-jobs" className={heroPrimary}>See open jobs <span aria-hidden>→</span></a>
-          <Link to="/quiz" className={heroSecondary}>Take the Career Quiz</Link>
+          <a href="#open-jobs" className={heroPrimary}>{t("See open jobs")} <span aria-hidden>→</span></a>
+          <Link to="/quiz" className={heroSecondary}>{t("Take the Career Quiz")}</Link>
         </>}
       >
-        <Link to="/careers" className="mt-6 self-start text-sm text-white/70 hover:text-white">← All careers</Link>
+        <Link to="/careers" className="mt-6 self-start text-sm text-white/70 hover:text-white">{t("← All careers")}</Link>
       </PageHero>
 
       <section className="border-b border-line bg-white">
         <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-x-4 gap-y-6 px-4 py-6 sm:py-8 lg:grid-cols-4">
           {facts.map(([k, v]) => (
             <div key={k} className="min-w-0 sm:px-2">
-              <dd className={`break-words font-display text-2xl font-bold leading-tight sm:text-3xl ${k === "Annual Salary" ? "text-emerald-700" : "text-navy"}`}>{v}</dd>
+              <dd className={`break-words font-display text-2xl font-bold leading-tight sm:text-3xl ${k === t("Annual Salary") ? "text-emerald-700" : "text-navy"}`}>{v}</dd>
               <dt className="mt-1 text-xs font-medium uppercase tracking-wide text-steel">{k}</dt>
             </div>
           ))}
@@ -164,13 +166,13 @@ export default function CareerDetail() {
             <Section title="Red Seal Requirements by Province">
               {career.red_seal_intro && <p className="max-w-prose leading-relaxed">{career.red_seal_intro}</p>}
               <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-                <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-signal" aria-hidden />Compulsory (certification required to work)</span>
-                <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-navy/40" aria-hidden />Voluntary (certification available but not required)</span>
+                <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-signal" aria-hidden />{t("Compulsory (certification required to work)")}</span>
+                <span className="flex items-center gap-2"><span className="h-3 w-3 rounded-full bg-navy/40" aria-hidden />{t("Voluntary (certification available but not required)")}</span>
               </div>
               <div className="mt-5">{provincePicker}</div>
               <ul className="grid gap-3 sm:grid-cols-2">
                 {shownSeal.map(([prov, status, duration, hours, note, authority, url]) => {
-                  const compulsory = (status ?? "").toLowerCase().startsWith("compulsory");
+                  const compulsory = /^(compulsory|obligatoire)/i.test(status ?? "");
                   return (
                     <li key={prov} className={`rounded-lg border bg-white p-4 ${compulsory ? "border-l-4 border-l-signal border-y-line border-r-line" : "border-line"}`}>
                       <div className="flex flex-wrap items-center justify-between gap-2">
@@ -182,7 +184,7 @@ export default function CareerDetail() {
                       {authority && (
                         <p className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-sm">
                           <span className="text-steel">{authority}</span>
-                          {url && <a href={url} target="_blank" rel="noopener noreferrer" className="font-semibold text-navy hover:underline">Visit <span aria-hidden>↗</span></a>}
+                          {url && <a href={url} target="_blank" rel="noopener noreferrer" className="font-semibold text-navy hover:underline">{t("Visit")} <span aria-hidden>↗</span></a>}
                         </p>
                       )}
                     </li>
@@ -195,17 +197,17 @@ export default function CareerDetail() {
 
           {career.hs_courses && (
             <Section title="Recommended High School Courses">
-              <p className="mb-4 text-steel">Taking these courses in high school will give you a head start in this career path:</p>
+              <p className="mb-4 text-steel">{t("Taking these courses in high school will give you a head start in this career path:")}</p>
               <Chips items={lines(career.hs_courses)} tone="bg-emerald-50 text-emerald-800" />
             </Section>
           )}
 
           {programs.length > 0 && (
             <Section title="Specialized Provincial Programs">
-              <p className="max-w-prose leading-relaxed">Many provinces offer programs that let high school students get a head start on careers in the automotive sector through co-op placements, dual credits, and paid work experience. Check what is available in your province:</p>
+              <p className="max-w-prose leading-relaxed">{t("Many provinces offer programs that let high school students get a head start on careers in the automotive sector through co-op placements, dual credits, and paid work experience. Check what is available in your province:")}</p>
               <div className="mt-5">{provincePicker}</div>
               {shownPrograms.length === 0 ? (
-                <p className="panel px-4 py-4 text-sm text-steel">No programs listed for {province} yet. Ask your school guidance counsellor what’s available.</p>
+                <p className="panel px-4 py-4 text-sm text-steel">{t("No programs listed for {place} yet. Ask your school guidance counsellor what’s available.", { place: province })}</p>
               ) : (
                 <div className="space-y-6">
                   {shownPrograms.map((g) => (
@@ -230,7 +232,7 @@ export default function CareerDetail() {
           {(career.education_text || career.education_required || career.training) && (
             <Section title="Education & Training">
               {career.education_required && (
-                <p className="mb-3 inline-block rounded-md bg-navy px-3 py-1.5 text-sm font-semibold text-white">Required: {career.education_required}</p>
+                <p className="mb-3 inline-block rounded-md bg-navy px-3 py-1.5 text-sm font-semibold text-white">{t("Required: {level}", { level: career.education_required })}</p>
               )}
               {career.education_text ? (
                 <p className="max-w-prose whitespace-pre-line leading-relaxed">{career.education_text}</p>
@@ -249,24 +251,24 @@ export default function CareerDetail() {
 
           {career.noc_code && (
             <Section title="Wages in Your Area">
-              <p className="mb-4 max-w-prose leading-relaxed">What people in this occupation earn, by province and region, from the Government of Canada’s Job Bank.</p>
+              <p className="mb-4 max-w-prose leading-relaxed">{t("What people in this occupation earn, by province and region, from the Government of Canada’s Job Bank.")}</p>
               <JobBankWages noc={career.noc_code} />
             </Section>
           )}
 
           <section id="open-jobs" className="scroll-mt-24">
-            <h2 className="text-3xl">Open Jobs</h2>
+            <h2 className="text-3xl">{t("Open Jobs")}</h2>
             {jobs.length ? (
               <>
                 <ul className="mt-4 overflow-hidden rounded-md border border-line border-b-0">{jobs.map((j) => <JobRow key={j.id} job={j} />)}</ul>
                 <Link to={`/jobs?sector=${career.sector}`} className="mt-4 inline-block text-sm font-semibold text-navy hover:underline">
-                  See all {SECTORS[career.sector].label.toLowerCase()} jobs
+                  {t("See all {sector} jobs", { sector: SECTORS[career.sector].label.toLowerCase() })}
                 </Link>
               </>
             ) : (
               <div className="panel mt-4 px-5 py-6">
-                <p className="text-steel">There aren’t any open {career.title.toLowerCase()} jobs posted right now.</p>
-                <Link to={`/jobs?sector=${career.sector}`} className="btn-ghost mt-4">See other {SECTORS[career.sector].label.toLowerCase()} jobs</Link>
+                <p className="text-steel">{t("There aren’t any open {career} jobs posted right now.", { career: career.title })}</p>
+                <Link to={`/jobs?sector=${career.sector}`} className="btn-ghost mt-4">{t("See other {sector} jobs", { sector: SECTORS[career.sector].label.toLowerCase() })}</Link>
               </div>
             )}
           </section>
@@ -274,23 +276,23 @@ export default function CareerDetail() {
 
         <aside className="hidden lg:block">
           <div className="sticky top-24 space-y-5">
-            <nav className="panel p-5 text-sm" aria-label="On this page">
-              <p className="font-display text-lg font-bold text-navy">On this page</p>
+            <nav className="panel p-5 text-sm" aria-label={t("On this page")}>
+              <p className="font-display text-lg font-bold text-navy">{t("On this page")}</p>
               <ul className="mt-2 space-y-1.5">
-                {sections.map((t) => <li key={t}><a href={`#${t === "Open Jobs" ? "open-jobs" : anchor(t)}`} className="text-steel hover:text-navy">{t}</a></li>)}
+                {sections.map((sec) => <li key={sec}><a href={`#${sec === "Open Jobs" ? "open-jobs" : anchor(sec)}`} className="text-steel hover:text-navy">{t(sec)}</a></li>)}
               </ul>
             </nav>
             <div className="panel border-l-4 border-l-signal p-5">
-              <p className="font-display text-lg font-bold text-navy">Training and certification</p>
-              <p className="mt-2 text-sm text-steel">I-CAR and AIA Canada offer training that helps people start and grow in this career.</p>
-              <a href="https://www.i-car.ca" className="mt-3 inline-block text-sm font-semibold text-navy hover:underline">Explore I-CAR training</a>
+              <p className="font-display text-lg font-bold text-navy">{t("Training and certification")}</p>
+              <p className="mt-2 text-sm text-steel">{t("I-CAR and AIA Canada offer training that helps people start and grow in this career.")}</p>
+              <a href="https://www.i-car.ca" className="mt-3 inline-block text-sm font-semibold text-navy hover:underline">{t("Explore I-CAR training")}</a>
             </div>
-            {profile?.role === "admin" && <Link to={`/admin/careers?edit=${career.id}`} className="btn-ghost w-full">Edit this career</Link>}
+            {profile?.role === "admin" && <Link to={`/admin/careers?edit=${career.id}`} className="btn-ghost w-full">{t("Edit this career")}</Link>}
           </div>
         </aside>
       </div>
       {profile?.role === "admin" && (
-        <div className="mx-auto max-w-6xl px-4 pb-10 lg:hidden"><Link to={`/admin/careers?edit=${career.id}`} className="btn-ghost w-full">Edit this career</Link></div>
+        <div className="mx-auto max-w-6xl px-4 pb-10 lg:hidden"><Link to={`/admin/careers?edit=${career.id}`} className="btn-ghost w-full">{t("Edit this career")}</Link></div>
       )}
     </>
   );

@@ -1,11 +1,12 @@
 import { useState, type ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../components/L";
 import type { Sector } from "../lib/types";
 import { SECTORS } from "../lib/constants";
 import { useContent } from "../lib/content";
 import EditPageLink from "../components/EditPageLink";
 import PageHero, { heroPrimary } from "../components/PageHero";
 
+import { t } from "../lib/i18n";
 type Scores = Partial<Record<Sector, number>>;
 interface Question { prompt: string; options: { text: string; scores: Scores }[] }
 
@@ -92,12 +93,12 @@ export default function Quiz() {
   if (step === -1) {
     return (
       <>
-        {hero(false, <button className={heroPrimary} onClick={() => setStep(0)}>Start the quiz <span aria-hidden>→</span></button>)}
+        {hero(false, <button className={heroPrimary} onClick={() => setStep(0)}>{t("Start the quiz")} <span aria-hidden>→</span></button>)}
         <div className="mx-auto grid max-w-5xl gap-4 px-4 py-14 sm:grid-cols-3">
-          {[["6 questions", "About what you enjoy and how you like to work"], ["2 minutes", "No account or sign-up needed"], ["Your best match", "Plus real jobs you can explore right away"]].map(([t, d]) => (
-            <div key={t} className="panel p-5">
-              <p className="font-display text-2xl font-bold text-navy">{t}</p>
-              <p className="mt-1 text-sm text-steel">{d}</p>
+          {[["6 questions", t("About what you enjoy and how you like to work")], ["2 minutes", t("No account or sign-up needed")], [t("Your best match"), t("Plus real jobs you can explore right away")]].map(([title, d]) => (
+            <div key={title} className="panel p-5">
+              <p className="font-display text-2xl font-bold text-navy">{t(title)}</p>
+              <p className="mt-1 text-sm text-steel">{t(d)}</p>
             </div>
           ))}
         </div>
@@ -118,26 +119,26 @@ export default function Quiz() {
       <>
       {hero(true)}
       <div className="mx-auto max-w-3xl px-4 py-14">
-        <p className="text-sm font-medium text-signal">Your best match</p>
+        <p className="text-sm font-medium text-signal">{t("Your best match")}</p>
         <h2 className="mt-1 text-5xl">{SECTORS[top].label}</h2>
         <p className="mt-3 text-lg text-steel">{SECTORS[top].blurb}.</p>
 
         <div className="panel mt-8 p-6">
-          <h2 className="text-2xl">Jobs to look into</h2>
+          <h2 className="text-2xl">{t("Jobs to look into")}</h2>
           <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-            {ROLES[top].map((r) => <li key={r}><Link to={`/careers?q=${encodeURIComponent(r.split(" (")[0])}`} className="block rounded border border-line px-3 py-2 text-sm hover:border-navy hover:text-navy">{r}</Link></li>)}
+            {ROLES[top].map((r) => <li key={r}><Link to={`/careers?q=${encodeURIComponent(r.split(" (")[0])}`} className="block rounded border border-line px-3 py-2 text-sm hover:border-navy hover:text-navy">{t(r)}</Link></li>)}
           </ul>
           <div className="mt-6 flex flex-wrap gap-3">
-            <Link to={`/jobs?sector=${top}`} className="btn-primary">See {SECTORS[top].label.toLowerCase()} jobs</Link>
-            <a href="https://www.i-car.ca" className="btn-ghost">Explore training</a>
+            <Link to={`/jobs?sector=${top}`} className="btn-primary">{t("See {sector} jobs", { sector: SECTORS[top].label.toLowerCase() })}</Link>
+            <a href="https://www.i-car.ca" className="btn-ghost">{t("Explore training")}</a>
           </div>
         </div>
 
         <p className="mt-6 text-steel">
-          You also scored well for <Link to={`/jobs?sector=${second}`} className="font-semibold text-navy hover:underline">{SECTORS[second].label.toLowerCase()}</Link>.
+          {t("You also scored well for")} <Link to={`/jobs?sector=${second}`} className="font-semibold text-navy hover:underline">{SECTORS[second].label.toLowerCase()}</Link>.
         </p>
         <button className="mt-6 text-sm font-semibold text-navy underline" onClick={() => { setAnswers([]); setStep(0); }}>
-          Retake the quiz
+          {t("Retake the quiz")}
         </button>
       </div>
       </>
@@ -150,13 +151,13 @@ export default function Quiz() {
     {hero(true)}
     <div className="mx-auto max-w-2xl px-4 py-14">
       <div className="flex items-center justify-between text-sm text-steel">
-        <span>Question {step + 1} of {QUESTIONS.length}</span>
-        {step > 0 && <button className="hover:text-navy" onClick={() => setStep(step - 1)}>Back</button>}
+        <span>{t("Question {n} of {total}", { n: step + 1, total: QUESTIONS.length })}</span>
+        {step > 0 && <button className="hover:text-navy" onClick={() => setStep(step - 1)}>{t("Back")}</button>}
       </div>
       <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-line" aria-hidden>
         <div className="h-full bg-signal transition-all" style={{ width: `${(step / QUESTIONS.length) * 100}%` }} />
       </div>
-      <h2 className="mt-8 text-4xl">{q.prompt}</h2>
+      <h2 className="mt-8 text-4xl">{t(q.prompt)}</h2>
       <div className="mt-6 space-y-3">
         {q.options.map((o, i) => (
           <button key={o.text} onClick={() => choose(i)}
@@ -164,7 +165,7 @@ export default function Quiz() {
             <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded bg-navy-soft text-sm font-semibold text-navy">
               {String.fromCharCode(65 + i)}
             </span>
-            <span>{o.text}</span>
+            <span>{t(o.text)}</span>
           </button>
         ))}
       </div>

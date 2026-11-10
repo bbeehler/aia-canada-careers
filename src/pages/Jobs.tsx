@@ -8,6 +8,7 @@ import PageHero from "../components/PageHero";
 import EditPageLink from "../components/EditPageLink";
 import { Highlighted, useContent } from "../lib/content";
 
+import { t } from "../lib/i18n";
 export default function Jobs() {
   const [params, setParams] = useSearchParams();
   const q = params.get("q") ?? "";
@@ -53,8 +54,8 @@ export default function Jobs() {
       <form className="grid gap-3 md:grid-cols-[1fr_repeat(3,170px)]"
         onSubmit={(e) => { e.preventDefault(); set("q", draftQ.trim()); }}>
         <div className="flex gap-2">
-          <label htmlFor="kw" className="sr-only">Keyword</label>
-          <input id="kw" className="field" placeholder="Title, keyword or city" value={draftQ}
+          <label htmlFor="kw" className="sr-only">{t("Keyword")}</label>
+          <input id="kw" className="field" placeholder={t("Title, keyword or city")} value={draftQ}
             onChange={(e) => setDraftQ(e.target.value)} onBlur={() => set("q", draftQ.trim())} enterKeyHint="search" />
           <button type="button" onClick={() => setShowFilters(!showFilters)} aria-expanded={showFilters}
             className="btn-ghost shrink-0 md:hidden">
@@ -62,16 +63,16 @@ export default function Jobs() {
           </button>
         </div>
         <div className={`${showFilters ? "grid" : "hidden"} gap-3 sm:grid-cols-3 md:contents`}>
-        <select aria-label="Sector" className="field" value={sector} onChange={(e) => set("sector", e.target.value)}>
-          <option value="">All sectors</option>
+        <select aria-label={t("Sector")} className="field" value={sector} onChange={(e) => set("sector", e.target.value)}>
+          <option value="">{t("All sectors")}</option>
           {(Object.keys(SECTORS) as Sector[]).map((s) => <option key={s} value={s}>{SECTORS[s].label}</option>)}
         </select>
-        <select aria-label="Province" className="field" value={province} onChange={(e) => set("province", e.target.value)}>
-          <option value="">All provinces</option>
+        <select aria-label={t("Province")} className="field" value={province} onChange={(e) => set("province", e.target.value)}>
+          <option value="">{t("All provinces")}</option>
           {PROVINCES.map(([c, n]) => <option key={c} value={c}>{n}</option>)}
         </select>
-        <select aria-label="Job type" className="field" value={type} onChange={(e) => set("type", e.target.value)}>
-          <option value="">All job types</option>
+        <select aria-label={t("Job type")} className="field" value={type} onChange={(e) => set("type", e.target.value)}>
+          <option value="">{t("All job types")}</option>
           {(Object.keys(EMPLOYMENT_TYPES) as EmploymentType[]).map((t) => <option key={t} value={t}>{EMPLOYMENT_TYPES[t]}</option>)}
         </select>
         </div>
@@ -79,12 +80,12 @@ export default function Jobs() {
 
       <div className="mt-6">
         {jobs === null ? (
-          <p className="text-steel">Loading jobs…</p>
+          <p className="text-steel">{t("Loading jobs…")}</p>
         ) : jobs.length === 0 ? (
           <div className="panel px-5 py-10">
-            <p className="font-medium">No jobs match those filters.</p>
-            <p className="mt-1 text-sm text-steel">Try a different province or sector, or clear the keyword.</p>
-            <button className="btn-ghost mt-4" onClick={() => { setDraftQ(""); setParams(new URLSearchParams()); }}>Clear filters</button>
+            <p className="font-medium">{t("No jobs match those filters.")}</p>
+            <p className="mt-1 text-sm text-steel">{t("Try a different province or sector, or clear the keyword.")}</p>
+            <button className="btn-ghost mt-4" onClick={() => { setDraftQ(""); setParams(new URLSearchParams()); }}>{t("Clear filters")}</button>
           </div>
         ) : (
           <>

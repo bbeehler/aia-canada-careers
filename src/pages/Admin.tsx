@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../components/L";
 import { supabase } from "../lib/supabase";
 import type { Company, Job } from "../lib/types";
 import { SECTORS, formatPay } from "../lib/constants";

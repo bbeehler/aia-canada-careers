@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "../components/L";
 import { supabase } from "../lib/supabase";
 import { useAuth } from "../lib/auth";
 import { Highlighted, useContent } from "../lib/content";
@@ -8,6 +8,7 @@ import PageHero from "../components/PageHero";
 import SmartLink from "../components/SmartLink";
 import EditPageLink from "../components/EditPageLink";
 
+import { localize, t } from "../lib/i18n";
 export const KIND_LABEL: Record<ResourceKind, string> = { organization: "Organization", website: "Website", program: "Program", guide: "Guide" };
 export const AUDIENCE_LABEL: Record<Audience, string> = { students: "Students", parents: "Parents", both: "Students & Parents" };
 const TABS: ["" | Audience, string][] = [["", "All"], ["students", "Students"], ["parents", "Parents"], ["both", "Students & Parents"]];
@@ -37,10 +38,10 @@ export default function Resources() {
 
   useEffect(() => {
     supabase.from("resources").select("*").eq("is_published", true).order("sort_order").order("title")
-      .then(({ data }) => setItems((data as Resource[]) ?? []));
+      .then(({ data }) => setItems(((data as Resource[]) ?? []).map(localize)));
   }, []);
 
-  // "Students" shows resources for students plus those for both; same for parents.
+  // t("Students") shows resources for students plus those for both; same for parents.
   const shown = (items ?? []).filter((r) => !tab || r.audience === tab || (tab !== "both" && r.audience === "both"));
 
   return (
@@ -49,18 +50,18 @@ export default function Resources() {
         body={c.get("resources.hero.body")} image={c.get("resources.hero.image") || undefined} />
       <div className="mx-auto max-w-6xl px-4 py-10">
         <div className="-mx-4 overflow-x-auto px-4">
-          <div className="inline-flex gap-1 rounded-lg bg-line/60 p-1" role="tablist" aria-label="Who it’s for">
+          <div className="inline-flex gap-1 rounded-lg bg-line/60 p-1" role="tablist" aria-label={t("Who it’s for")}>
             {TABS.map(([v, label]) => (
               <button key={label} role="tab" aria-selected={tab === v} onClick={() => setTab(v)}
                 className={`min-h-[40px] whitespace-nowrap rounded-md px-4 text-sm font-medium ${tab === v ? "bg-white text-navy shadow-sm" : "text-steel hover:text-navy"}`}>
-                {label}
+                {t(label)}
               </button>
             ))}
           </div>
         </div>
 
-        {items === null ? <p className="mt-8 text-steel">Loading…</p> : shown.length === 0 ? (
-          <p className="panel mt-6 px-5 py-8 text-steel">No resources here yet.</p>
+        {items === null ? <p className="mt-8 text-steel">{t("Loading…")}</p> : shown.length === 0 ? (
+          <p className="panel mt-6 px-5 py-8 text-steel">{t("No resources here yet.")}</p>
         ) : (
           <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {shown.map((r) => {
@@ -68,12 +69,12 @@ export default function Resources() {
                 <>
                   <KindIcon kind={r.kind} />
                   <h2 className="mt-4 font-sans text-lg font-semibold leading-snug tracking-normal text-ink">
-                    {r.title}{r.url && /^https?:/.test(r.url) && <span className="sr-only"> (opens in a new tab)</span>}
+                    {r.title}{r.url && /^https?:/.test(r.url) && <span className="sr-only"> {t("(opens in a new tab)")}</span>}
                   </h2>
                   <p className="mt-2 text-sm leading-relaxed text-ink/80">{r.description}</p>
                   <p className="mt-auto flex flex-wrap gap-2 pt-4">
-                    <span className="rounded bg-line/70 px-2 py-0.5 text-xs font-medium text-ink">{KIND_LABEL[r.kind]}</span>
-                    <span className="rounded border border-line px-2 py-0.5 text-xs font-medium text-ink">{AUDIENCE_LABEL[r.audience]}</span>
+                    <span className="rounded bg-line/70 px-2 py-0.5 text-xs font-medium text-ink">{t(KIND_LABEL[r.kind])}</span>
+                    <span className="rounded border border-line px-2 py-0.5 text-xs font-medium text-ink">{t(AUDIENCE_LABEL[r.audience])}</span>
                   </p>
                 </>
               );
@@ -86,7 +87,7 @@ export default function Resources() {
             })}
           </ul>
         )}
-        {profile?.role === "admin" && <Link to="/admin/resources" className="btn-ghost mt-8">Edit resources</Link>}
+        {profile?.role === "admin" && <Link to="/admin/resources" className="btn-ghost mt-8">{t("Edit resources")}</Link>}
       </div>
       <EditPageLink section="resources.hero" />
     </>

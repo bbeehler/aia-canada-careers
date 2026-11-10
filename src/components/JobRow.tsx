@@ -1,7 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link } from "./L";
 import type { Job } from "../lib/types";
 import { EMPLOYMENT_TYPES, SECTORS, formatPay, timeAgo } from "../lib/constants";
 
+import { t } from "../lib/i18n";
 export default function JobRow({ job }: { job: Job }) {
   return (
     <li>
@@ -13,7 +14,7 @@ export default function JobRow({ job }: { job: Job }) {
           <p className="text-xs font-medium text-signal">{SECTORS[job.sector].label}</p>
           <h3 className="mt-0.5 text-xl leading-tight group-hover:underline">{job.title}</h3>
           <p className="mt-1 text-sm text-steel">
-            {job.companies?.name ?? "Employer"} – {job.city}, {job.province}
+            {job.companies?.name ?? t("Employer")} – {job.city}, {job.province}
             {job.remote_ok ? " (some remote)" : ""}
           </p>
         </div>

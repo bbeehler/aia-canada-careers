@@ -91,6 +91,13 @@ newest "Wages" file (dataset adad580f-76b0-4502-bd05-20c125de9116, published eac
 rows for every career's NOC 2021 code. Set or change a career's code in the Careers editor; new codes
 load as soon as the career is saved.
 
+## French
+
+Every page has a French version at /fr/... (for example /fr/careers), with an EN | FR switch in the
+header. Interface text is translated in `src/lib/fr.ts` (keyed by the English text). Editable wording is
+managed in both languages: Site content and Careers have an English / Français switch, and Resources
+has French fields. Any French field left blank shows the English. The admin screens stay in English.
+
 ## Editing site content
 
 Admins can change the wording on the home page, the For employers page, the quiz start screen and

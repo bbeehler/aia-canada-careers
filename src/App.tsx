@@ -24,34 +24,42 @@ import ResourcesEditor from "./pages/ResourcesEditor";
 import Account from "./pages/Account";
 import ContentEditor from "./pages/ContentEditor";
 
+// The same pages in English (/...) and French (/fr/...)
+function pages(base: string) {
+  return (
+    <Route path={base} element={<Layout />}>
+      <Route index element={<Home />} />
+      <Route path="jobs" element={<Jobs />} />
+      <Route path="jobs/:id" element={<JobDetail />} />
+      <Route path="quiz" element={<Quiz />} />
+      <Route path="parents" element={<Parents />} />
+      <Route path="about-the-industry" element={<About />} />
+      <Route path="careers" element={<Careers />} />
+      <Route path="careers/:slug" element={<CareerDetail />} />
+      <Route path="admin/careers" element={<RequireRole roles={["admin"]}><CareersEditor /></RequireRole>} />
+      <Route path="sign-in" element={<SignIn />} />
+      <Route path="employers" element={<Employers />} />
+      <Route path="employer" element={<RequireRole roles={["employer", "admin"]}><EmployerDashboard /></RequireRole>} />
+      <Route path="employer/jobs/new" element={<RequireRole roles={["employer", "admin"]}><JobForm /></RequireRole>} />
+      <Route path="employer/jobs/:id/edit" element={<RequireRole roles={["employer", "admin"]}><JobForm /></RequireRole>} />
+      <Route path="employer/jobs/:id/applications" element={<RequireRole roles={["employer", "admin"]}><Applications /></RequireRole>} />
+      <Route path="applications" element={<RequireRole roles={["candidate"]}><MyApplications /></RequireRole>} />
+      <Route path="admin" element={<RequireRole roles={["admin", "staff"]}><Admin /></RequireRole>} />
+      <Route path="account" element={<RequireRole roles={["candidate", "employer", "staff", "admin"]}><Account /></RequireRole>} />
+      <Route path="resources" element={<Resources />} />
+      <Route path="admin/resources" element={<RequireRole roles={["admin"]}><ResourcesEditor /></RequireRole>} />
+      <Route path="admin/users" element={<RequireRole roles={["admin"]}><Users /></RequireRole>} />
+      <Route path="admin/content" element={<RequireRole roles={["admin"]}><ContentEditor /></RequireRole>} />
+      <Route path="*" element={<NotFound />} />
+    </Route>
+  );
+}
+
 export default function App() {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="jobs" element={<Jobs />} />
-        <Route path="jobs/:id" element={<JobDetail />} />
-        <Route path="quiz" element={<Quiz />} />
-        <Route path="parents" element={<Parents />} />
-        <Route path="about-the-industry" element={<About />} />
-        <Route path="careers" element={<Careers />} />
-        <Route path="careers/:slug" element={<CareerDetail />} />
-        <Route path="admin/careers" element={<RequireRole roles={["admin"]}><CareersEditor /></RequireRole>} />
-        <Route path="sign-in" element={<SignIn />} />
-        <Route path="employers" element={<Employers />} />
-        <Route path="employer" element={<RequireRole roles={["employer", "admin"]}><EmployerDashboard /></RequireRole>} />
-        <Route path="employer/jobs/new" element={<RequireRole roles={["employer", "admin"]}><JobForm /></RequireRole>} />
-        <Route path="employer/jobs/:id/edit" element={<RequireRole roles={["employer", "admin"]}><JobForm /></RequireRole>} />
-        <Route path="employer/jobs/:id/applications" element={<RequireRole roles={["employer", "admin"]}><Applications /></RequireRole>} />
-        <Route path="applications" element={<RequireRole roles={["candidate"]}><MyApplications /></RequireRole>} />
-        <Route path="admin" element={<RequireRole roles={["admin", "staff"]}><Admin /></RequireRole>} />
-        <Route path="account" element={<RequireRole roles={["candidate", "employer", "staff", "admin"]}><Account /></RequireRole>} />
-        <Route path="resources" element={<Resources />} />
-        <Route path="admin/resources" element={<RequireRole roles={["admin"]}><ResourcesEditor /></RequireRole>} />
-        <Route path="admin/users" element={<RequireRole roles={["admin"]}><Users /></RequireRole>} />
-        <Route path="admin/content" element={<RequireRole roles={["admin"]}><ContentEditor /></RequireRole>} />
-        <Route path="*" element={<NotFound />} />
-      </Route>
+      {pages("/fr")}
+      {pages("/")}
     </Routes>
   );
 }

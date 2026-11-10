@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link } from "./L";
 import { useAuth } from "../lib/auth";
 
 // Floating shortcut for admins: jump to the editor for this page's wording.
