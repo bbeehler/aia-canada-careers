@@ -90,3 +90,16 @@ export interface Career {
   education_required: string;
   education_text: string;
 }
+
+export type ResourceKind = "organization" | "website" | "program" | "guide";
+export type Audience = "students" | "parents" | "both";
+export interface Resource {
+  id: string;
+  title: string;
+  description: string;
+  url: string;
+  kind: ResourceKind;
+  audience: Audience;
+  sort_order: number;
+  is_published: boolean;
+}

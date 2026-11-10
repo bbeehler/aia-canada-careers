@@ -15,6 +15,7 @@ const PUBLIC_LINKS: [string, string][] = [
   ["/careers", "Explore Careers"],
   ["/jobs", "Find Jobs"],
   ["/quiz", "Career Quiz"],
+  ["/resources", "Resources"],
 ];
 
 export default function Layout() {
@@ -32,7 +33,7 @@ export default function Layout() {
   }, [open]);
 
   const roleLinks: [string, string, boolean?][] =
-    profile?.role === "admin" ? [["/admin", "Review queue", true], ["/admin/users", "Users"], ["/admin/careers", "Careers"], ["/admin/content", "Site content"]]
+    profile?.role === "admin" ? [["/admin", "Review queue", true], ["/admin/users", "Users"], ["/admin/careers", "Careers"], ["/admin/resources", "Resources"], ["/admin/content", "Site content"]]
     : profile?.role === "staff" ? [["/admin", "Review queue", true]]
     : profile?.role === "employer" ? [["/employer", "My postings", true], ["/employer/jobs/new", "Post a job"]]
     : profile?.role === "candidate" ? [["/applications", "My applications"]]
@@ -126,7 +127,7 @@ export default function Layout() {
             </Link>
             <p className="mt-3 max-w-xs leading-relaxed text-steel">{c.get("footer.blurb")}</p>
           </div>
-          <FooterColumn title="Explore" links={[["About the Industry", "/about-the-industry"], ["All Careers", "/careers"], ["Find Jobs", "/jobs"], ["Career Quiz", "/quiz"], ["Resources", "/parents"]]} />
+          <FooterColumn title="Explore" links={[["About the Industry", "/about-the-industry"], ["All Careers", "/careers"], ["Find Jobs", "/jobs"], ["Career Quiz", "/quiz"], ["Resources", "/resources"]]} />
           <FooterColumn title="Career Areas" links={[["Vehicle Repair", "/careers?category=mechanical"], ["Collision Repair", "/careers?category=collision"], ["Parts & Manufacturing", "/careers?category=parts_manufacturing"], ["Business Operations", "/careers?category=business_operations"]]} />
           <FooterColumn title="For Parents" links={[["Parent Guide", "/parents"], ["Salary Information", "/parents#pay"], ["AIA Canada", "https://www.aiacanada.com"]]} />
         </div>

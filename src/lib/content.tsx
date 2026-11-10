@@ -107,6 +107,15 @@ export const CONTENT_SECTIONS: ContentSection[] = [
     ],
   },
   {
+    id: "resources.hero", page: "Resources page", title: "Banner",
+    fields: [
+      { key: "resources.hero.tag", label: "Small tag", type: "text", default: "Resources" },
+      { key: "resources.hero.heading", label: "Headline", type: "text", default: "Resources & Learning", hint: HIGHLIGHT_HINT },
+      { key: "resources.hero.body", label: "Paragraph", type: "textarea", default: "Helpful Canadian resources for students exploring automotive careers and parents supporting their career decisions." },
+      { key: "resources.hero.image", label: "Background photo", type: "image", default: "", hint: "Optional. Leave empty for the plain navy banner. Wide photos work best." },
+    ],
+  },
+  {
     id: "jobs.hero", page: "Find jobs page", title: "Banner",
     fields: [
       { key: "jobs.hero.tag", label: "Small tag", type: "text", default: "Find Jobs" },

@@ -19,6 +19,8 @@ import Careers from "./pages/Careers";
 import CareerDetail from "./pages/CareerDetail";
 import CareersEditor from "./pages/CareersEditor";
 import Users from "./pages/Users";
+import Resources from "./pages/Resources";
+import ResourcesEditor from "./pages/ResourcesEditor";
 import Account from "./pages/Account";
 import ContentEditor from "./pages/ContentEditor";
 
@@ -44,6 +46,8 @@ export default function App() {
         <Route path="applications" element={<RequireRole roles={["candidate"]}><MyApplications /></RequireRole>} />
         <Route path="admin" element={<RequireRole roles={["admin", "staff"]}><Admin /></RequireRole>} />
         <Route path="account" element={<RequireRole roles={["candidate", "employer", "staff", "admin"]}><Account /></RequireRole>} />
+        <Route path="resources" element={<Resources />} />
+        <Route path="admin/resources" element={<RequireRole roles={["admin"]}><ResourcesEditor /></RequireRole>} />
         <Route path="admin/users" element={<RequireRole roles={["admin"]}><Users /></RequireRole>} />
         <Route path="admin/content" element={<RequireRole roles={["admin"]}><ContentEditor /></RequireRole>} />
         <Route path="*" element={<NotFound />} />
