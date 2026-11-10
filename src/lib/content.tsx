@@ -24,6 +24,17 @@ export const CONTENT_SECTIONS: ContentSection[] = [
     ],
   },
   {
+    id: "home.stats", page: "Home page", title: "Numbers strip (under the banner)",
+    fields: [
+      { key: "home.stats.employment.label", label: "First number: label", type: "text", default: "People working in auto care", hint: "The numbers themselves come from Statistics Canada and update automatically." },
+      { key: "home.stats.employment.caption", label: "First number: caption", type: "text", default: "Employees in repair, parts and manufacturing across Canada" },
+      { key: "home.stats.pay.label", label: "Second number: label", type: "text", default: "Average yearly pay" },
+      { key: "home.stats.pay.caption", label: "Second number: caption", type: "text", default: "Across auto care industries, including overtime" },
+      { key: "home.stats.vehicles.label", label: "Third number: label", type: "text", default: "Vehicles on Canadian roads" },
+      { key: "home.stats.vehicles.caption", label: "Third number: caption", type: "text", default: "Every one needs maintenance and repairs" },
+    ],
+  },
+  {
     id: "home.didyouknow", page: "Home page", title: "Did you know? banner",
     fields: [
       { key: "home.didyouknow.tag", label: "Small tag", type: "text", default: "Did You Know?" },

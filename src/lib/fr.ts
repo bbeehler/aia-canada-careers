@@ -188,6 +188,13 @@ export const FR: Record<string, string> = {
   "These are averages across everyone working in each industry, from apprentices to managers.": "Il s’agit de moyennes pour l’ensemble des personnes qui travaillent dans chaque industrie, des apprentis aux gestionnaires.",
   "Checked for updates {date}.": "Dernière vérification : {date}.",
 
+  // Home numbers strip
+  "Auto care in Canada by the numbers": "L’entretien automobile au Canada en chiffres",
+  "employment and pay: {month}": "emploi et rémunération : {month}",
+  "vehicles: {year}": "véhicules : {year}",
+  "Source: Statistics Canada ({sources}). Updated automatically.": "Source : Statistique Canada ({sources}). Mise à jour automatique.",
+  "See pay by industry": "Voir la rémunération par industrie",
+
   // About the Industry
   "Take the Career Quiz": "Faire le jeu-questionnaire",
   "Explore All Careers": "Explorer toutes les carrières",

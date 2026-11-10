@@ -6,6 +6,12 @@ export const FR_DEFAULTS: Record<string, string> = {
   "home.hero.quiz_button": "Faire le jeu-questionnaire",
   "home.hero.image_alt": "Un technicien en combinaison travaille sous une voiture soulevée sur un pont élévateur dans un atelier",
 
+  "home.stats.employment.label": "Personnes qui travaillent dans l’entretien automobile",
+  "home.stats.employment.caption": "Salariés en réparation, en pièces et en fabrication partout au Canada",
+  "home.stats.pay.label": "Rémunération annuelle moyenne",
+  "home.stats.pay.caption": "Dans les industries de l’entretien automobile, heures supplémentaires comprises",
+  "home.stats.vehicles.label": "Véhicules sur les routes canadiennes",
+  "home.stats.vehicles.caption": "Chacun a besoin d’entretien et de réparations",
   "home.didyouknow.tag": "Le saviez-vous?",
   "home.didyouknow.heading": "Le marché secondaire de l’automobile au Canada",
   "home.didyouknow.body": "Le marché secondaire de l’automobile au Canada a atteint une production économique **record de 43,9 milliards de dollars**, soutenant plus de **400 000 emplois** dans plus de 29 000 entreprises partout au pays, et il continue de croître. Découvrez comment fonctionne l’industrie, ce qui distingue le marché secondaire des concessionnaires et pourquoi c’est le moment idéal pour vous lancer.",

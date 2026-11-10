@@ -5,6 +5,7 @@ import type { Job, Sector } from "../lib/types";
 import { EMPLOYMENT_TYPES, PROVINCES, formatPay } from "../lib/constants";
 import JobRow from "../components/JobRow";
 import EditPageLink from "../components/EditPageLink";
+import HomeStats from "../components/HomeStats";
 import SmartLink from "../components/SmartLink";
 import { Bold, Highlighted, useContent } from "../lib/content";
 
@@ -76,6 +77,7 @@ export default function Home() {
           </Link>
         </div>
       </section>
+      <HomeStats />
 
 
       <section className="border-b border-line bg-white">

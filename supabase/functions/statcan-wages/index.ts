@@ -92,7 +92,35 @@ Deno.serve(async (req) => {
     }),
   }));
   const periods = regions.flatMap((r) => r.industries.map((i) => i.weekly.period)).filter(Boolean).sort();
-  const data = { latest_period: periods[periods.length - 1] ?? null, regions };
+
+  // Home page headline numbers (Canada): payroll employment in the four auto care industries (table 14-10-0201-01),
+  // average yearly earnings across them weighted by employment, and registered vehicles (table 23-10-0308-01).
+  let home: any = null;
+  try {
+    const auto = INDUSTRIES.filter(([n]) => n !== 2);
+    const extra = await fetchSeries([
+      ...auto.map(([n]) => ({ productId: 14100201, coordinate: `1.1.${n}.0.0.0.0.0.0.0`, latestN: 1 })),
+      { productId: 23100308, coordinate: "1.1.1.1.0.0.0.0.0.0", latestN: 1 },
+    ]);
+    // Statistics Canada doesn't return series in the order requested, so match them by table and coordinate
+    const find = (pid: number, coord: string) => extra.find((r: any) => Number(r?.object?.productId) === pid && r?.object?.coordinate === coord);
+    const pt = (r: any) => r?.object?.vectorDataPoint?.[0];
+    let employed = 0, weighted = 0, empPeriod = "";
+    auto.forEach(([n]) => {
+      const p = pt(find(14100201, `1.1.${n}.0.0.0.0.0.0.0`));
+      const emp = p?.value == null ? null : Number(p.value);
+      const weekly = byKey.get(`14100203|1.1.1.${n}.0.0.0.0.0.0`)?.latest ?? null;
+      if (emp && weekly) { employed += emp; weighted += emp * weekly; empPeriod = String(p.refPer).slice(0, 7); }
+    });
+    const veh = pt(find(23100308, "1.1.1.1.0.0.0.0.0.0"));
+    home = {
+      employment: employed ? { value: employed, period: empPeriod } : null,
+      avg_pay: employed ? { weekly: Math.round((weighted / employed) * 100) / 100, annual: Math.round((weighted / employed) * 52), period: empPeriod } : null,
+      vehicles: veh?.value ? { value: Number(veh.value), year: String(veh.refPer).slice(0, 4) } : null,
+    };
+  } catch (e) { console.error("home metrics", e); }
+
+  const data = { latest_period: periods[periods.length - 1] ?? null, regions, home };
 
   if (!data.latest_period) return json({ error: "No figures came back from Statistics Canada; keeping the last saved copy." }, 502);
   await admin.from("statcan_wages").upsert({ id: "latest", fetched_at: new Date().toISOString(), data });
