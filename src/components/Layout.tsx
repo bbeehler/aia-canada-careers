@@ -59,7 +59,7 @@ export default function Layout() {
           <Link to="/" className="flex min-w-0 items-center gap-2.5 sm:gap-3" aria-label={t("Careers in Auto Care home")}>
             <img src="/aia-canada-logo.png" alt="AIA Canada" width={45} height={48} className="h-10 w-auto sm:h-12" />
             <span className="h-8 w-px shrink-0 bg-line sm:h-9" aria-hidden />
-            <span className="truncate font-display text-xl font-bold leading-none text-navy sm:text-2xl">{t("Careers in Auto Care")}</span>
+            <span className="font-display text-lg font-bold leading-[1.05] text-navy min-[400px]:text-xl sm:text-2xl sm:leading-none">{t("Careers in Auto Care")}</span>
           </Link>
 
           <div className="ml-auto flex items-center gap-1">

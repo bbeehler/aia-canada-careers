@@ -127,7 +127,7 @@ export default function CareerDetail() {
         <dl className="mx-auto grid max-w-6xl grid-cols-2 gap-x-4 gap-y-6 px-4 py-6 sm:py-8 lg:grid-cols-4">
           {facts.map(([k, v]) => (
             <div key={k} className="min-w-0 sm:px-2">
-              <dd className={`break-words font-display text-2xl font-bold leading-tight sm:text-3xl ${k === t("Annual Salary") ? "text-emerald-700" : "text-navy"}`}>{v}</dd>
+              <dd className={`hyphens-auto font-display text-lg font-bold leading-tight min-[400px]:text-xl sm:text-3xl ${k === t("Annual Salary") ? "text-emerald-700" : "text-navy"}`}>{v}</dd>
               <dt className="mt-1 text-xs font-medium uppercase tracking-wide text-steel">{k}</dt>
             </div>
           ))}
