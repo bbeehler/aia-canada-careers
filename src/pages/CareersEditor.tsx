@@ -9,7 +9,7 @@ const BLANK: Omit<Career, "id"> = {
   slug: "", title: "", sector: "mechanical", summary: "", description: "", tasks: "", skills: "", training: "",
   education_level: "", salary_range: "", growth: "", search_terms: "", sort_order: 200, is_published: false,
   outlook: "", day_in_life: "", certifications: "", red_seal_intro: "", red_seal: "", red_seal_note: "", hs_courses: "",
-  provincial_programs: "", provincial_programs_note: "", education_required: "", education_text: "",
+  provincial_programs: "", provincial_programs_note: "", education_required: "", education_text: "", noc_code: "",
 };
 
 const slugify = (s: string) => s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -88,6 +88,8 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
       return;
     }
     setStatus("saved");
+    // Load Job Bank wages right away if this occupation code is new
+    if (record.noc_code) supabase.functions.invoke("jobbank-wages", { body: {} });
     onSaved(res.data.id);
   };
 
@@ -157,6 +159,9 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
       <Group title="Education & Training">
         {text("education_required", "Required", "Shown as “Required: …”.", "Vocational Certificate")}
         {area("education_text", "Text", undefined, 4)}
+      </Group>
+      <Group title="Wages in Your Area" hint="Wages come from Job Bank. Enter the 5-digit NOC 2021 code for this occupation, or leave it empty to hide the section.">
+        {text("noc_code", "Occupation code (NOC 2021)", "Find codes at noc.esdc.gc.ca. Several careers can share one code.", "72410")}
       </Group>
       {text("search_terms", "Job matching words", "Comma-separated words used to find matching open jobs for this career, e.g. technician, mechanic, 310S.")}
       <div className="grid gap-4 sm:grid-cols-2">

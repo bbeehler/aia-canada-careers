@@ -6,6 +6,7 @@ import { SECTORS } from "../lib/constants";
 import type { Career, Job } from "../lib/types";
 import PageHero, { heroPrimary, heroSecondary } from "../components/PageHero";
 import JobRow from "../components/JobRow";
+import JobBankWages from "../components/JobBankWages";
 
 const lines = (s: string) => (s ?? "").split("\n").map((l) => l.trim()).filter(Boolean);
 const rows = (s: string) => lines(s).map((l) => l.split("|").map((p) => p.trim()));
@@ -89,6 +90,7 @@ export default function CareerDetail() {
     career.hs_courses && "Recommended High School Courses",
     programs.length > 0 && "Specialized Provincial Programs",
     (career.education_text || career.education_required || career.training) && "Education & Training",
+    career.noc_code && "Wages in Your Area",
     "Open Jobs",
   ].filter(Boolean) as string[];
 
@@ -242,6 +244,13 @@ export default function CareerDetail() {
                   ))}
                 </ol>
               )}
+            </Section>
+          )}
+
+          {career.noc_code && (
+            <Section title="Wages in Your Area">
+              <p className="mb-4 max-w-prose leading-relaxed">What people in this occupation earn, by province and region, from the Government of Canada’s Job Bank.</p>
+              <JobBankWages noc={career.noc_code} />
             </Section>
           )}
 

@@ -82,6 +82,15 @@ maintenance (NAICS 8111), automotive parts, accessories and tire retailers (4413
 parts and accessories merchant wholesalers (4153), motor vehicle parts manufacturing (3363), and all
 industries for comparison.
 
+## Wages by occupation (Job Bank)
+
+Each career page has a **Wages in Your Area** section with low, median and high wages for that
+occupation by province and economic region, from Job Bank (Employment and Social Development Canada).
+The `jobbank-wages` function checks the Government of Canada open data portal every Monday for the
+newest "Wages" file (dataset adad580f-76b0-4502-bd05-20c125de9116, published each fall), and loads the
+rows for every career's NOC 2021 code. Set or change a career's code in the Careers editor; new codes
+load as soon as the career is saved.
+
 ## Editing site content
 
 Admins can change the wording on the home page, the For employers page, the quiz start screen and

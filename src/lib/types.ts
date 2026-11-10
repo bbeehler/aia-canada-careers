@@ -89,6 +89,7 @@ export interface Career {
   provincial_programs_note: string;
   education_required: string;
   education_text: string;
+  noc_code: string;
 }
 
 export type ResourceKind = "organization" | "website" | "program" | "guide";

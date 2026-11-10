@@ -1,0 +1,10 @@
+-- Applied in Supabase as migration "jobbank_wages". Summary:
+-- * careers.noc_code: the NOC 2021 occupation code used to look up Job Bank wages (5 digits or empty).
+--   Starting codes: 72410 (service technician, truck and transport mechanic), 72411 (collision),
+--   64409 (service advisor), 11202 (marketing), 60020 (shop manager), 13102 (payroll), 72100 (CNC machinist),
+--   94200 (quality control inspector, assembly line technician), 21321 (manufacturing engineer).
+-- * public.jobbank_wages: low/median/high wages by occupation, province and economic region (public read).
+--   Province rows have 4-character region codes (e.g. ER35); economic regions have 6 (e.g. ER3540).
+-- * public.jobbank_meta: which open data file was loaded and when.
+-- * pg_cron job "weekly-jobbank-wages" calls the jobbank-wages function Mondays at 10:00 UTC.
+-- The full SQL is in Supabase's migration history (Database > Migrations).
