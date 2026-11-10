@@ -78,4 +78,15 @@ export interface Career {
   search_terms: string;
   sort_order: number;
   is_published: boolean;
+  outlook: string;
+  day_in_life: string;
+  certifications: string;
+  red_seal_intro: string;
+  red_seal: string;
+  red_seal_note: string;
+  hs_courses: string;
+  provincial_programs: string;
+  provincial_programs_note: string;
+  education_required: string;
+  education_text: string;
 }

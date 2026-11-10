@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type ReactNode } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { SECTORS } from "../lib/constants";
@@ -8,6 +8,8 @@ import PageHero, { heroPrimary } from "../components/PageHero";
 const BLANK: Omit<Career, "id"> = {
   slug: "", title: "", sector: "mechanical", summary: "", description: "", tasks: "", skills: "", training: "",
   education_level: "", salary_range: "", growth: "", search_terms: "", sort_order: 200, is_published: false,
+  outlook: "", day_in_life: "", certifications: "", red_seal_intro: "", red_seal: "", red_seal_note: "", hs_courses: "",
+  provincial_programs: "", provincial_programs_note: "", education_required: "", education_text: "",
 };
 
 const slugify = (s: string) => s.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -131,16 +133,31 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
         </div>
       </div>
       {text("slug", "Web address", "Lowercase letters, numbers and dashes. Changing it breaks links people have saved.", "automotive-service-technician")}
-      {area("summary", "Summary", "One or two sentences, shown on the career card and at the top of the page.", 2)}
-      <div className="grid gap-4 sm:grid-cols-3">
-        {text("salary_range", "Salary range", undefined, "$38K – $100K+")}
-        {text("growth", "Job growth", undefined, "+5%")}
-        {text("education_level", "Education level", "Used for the Levels filter.", "College Diploma")}
+      {area("summary", "Summary", "One or two sentences, shown on the career card and in the banner.", 2)}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {text("salary_range", "Annual Salary", undefined, "$38K – $100K+")}
+        {text("growth", "Job Growth (10yr)", undefined, "+5%")}
+        {text("education_level", "Education", "Also used for the Levels filter.", "Vocational Certificate")}
+        {text("outlook", "Job Outlook", undefined, "Strong")}
       </div>
-      {area("description", "About the role", undefined, 5)}
-      {area("tasks", "What you’ll do", "One task per line.")}
-      {area("skills", "Skills that help", "One skill per line.")}
-      {area("training", "How to get there", "One step per line, in order.")}
+      <Group title="About This Career">{area("description", "Text", undefined, 5)}</Group>
+      <Group title="A Day in the Life">{area("day_in_life", "Text", undefined, 4)}</Group>
+      <Group title="Key Skills">{area("skills", "Skills", "One per line.")}</Group>
+      <Group title="Certifications">{area("certifications", "Certifications", "One per line.", 3)}</Group>
+      <Group title="Red Seal Requirements by Province" hint="Leave the table empty for careers that aren’t a Red Seal trade; the section then won’t show.">
+        {area("red_seal_intro", "Intro", undefined, 3)}
+        {area("red_seal", "Provinces and territories", "One per line: Province | Compulsory or Voluntary | length | hours | note | authority name | website (optional). Example: Ontario | Compulsory | 4 years | 7,220 hrs | Must hold a Certificate of Qualification. | Skilled Trades Ontario | https://www.skilledtradesontario.ca", 10)}
+        {area("red_seal_note", "Note under the table", "Web addresses like red-seal.ca become links.", 2)}
+      </Group>
+      <Group title="Recommended High School Courses">{area("hs_courses", "Courses", "One per line.")}</Group>
+      <Group title="Specialized Provincial Programs">
+        {area("provincial_programs", "Programs", "One per line: Province | Program name | description", 10)}
+        {area("provincial_programs_note", "Note under the programs", "Web addresses like Canada.ca become links.", 2)}
+      </Group>
+      <Group title="Education & Training">
+        {text("education_required", "Required", "Shown as “Required: …”.", "Vocational Certificate")}
+        {area("education_text", "Text", undefined, 4)}
+      </Group>
       {text("search_terms", "Job matching words", "Comma-separated words used to find matching open jobs for this career, e.g. technician, mechanic, 310S.")}
       <div className="grid gap-4 sm:grid-cols-2">
         {text("sort_order", "Display order", "Lower numbers appear first.")}
@@ -156,5 +173,15 @@ function CareerForm({ id, initial, onSaved, onDeleted }: {
         {id && <button type="button" onClick={remove} className="ml-auto text-sm text-steel hover:text-signal">Delete career</button>}
       </div>
     </form>
+  );
+}
+
+function Group({ title, hint, children }: { title: string; hint?: string; children: ReactNode }) {
+  return (
+    <fieldset className="space-y-4 rounded-md border border-line p-4">
+      <legend className="px-1 font-display text-xl font-bold text-navy">{title}</legend>
+      {hint && <p className="hint -mt-2">{hint}</p>}
+      {children}
+    </fieldset>
   );
 }
