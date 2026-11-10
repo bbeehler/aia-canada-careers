@@ -40,6 +40,7 @@ export interface Job {
   uses_ai_screening: boolean;
   is_existing_vacancy: boolean;
   is_featured: boolean;
+  career_id?: string | null;
   apply_method: ApplyMethod;
   apply_url: string | null;
   status: JobStatus;

@@ -52,7 +52,7 @@ export default function CareerDetail() {
     const terms = [career.title, ...career.search_terms.split(",")].map((t) => t.trim().replace(/[%,()]/g, " ")).filter((t) => t.length > 2);
     supabase.from("jobs").select("*, companies(name, is_member)")
       .eq("status", "published").gt("expires_at", new Date().toISOString())
-      .or(terms.map((t) => `title.ilike.%${t}%`).join(",")).order("published_at", { ascending: false }).limit(5)
+      .or([`career_id.eq.${career.id}`, ...terms.map((t) => `title.ilike.%${t}%`)].join(",")).order("published_at", { ascending: false }).limit(5)
       .then(({ data }) => setJobs((data as Job[]) ?? []));
   }, [career]);
 

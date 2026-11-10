@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { useCompany } from "../lib/useCompany";
-import type { EmploymentType, Job, Sector } from "../lib/types";
+import type { Career, EmploymentType, Job, Sector } from "../lib/types";
 import { EMPLOYMENT_TYPES, PROVINCES, SECTORS } from "../lib/constants";
 import PageHero from "../components/PageHero";
 
@@ -15,12 +15,29 @@ export default function JobForm() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const submitIntent = useRef(false);
+  const [careers, setCareers] = useState<Pick<Career, "id" | "title" | "sector" | "search_terms">[]>([]);
+  const [careerId, setCareerId] = useState<string | null>(null); // null = not chosen yet, "" = not listed
+  const [suggested, setSuggested] = useState(false);
+
+  useEffect(() => {
+    supabase.from("careers").select("id, title, sector, search_terms").eq("is_published", true).order("sort_order")
+      .then(({ data }) => setCareers((data as typeof careers) ?? []));
+  }, []);
+
+  // Suggest a matching career from the job title (only until the employer makes a choice)
+  const suggestCareer = (title: string) => {
+    if (careerId !== null || !title.trim()) return;
+    const t = title.toLowerCase();
+    const match = careers.find((c) => t.includes(c.title.toLowerCase()))
+      ?? careers.find((c) => c.search_terms.split(",").map((w) => w.trim().toLowerCase()).filter((w) => w.length > 3).some((w) => t.includes(w)));
+    if (match) { setCareerId(match.id); setSuggested(true); }
+  };
 
   useEffect(() => {
     if (!id) return;
     supabase.from("jobs").select("*").eq("id", id).single().then(({ data }) => {
       setJob((data as Job) ?? {});
-      if (data) setApplyMethod((data as Job).apply_method);
+      if (data) { setApplyMethod((data as Job).apply_method); setCareerId((data as Job).career_id ?? ""); }
     });
   }, [id]);
 
@@ -39,6 +56,7 @@ export default function JobForm() {
       company_id: company.id,
       title: String(f.get("title")).trim(),
       sector: f.get("sector") as Sector,
+      career_id: careerId || null,
       employment_type: f.get("employment_type") as EmploymentType,
       city: String(f.get("city")).trim(),
       province: String(f.get("province")),
@@ -84,7 +102,25 @@ export default function JobForm() {
           <div>
             <label className="label" htmlFor="title">Job title</label>
             <input id="title" name="title" required minLength={3} maxLength={140} defaultValue={job.title} className="field"
-              placeholder="Licensed Automotive Service Technician (310S)" />
+              placeholder="Licensed Automotive Service Technician (310S)" onBlur={(e) => suggestCareer(e.target.value)} />
+          </div>
+          <div>
+            <label className="label" htmlFor="career_id">Which career best matches this job? (optional)</label>
+            <select id="career_id" className="field" value={careerId ?? ""} onChange={(e) => { setCareerId(e.target.value); setSuggested(false); }}>
+              <option value="">Not listed / other</option>
+              {(Object.keys(SECTORS) as Sector[]).map((s) => {
+                const group = careers.filter((c) => c.sector === s);
+                return group.length ? (
+                  <optgroup key={s} label={SECTORS[s].label}>
+                    {group.map((c) => <option key={c.id} value={c.id}>{c.title}</option>)}
+                  </optgroup>
+                ) : null;
+              })}
+            </select>
+            <p className="hint">
+              {suggested ? "We picked this from your job title. Change it if it’s not right. " : ""}
+              This links your posting to the career page and shows job seekers how the pay compares with typical wages in your province. If your job isn’t listed, choose “Not listed / other”; you can still post it.
+            </p>
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>

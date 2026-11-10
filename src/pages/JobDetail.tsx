@@ -6,6 +6,7 @@ import type { Job } from "../lib/types";
 import { EMPLOYMENT_TYPES, SECTORS, formatPay, timeAgo } from "../lib/constants";
 import StatusBadge from "../components/StatusBadge";
 import PageHero from "../components/PageHero";
+import PayComparison from "../components/PayComparison";
 
 export default function JobDetail() {
   const { id } = useParams();
@@ -53,6 +54,8 @@ export default function JobDetail() {
             <dd className="font-medium">{timeAgo(job.published_at) || "Not yet published"}</dd>
           </div>
         </dl>
+
+        {job.career_id && <PayComparison job={job} />}
 
         <h2 className="mt-10 text-2xl">About the job</h2>
         <p className="mt-3 max-w-prose whitespace-pre-line leading-relaxed">{job.description}</p>
