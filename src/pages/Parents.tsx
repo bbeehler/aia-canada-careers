@@ -5,6 +5,7 @@ import { Highlighted, useContent } from "../lib/content";
 import { SECTORS, formatPay } from "../lib/constants";
 import type { PayPeriod, Sector } from "../lib/types";
 import EditPageLink from "../components/EditPageLink";
+import StatcanWages from "../components/StatcanWages";
 import PageHero, { heroPrimary, heroSecondary } from "../components/PageHero";
 
 interface PayRow { sector: Sector; pay_min: number; pay_max: number; pay_period: PayPeriod }
@@ -58,9 +59,13 @@ export default function Parents() {
         </div>
       </section>
 
-      <section id="pay" className="mt-14 scroll-mt-6">
+      <section id="pay" className="mt-14 scroll-mt-24">
         <h2 className="text-3xl">{c.get("parents.pay.heading")}</h2>
-        <p className="mt-3 max-w-prose text-steel">{c.get("parents.pay.body")}</p>
+        <h3 className="mt-6 font-sans text-xl font-semibold tracking-normal text-ink">{c.get("parents.statcan.heading")}</h3>
+        <p className="mt-2 max-w-prose text-steel">{c.get("parents.statcan.body")}</p>
+        <StatcanWages />
+        <h3 className="mt-10 font-sans text-xl font-semibold tracking-normal text-ink">{c.get("parents.postings.heading")}</h3>
+        <p className="mt-2 max-w-prose text-steel">{c.get("parents.pay.body")}</p>
         {ranges === null ? (
           <p className="mt-5 text-steel">Loading pay ranges…</p>
         ) : rows.length === 0 ? (

@@ -70,6 +70,18 @@ Companies that can't be found in Insightly are left as they are and flagged for 
 
 When AIA moves to HubSpot, only `_shared/insightly.ts` needs to change.
 
+## Salary information (Statistics Canada)
+
+The Salary Information section on /parents shows the latest average earnings for auto care industries
+from Statistics Canada's Survey of Employment, Payrolls and Hours: average weekly earnings (table
+14-10-0203-01) and average hourly earnings for hourly-paid employees (table 14-10-0205-01), for Canada
+and each province and territory. The `statcan-wages` function pulls them from Statistics Canada's free
+Web Data Service every day at 4:30 a.m. Eastern and saves a copy, so the page stays fast and keeps the
+last good figures if Statistics Canada is unavailable. Industries shown: automotive repair and
+maintenance (NAICS 8111), automotive parts, accessories and tire retailers (4413), new motor vehicle
+parts and accessories merchant wholesalers (4153), motor vehicle parts manufacturing (3363), and all
+industries for comparison.
+
 ## Editing site content
 
 Admins can change the wording on the home page, the For employers page, the quiz start screen and
