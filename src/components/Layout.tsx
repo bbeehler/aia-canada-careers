@@ -63,7 +63,6 @@ export default function Layout() {
           </Link>
 
           <div className="ml-auto flex items-center gap-1">
-          <LanguageSwitch />
           <nav className="hidden shrink-0 items-center gap-1 md:flex" aria-label={t("Account")}>
             {roleLinks.length > 0 && (
               <span className="mr-1 hidden text-xs font-semibold uppercase tracking-wide text-steel lg:inline">{roleLabel}</span>
@@ -75,9 +74,15 @@ export default function Layout() {
                 <button onClick={signOut} className="ml-2 btn-ghost whitespace-nowrap">{t("Sign out")}</button>
               </>
             ) : (
-              <Link to="/sign-in" className="ml-1 btn-navy whitespace-nowrap">{t("Sign in")}</Link>
+              <>
+                <Link to="/sign-in" className="ml-1 btn-ghost whitespace-nowrap px-5 py-3 text-base">{t("Sign in")}</Link>
+                <Link to="/sign-in?mode=sign-up" className="ml-1 btn-primary whitespace-nowrap px-5 py-3 text-base">{t("Register")}</Link>
+              </>
             )}
+            <span className="mx-2 h-8 w-px bg-line" aria-hidden />
+            <LanguageSwitch />
           </nav>
+          <LanguageSwitch className="md:hidden" />
 
           <button type="button" className="-mr-2 flex h-11 w-11 shrink-0 items-center justify-center rounded text-navy hover:bg-paper md:hidden"
             aria-expanded={open} aria-controls="mobile-menu" aria-label={open ? t("Close menu") : t("Open menu")} onClick={() => setOpen(!open)}>
@@ -113,7 +118,10 @@ export default function Layout() {
                     <button onClick={signOut} className="btn-ghost w-full py-3">{t("Sign out")}</button>
                   </>
                 ) : (
-                  <Link to="/sign-in" className="btn-navy w-full py-3">{t("Sign in")}</Link>
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link to="/sign-in" className="btn-ghost w-full py-3 text-base">{t("Sign in")}</Link>
+                    <Link to="/sign-in?mode=sign-up" className="btn-primary w-full py-3 text-base">{t("Register")}</Link>
+                  </div>
                 )}
               </div>
             </nav>
@@ -165,9 +173,9 @@ function LanguageSwitch({ className = "" }: { className?: string }) {
   const other = getLang() === "fr" ? "en" : "fr";
   return (
     <RawLink to={switchPath(pathname, search, hash, other)} lang={other === "fr" ? "fr" : "en"} hrefLang={other}
-      className={`inline-flex min-h-[40px] items-center rounded px-2.5 text-sm font-semibold text-navy hover:bg-paper ${className}`}
-      aria-label={other === "fr" ? "Français" : "English"}>
-      {other === "fr" ? "FR" : "EN"}
+      className={`inline-flex min-h-[44px] items-center rounded px-3 text-sm font-semibold text-navy underline-offset-4 hover:bg-paper hover:underline ${className}`}
+      title={other === "fr" ? "Voir cette page en français" : "View this page in English"}>
+      {other === "fr" ? "Français" : "English"}
     </RawLink>
   );
 }

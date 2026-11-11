@@ -38,6 +38,7 @@ export const FR: Record<string, string> = {
   "For Employers": "Pour les employeurs",
   "Sign in": "Se connecter",
   "Sign out": "Se déconnecter",
+  "Register": "S’inscrire",
   "My account": "Mon compte",
   "Account": "Compte",
   "Main": "Principal",
